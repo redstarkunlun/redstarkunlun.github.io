@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人用金融管理</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .add-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .add-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 50%;
+            border-radius: 5px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover {
+            color: red;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 0 0 5px 5px;
+        }
+
+        /* パスワード画面のスタイル */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        #login-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        #login-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-field i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        #main-content {
+            display: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* 削除確認モーダル */
+        .confirmation-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cancel-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .confirm-delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .confirm-delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="login-screen">
+        <div id="login-card">
+            <h2>個人用金融管理</h2>
+            <div id="password-setup" style="display: none;">
+                <p>初めての利用です。パスワードを設定してください。</p>
+                <div class="form-group">
+                    <label for="new-password">新しいパスワード</label>
+                    <div class="password-field">
+                        <input type="password" id="new-password" required>
+                        <i onclick="togglePasswordVisibility('new-password')" class="toggle-password">👁️</i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">パスワード確認</label>
+                    <div class="password-field">
+                        <input type="password" id="confirm-password" required>
+                        <i onclick="togglePasswordVisibility('confirm-password')" class="toggle-password">👁️</i>
+                    </div>
+                </div>
+                <button class="add-btn" onclick="setupPassword()">パスワード設定</button>
+                <p id="setup-error" class="error-message"></p>
+            </div>
+
+            <div id="password-login">
+                <p>金融情報にアクセスするにはパスワードを入力してください。</p>
+                <div class="form-group">
+                    <label for="login-password">パスワード</label>
+                    <div class="password-field">
+                        <input type="password" id="login-password" required>
+                        <i onclick="togglePasswordVisibility('login-password')" class="toggle-password">👁️</i>
+                    </div>
+                </div>
+                <button class="add-btn" onclick="checkPassword()">ログイン</button>
+                <p id="login-error" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div id="main-content">
+        <div class="container">
+            <header>
+                <h1>個人用金融管理</h1>
+                <p>あなたの銀行口座とクレジットカード情報をここで管理</p>
+                <div class="nav-actions">
+                    <button class="logout-btn" onclick="logout()">ログアウト</button>
+                </div>
+            </header>
+
+            <div class="dashboard">
+                <div class="card">
+                    <h2>銀行口座一覧</h2>
+                    <table id="bank-accounts">
+                        <thead>
+                            <tr>
+                                <th>銀行名</th>
+                                <th>支店名</th>
+                                <th>口座番号</th>
+                                <th>残高</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>みずほ銀行</td>
+                                <td>東京支店</td>
+                                <td>1234567</td>
+                                <td>500,000円</td>
+                                <td><button class="delete-btn" onclick="confirmDelete('bank', 0)">削除</button></td>
+                            </tr>
+                            <tr>
+                                <td>三菱UFJ銀行</td>
+                                <td>渋谷支店</td>
+                                <td>7654321</td>
+                                <td>750,000円</td>
+                                <td><button class="delete-btn" onclick="confirmDelete('bank', 1)">削除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-btn" onclick="openModal('bank-modal')">口座を追加</button>
+                </div>
+
+                <div class="card">
+                    <h2>クレジットカード一覧</h2>
+                    <table id="credit-cards">
+                        <thead>
+                            <tr>
+                                <th>カード名</th>
+                                <th>カード番号（末尾4桁）</th>
+                                <th>有効期限</th>
+                                <th>利用可能枠</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>楽天カード</td>
+                                <td>****1234</td>
+                                <td>12/25</td>
+                                <td>500,000円</td>
+                                <td><button class="delete-btn" onclick="confirmDelete('card', 0)">削除</button></td>
+                            </tr>
+                            <tr>
+                                <td>アメックスゴールド</td>
+                                <td>****5678</td>
+                                <td>06/27</td>
+                                <td>1,000,000円</td>
+                                <td><button class="delete-btn" onclick="confirmDelete('card', 1)">削除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-btn" onclick="openModal('card-modal')">カードを追加</button>
+                </div>
+            </div>
+
+            <!-- 銀行口座追加モーダル -->
+            <div id="bank-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('bank-modal')">&times;</span>
+                    <h2>銀行口座を追加</h2>
+                    <form id="bank-form">
+                        <div class="form-group">
+                            <label for="bank-name">銀行名</label>
+                            <input type="text" id="bank-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="branch-name">支店名</label>
+                            <input type="text" id="branch-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="account-number">口座番号</label>
+                            <input type="text" id="account-number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="balance">残高（円）</label>
+                            <input type="number" id="balance" required>
+                        </div>
+                        <button type="submit" class="add-btn">追加</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- クレジットカード追加モーダル -->
+            <div id="card-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('card-modal')">&times;</span>
+                    <h2>クレジットカードを追加</h2>
+                    <form id="card-form">
+                        <div class="form-group">
+                            <label for="card-name">カード名</label>
+                            <input type="text" id="card-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-number">カード番号</label>
+                            <input type="text" id="card-number" maxlength="19" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiry-date">有効期限（MM/YY）</label>
+                            <input type="text" id="expiry-date" placeholder="01/25" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="credit-limit">利用可能枠（円）</label>
+                            <input type="number" id="credit-limit" required>
+                        </div>
+                        <button type="submit" class="add-btn">追加</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 削除確認モーダル -->
+            <div id="delete-confirmation-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('delete-confirmation-modal')">&times;</span>
+                    <h2>削除の確認</h2>
+                    <p id="delete-confirmation-message">この項目を削除してもよろしいですか？</p>
+                    <div class="confirmation-actions">
+                        <button class="cancel-btn" onclick="closeModal('delete-confirmation-modal')">キャンセル</button>
+                        <button class="confirm-delete-btn" onclick="deleteItem()">削除</button>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <p>&copy; 2025 個人用金融管理アプリ - すべての情報はローカルに保存されます</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // 削除用の変数
+        let deleteTarget = {
+            type: null,
+            index: null
+        };
+
+        // パスワード管理機能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初期化時にパスワードが設定されているか確認
+            const hasPassword = localStorage.getItem('financeAppPassword');
+
+            if (!hasPassword) {
+                // パスワードが設定されていない場合は設定画面を表示
+                document.getElementById('password-login').style.display = 'none';
+                document.getElementById('password-setup').style.display = 'block';
+            }
+        });
+
+        // パスワードの表示/非表示切り替え
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+
+        // 新規パスワード設定
+        function setupPassword() {
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorElement = document.getElementById('setup-error');
+
+            // パスワード検証
+            if (newPassword.length < 4) {
+                errorElement.textContent = 'パスワードは4文字以上で設定してください。';
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                errorElement.textContent = 'パスワードが一致しません。';
+                return;
+            }
+
+            // パスワードをローカルストレージに保存（ハッシュ化は省略）
+            localStorage.setItem('financeAppPassword', newPassword);
+
+            // ログイン成功
+            showMainContent();
+        }
+
+        // ログイン処理
+        function checkPassword() {
+            const inputPassword = document.getElementById('login-password').value;
+            const storedPassword = localStorage.getItem('financeAppPassword');
+            const errorElement = document.getElementById('login-error');
+
+            if (inputPassword === storedPassword) {
+                // ログイン成功
+                showMainContent();
+            } else {
+                // ログイン失敗
+                errorElement.textContent = 'パスワードが正しくありません。';
+            }
+        }
+
+        // メインコンテンツを表示
+        function showMainContent() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+
+            // フォームをリセット
+            document.getElementById('login-password').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            document.getElementById('login-error').textContent = '';
+            document.getElementById('setup-error').textContent = '';
+        }
+
+        // ログアウト処理
+        function logout() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+        }
+
+        // モーダルを開く関数
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        // モーダルを閉じる関数
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // 削除確認ダイアログを表示
+        function confirmDelete(type, index) {
+            deleteTarget.type = type;
+            deleteTarget.index = index;
+
+            let message = '';
+            if (type === 'bank') {
+                const table = document.getElementById('bank-accounts');
+                const row = table.getElementsByTagName('tbody')[0].rows[index];
+                const bankName = row.cells[0].textContent;
+                const accountNumber = row.cells[2].textContent;
+                message = `${bankName}の口座（口座番号: ${accountNumber}）を削除してもよろしいですか？`;
+            } else if (type === 'card') {
+                const table = document.getElementById('credit-cards');
+                const row = table.getElementsByTagName('tbody')[0].rows[index];
+                const cardName = row.cells[0].textContent;
+                const cardNumber = row.cells[1].textContent;
+                message = `${cardName}（カード番号: ${cardNumber}）を削除してもよろしいですか？`;
+            }
+
+            document.getElementById('delete-confirmation-message').textContent = message;
+            openModal('delete-confirmation-modal');
+        }
+
+        // 項目削除実行
+        function deleteItem() {
+            if (deleteTarget.type === 'bank') {
+                const table = document.getElementById('bank-accounts').getElementsByTagName('tbody')[0];
+                table.deleteRow(deleteTarget.index);
+            } else if (deleteTarget.type === 'card') {
+                const table = document.getElementById('credit-cards').getElementsByTagName('tbody')[0];
+                table.deleteRow(deleteTarget.index);
+            }
+
+            // データを保存
+            saveData();
+
+            // モーダルを閉じる
+            closeModal('delete-confirmation-modal');
+        }
+
+        // 銀行口座追加フォームの処理
+        document.getElementById('bank-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // フォームから値を取得
+            const bankName = document.getElementById('bank-name').value;
+            const branchName = document.getElementById('branch-name').value;
+            const accountNumber = document.getElementById('account-number').value;
+            const balance = document.getElementById('balance').value;
+
+            // テーブルに行を追加
+            const table = document.getElementById('bank-accounts').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            const rowIndex = table.rows.length - 1;
+
+            newRow.innerHTML = `
+                <td>${bankName}</td>
+                <td>${branchName}</td>
+                <td>${accountNumber}</td>
+                <td>${Number(balance).toLocaleString()}円</td>
+                <td><button class="delete-btn" onclick="confirmDelete('bank', ${rowIndex})">削除</button></td>
+            `;
+
+            // フォームをリセットしてモーダルを閉じる
+            document.getElementById('bank-form').reset();
+            closeModal('bank-modal');
+
+            // データを保存
+            saveData();
+        });
+
+        // クレジットカード追加フォームの処理
+        document.getElementById('card-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // フォームから値を取得
+            const cardName = document.getElementById('card-name').value;
+            const cardNumber = document.getElementById('card-number').value;
+            const expiryDate = document.getElementById('expiry-date').value;
+            const creditLimit = document.getElementById('credit-limit').value;
+
+            // カード番号の末尾4桁のみを表示
+            const maskedNumber = '****' + cardNumber.slice(-4);
+
+            // テーブルに行を追加
+            const table = document.getElementById('credit-cards').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            const rowIndex = table.rows.length - 1;
+
+            newRow.innerHTML = `
+                <td>${cardName}</td>
+                <td>${maskedNumber}</td>
+                <td>${expiryDate}</td>
+                <td>${Number(creditLimit).toLocaleString()}円</td>
+                <td><button class="delete-btn" onclick="confirmDelete('card', ${rowIndex})">削除</button></td>
+            `;
+
+            // フォームをリセットしてモーダルを閉じる
+            document.getElementById('card-form').reset();
+            closeModal('card-modal');
+
+            // データを保存
+            saveData();
+        });
+
+        // ウィンドウ外クリックでモーダルを閉じる
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // データの保存（ローカルストレージ使用）
+        function saveData() {
+            // 銀行口座のデータ取得
+            const bankTable = document.getElementById('bank-accounts');
+            const bankRows = Array.from(bankTable.getElementsByTagName('tbody')[0].rows);
+            const bankData = bankRows.map(row => {
+                return {
+                    bankName: row.cells[0].textContent,
+                    branchName: row.cells[1].textContent,
+                    accountNumber: row.cells[2].textContent,
+                    balance: row.cells[3].textContent
+                };
+            });
+
+            // クレジットカードのデータ取得
+            const cardTable = document.getElementById('credit-cards');
+            const cardRows = Array.from(cardTable.getElementsByTagName('tbody')[0].rows);
+            const cardData = cardRows.map(row => {
+                return {
+                    cardName: row.cells[0].textContent,
+                    cardNumber: row.cells[1].textContent,
+                    expiryDate: row.cells[2].textContent,
+                    creditLimit: row.cells[3].textContent
+                };
+            });
+
+            // データをローカルストレージに保存
+            localStorage.setItem('bankAccounts', JSON.stringify(bankData));
+            localStorage.setItem('creditCards', JSON.stringify(cardData));
+        }
+
+        // データのロード
+        function loadData() {
+            // 銀行口座データの読み込み
+            const bankData = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+            const bankTable = document.getElementById('bank-accounts').getElementsByTagName('tbody')[0];
+
+            // 既存の行をクリア
+            bankTable.innerHTML = '';
+
+            // データを表に追加
+            bankData.forEach((account, index) => {
+                const newRow = bankTable.insertRow();
+                newRow.innerHTML = `
+                    <td>${account.bankName}</td>
+                    <td>${account.branchName}</td>
+                    <td>${account.accountNumber}</td>
+                    <td>${account.balance}</td>
+                    <td><button class="delete-btn" onclick="confirmDelete('bank', ${index})">削除</button></td>
+                `;
+            });
+
+            // クレジットカードデータの読み込み
+            const cardData = JSON.parse(localStorage.getItem('creditCards') || '[]');
+            const cardTable = document.getElementById('credit-cards').getElementsByTagName('tbody')[0];
+
+            // 既存の行をクリア
+            cardTable.innerHTML = '';
+
+            // データを表に追加
+            cardData.forEach((card, index) => {
+                const newRow = cardTable.insertRow();
+                newRow.innerHTML = `
+                    <td>${card.cardName}</td>
+                    <td>${card.cardNumber}</td>
+                    <td>${card.expiryDate}</td>
+                    <td>${card.creditLimit}</td>
+                    <td><button class="delete-btn" onclick="confirmDelete('card', ${index})">削除</button></td>
+                `;
+            });
+        }
+
+        // ページ読み込み時にデータをロード
+        document.addEventListener('DOMContentLoaded', function() {
+            // パスワード確認後にデータをロードするために、showMainContent関数を修正
+            const originalShowMainContent = showMainContent;
+            showMainContent = function() {
+                originalShowMainContent();
+                loadData();
+            };
+        });
+    </script>
+</body>
+</html>
