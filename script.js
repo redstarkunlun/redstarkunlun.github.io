@@ -1,42 +1,42 @@
-var isBig = false;
-
-function big(b) {
-    if (b) {
-        rainbow.classList.remove("hidden");
-        nav.classList.add("big");
-        header.classList.add("big");
-        document.body.classList.add("big");
-    } else if (header.classList.contains("big")) {
-        nav.classList.remove("big");
-        header.classList.remove("big");
-        document.body.classList.remove("big");
-        rainbow.classList.add("hidden");
-    }
-    isBig = b;
-}
-big(true);
-
-function toggleBig() {
-    isBig = !isBig
-    big(isBig);
-}
-
-var wasZero = true;
-var lastScroll = 0;
-document.addEventListener("scroll", (e) => {
-  if(document.scrollingElement.scrollTop == 0 && lastScroll == 1) {
-    big(true);
-    wasZero = true;
-  } else if(document.scrollingElement.scrollTop == 0) {
-      document.scrollingElement.scrollTop = 1;
+// スクロール時のナビゲーション効果
+window.addEventListener('scroll', function() {
+  const nav = document.getElementById('nav');
+  if (window.scrollY > 50) {
+    nav.style.boxShadow = '0 4px 12px var(--shadow-color)';
   } else {
-    if (wasZero) {
-      big(false);
-      document.scrollingElement.scrollTop = 1;
-      wasZero = false;
-      return false;
-    }
-    wasZero = false;
+    nav.style.boxShadow = '0 2px 10px var(--shadow-color)';
   }
-  lastScroll = document.scrollingElement.scrollTop;
+});
+
+// テーマの切り替え機能
+const themeToggle = document.getElementById('theme-toggle');
+const htmlElement = document.documentElement;
+const themeIcon = themeToggle.querySelector('i');
+
+// ローカルストレージからテーマ設定を読み込む
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  htmlElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+}
+
+// テーマアイコンを更新する関数
+function updateThemeIcon(theme) {
+  if (theme === 'dark') {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+  }
+}
+
+// テーマ切り替えイベント
+themeToggle.addEventListener('click', () => {
+  const currentTheme = htmlElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  htmlElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeIcon(newTheme);
 });
