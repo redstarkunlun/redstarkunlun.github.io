@@ -1,53 +1,112 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
+  <!-- 基本設定 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>かふぇいん - JOJI民/鹿児島ユナイテッドサポ</title>
-  
-  <!-- favicon and meta tags -->
-  <link rel="shortcut icon" type="image/x-icon" href="https://redstarkunlun.github.io/co275.png">
-  <meta property="og:title" content="かふぇいん - ホームページ">
-  <meta property="og:description" content="JOJI民/鹿児島ユナイテッドサポ">
+  <title>自己紹介サイト</title>
+
+  <!-- ファビコンとOGP設定 -->
+  <link rel="shortcut icon" type="image/x-icon" href="https://redstarkunlun.github.io/co275.png" />
+  <meta property="og:title" content="自己紹介サイト">
+  <meta property="og:description" content="私の自己紹介ページへようこそ">
   <meta property="og:image" content="https://redstarkunlun.github.io/co275.png">
-  <meta property="og:type" content="article">
-  
-  <!-- stylesheets and scripts -->
-  <link rel="stylesheet" href="css/style.css">
+  <meta property="og:type" content="website">
+
+  <!-- スクリプトとスタイル -->
   <script src="https://kit.fontawesome.com/7cf1aca7fb.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+  <!-- レインボーライン -->
   <div class="full" id="rainbow">
     <div class="rainbow"></div>
   </div>
-  
-  <div class="nav big" id="nav">
-    <div class="header big" id="header">
-      <div class="name">
-        <span>かふぇいん</span>
-        <div class="tag-line">JOJI民/鹿児島ユナイテッドサポ</div>
+
+  <!-- ナビゲーション -->
+  <div class="nav" id="nav">
+    <div class="header" id="header">
+      <div class="profile-area">
+        <div class="profile-icon">
+          <img src="https://redstarkunlun.github.io/co275.png" alt="プロフィールアイコン">
+        </div>
+        <div class="name-area">
+          <span class="name">かふぇいん</span>
+          <div class="tag-line">JOJI民/鹿児島ユナイテッドサポ</div>
+        </div>
       </div>
-      
-      <nav aria-label="メインナビゲーション">
-        <ul class="menu">
-          <li><a href="https://github.com/redstarkunlun" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i><span class="extra">GitHub</span></a></li>
-          <li><a href="https://www.twitch.tv/64ffe1ne" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitch" aria-hidden="true"></i><span class="extra">Twitch</span></a></li>
-          <li><a href="https://twitter.com/kufc111" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter" aria-hidden="true"></i><span class="extra">Twitter</span></a></li>
-          <li><a href="https://discord.com/invite/cappuccino" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord" aria-hidden="true"></i><span class="extra">Discord</span></a></li>
-          <li><a href="mailto:amamiya@fbi.ac"><i class="fas fa-envelope" aria-hidden="true"></i><span class="extra">Email</span></a></li>
-        </ul>
-      </nav>
+      <ul class="menu">
+        <li><a href="https://github.com/redstarkunlun" target="_blank"><i class="fab fa-github"></i><span class="extra">GitHub</span></a></li>
+        <li><a href="https://www.twitch.tv/64ffe1ne" target="_blank"><i class="fab fa-twitch"></i><span class="extra">Twitch</span></a></li>
+        <li><a href="https://www.twitch.tv/64ffe1ne" target="_blank"><i class="fab fa-twitter"></i><span class="extra">Twitter</span></a></li>
+        <li><a href="https://discord.com/invite/cappuccino" target="_blank"><i class="fab fa-discord"></i><span class="extra">Discord</span></a></li>
+        <li><a href="mailto:amamiya@fbi.ac" target="_blank"><i class="fas fa-envelope"></i><span class="extra">Email</span></a></li>
+        <li>
+          <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
+            <i class="fas fa-moon"></i>
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
-  
-  <main>
-    <!-- ここにメインコンテンツを追加 -->
-  </main>
-  
-  <footer>
-    <p>&copy; 2025 かふぇいん - All Rights Reserved</p>
-  </footer>
-  
-  <script src="./script.js"></script>
+
+  <!-- メインコンテンツ -->
+  <div class="container">
+    <!-- 自己紹介セクション（プロフィール画像付き） -->
+    <div class="section">
+      <h2 class="section-title">自己紹介</h2>
+      <div class="profile-section">
+        <div class="large-profile-icon">
+          <img src="https://redstarkunlun.github.io/co275.png" alt="プロフィールアイコン">
+        </div>
+        <div class="profile-content">
+          <p>初めまして、かふぇいんと申します
+            <br>ヒメヒナと領国つかささんが好きなオタク。
+            <br>サッカーでは鹿児島ユナイテッドFCが好きです</p>
+          <!-- <p>GitHubでいくつかの個人プロジェクトを公開しています。</p> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 趣味・特技セクション -->
+    <div class="section">
+      <h2 class="section-title">趣味</h2>
+      <ul>
+        <li>音楽鑑賞（特にヒメヒナの曲）</li>
+        <li>サッカー観戦（鹿児島ユナイテッドFC応援）</li>    
+        <li>読書（SF、ファンタジー小説）</li>
+      </ul>
+    </div>
+
+    <!-- プロジェクトセクション -->
+    <div class="section">
+      <h2 class="section-title">プロジェクト</h2>
+      <p>GitHubで公開している主なプロジェクトです：</p>
+      <ul>
+        <li><strong>個人ウェブサイト</strong> - このサイトを含む個人的なウェブ制作プロジェクト</li>
+        
+      </ul>
+      <p>詳細は<a href="https://github.com/redstarkunlun" target="_blank">GitHubプロフィール</a>をご覧ください。</p>
+    </div>
+
+    <!-- コンタクトセクション -->
+    <!-- <div class="section">
+      <h2 class="section-title">コンタクト</h2>
+      <p>お問い合わせやコラボレーションのご提案は以下からお願いします：</p>
+      <ul>
+        <li>Email: <a href="mailto:amamiya@fbi.ac">amamiya@fbi.ac</a></li>
+        <li>Twitter: <a href="https://twitter.com/lix_hcredstar" target="_blank">@lix_hcredstar</a></li>
+        <li>Discord: <a href="https://discord.com/invite/cappuccino" target="_blank">Discord Server</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- フッター -->
+  <div class="footer">
+    <p>&copy; 2025 かふぇいん. All Rights Reserved.</p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
