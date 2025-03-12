@@ -1,4 +1,3 @@
-// 基本的なパスワード生成機能
 function password_generate() {
     if (document.getElementById("small").checked == true) {
         var small = "abcdefghijklmnopqrstuvwxyz";
@@ -69,7 +68,9 @@ function password_generate() {
     document.getElementById("password").value = pass;
     
     // パスワード強度評価の呼び出し
-    updatePasswordStrength(pass);
+    if (typeof updatePasswordStrength === 'function') {
+        updatePasswordStrength(pass);
+    }
 }
 
 function password_copy() {
@@ -77,8 +78,10 @@ function password_copy() {
     text.select();
     document.execCommand("copy");
     
-    // コピー通知の表示
-    showCopyNotification();
+    // コピー通知の表示（もし実装されていれば）
+    if (typeof showCopyNotification === 'function') {
+        showCopyNotification();
+    }
 }
 
 function password_longer_count() {
@@ -97,9 +100,6 @@ function updatePasswordStrength(password) {
     if (/[0-9]/.test(password)) strength += 1;
     if (/[^A-Za-z0-9]/.test(password)) strength += 1;
     
-    // エントロピーを考慮した追加評価
-    if (hasGoodEntropy(password)) strength += 0.5;
-    
     // 強度表示要素のチェック
     const strengthBar = document.getElementById('strength-bar');
     const strengthText = document.getElementById('password-strength-text');
@@ -108,7 +108,7 @@ function updatePasswordStrength(password) {
         let strengthLabel = '';
         let color = '';
         
-        switch(Math.floor(strength)) {
+        switch(strength) {
             case 0:
             case 1:
             case 2:
@@ -125,7 +125,6 @@ function updatePasswordStrength(password) {
                 color = '#2ecc71';
                 break;
             case 6:
-            default:
                 strengthLabel = '非常に強い';
                 color = '#1e8449';
                 break;
@@ -135,16 +134,6 @@ function updatePasswordStrength(password) {
         strengthBar.style.backgroundColor = color;
         strengthText.textContent = 'パスワード強度: ' + strengthLabel;
     }
-}
-
-// エントロピーの評価（文字の多様性と配置の複雑さ）
-function hasGoodEntropy(password) {
-    // 単純な繰り返しパターンをチェック
-    const repeats = /(.)\1{2,}/;
-    // 連続した文字/数字をチェック
-    const sequences = /(?:abcdef|123456|qwerty)/i;
-    
-    return !repeats.test(password) && !sequences.test(password);
 }
 
 // コピー通知の表示
@@ -157,59 +146,3 @@ function showCopyNotification() {
         }, 2000);
     }
 }
-
-// テーマ管理
-document.addEventListener('DOMContentLoaded', function() {
-    // 現在の年を設定
-    const currentYearElement = document.getElementById('current-year');
-    if (currentYearElement) {
-        currentYearElement.textContent = new Date().getFullYear();
-    }
-    
-    // テーマ切り替え
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        // ユーザーの設定したテーマ設定を取得
-        const savedTheme = localStorage.getItem('theme');
-        
-        if (savedTheme) {
-            // 保存されたテーマがあればそれを適用
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeToggle.checked = (savedTheme === 'dark');
-        } else {
-            // なければシステム設定を確認
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeToggle.checked = true;
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                themeToggle.checked = false;
-                localStorage.setItem('theme', 'light');
-            }
-        }
-        
-        // テーマ切り替え処理
-        themeToggle.addEventListener('change', function(e) {
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
-        });
-        
-        // システムテーマの変更検知
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                if (!localStorage.getItem('theme')) {
-                    // ユーザーが明示的にテーマを設定していない場合のみ自動的に変更
-                    const newTheme = e.matches ? 'dark' : 'light';
-                    document.documentElement.setAttribute('data-theme', newTheme);
-                    themeToggle.checked = e.matches;
-                }
-            });
-        }
-    }
-});
