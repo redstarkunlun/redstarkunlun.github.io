@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ダークモード対応Todo リスト</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: white;
+            --text-color: #333;
+            --border-color: #eee;
+            --button-color: #4CAF50;
+            --button-hover: #45a049;
+            --delete-button: #f44336;
+            --delete-hover: #d32f2f;
+            --completed-color: #888;
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --button-color: #388e3c;
+            --button-hover: #2e7d32;
+            --delete-button: #d32f2f;
+            --delete-hover: #b71c1c;
+            --completed-color: #757575;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .todo-container {
+            background-color: var(--container-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #555;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .mode-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #new-todo {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #add-button {
+            padding: 10px 15px;
+            background-color: var(--button-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #add-button:hover {
+            background-color: var(--button-hover);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            transition: border-color 0.3s ease;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .todo-text {
+            flex-grow: 1;
+            margin-left: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: var(--completed-color);
+        }
+
+        .delete-button {
+            background-color: var(--delete-button);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: var(--delete-hover);
+        }
+
+        /* チェックボックスのスタイル調整 */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--button-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <div class="header">
+            <h1>Todo リスト</h1>
+            <div class="theme-switch">
+                <span class="mode-icon">☀️</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-icon">🌙</span>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="new-todo" placeholder="新しいタスクを入力してください">
+            <button id="add-button">追加</button>
+        </div>
+
+        <ul id="todo-list">
+            <!-- ここにTodo項目が追加されます -->
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // テーマの初期設定
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-toggle').checked = true;
+            }
+
+            // テーマ切り替えの処理
+            document.getElementById('theme-toggle').addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // ローカルストレージからタスクを読み込む
+            loadTasks();
+
+            // 追加ボタンのクリックイベント
+            document.getElementById('add-button').addEventListener('click', addTask);
+
+            // Enterキーを押したときもタスクを追加
+            document.getElementById('new-todo').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+        });
+
+        // タスクを追加する関数
+        function addTask() {
+            const input = document.getElementById('new-todo');
+            const text = input.value.trim();
+
+            if (text === '') return;
+
+            const todoList = document.getElementById('todo-list');
+            const li = createTaskElement(text, false);
+            todoList.appendChild(li);
+
+            // 入力フィールドをクリア
+            input.value = '';
+
+            // ローカルストレージに保存
+            saveTasks();
+        }
+
+        // タスク要素を作成する関数
+        function createTaskElement(text, completed) {
+            const li = document.createElement('li');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = completed;
+            checkbox.addEventListener('change', function() {
+                todoText.classList.toggle('completed', this.checked);
+                saveTasks();
+            });
+
+            const todoText = document.createElement('span');
+            todoText.textContent = text;
+            todoText.className = 'todo-text';
+            if (completed) {
+                todoText.classList.add('completed');
+            }
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '削除';
+            deleteButton.className = 'delete-button';
+            deleteButton.addEventListener('click', function() {
+                li.remove();
+                saveTasks();
+            });
+
+            li.appendChild(checkbox);
+            li.appendChild(todoText);
+            li.appendChild(deleteButton);
+
+            return li;
+        }
+
+        // タスクをローカルストレージに保存する関数
+        function saveTasks() {
+            const todoList = document.getElementById('todo-list');
+            const tasks = [];
+
+            for (const li of todoList.children) {
+                const text = li.querySelector('.todo-text').textContent;
+                const completed = li.querySelector('input[type="checkbox"]').checked;
+                tasks.push({ text, completed });
+            }
+
+            localStorage.setItem('todos', JSON.stringify(tasks));
+        }
+
+        // ローカルストレージからタスクを読み込む関数
+        function loadTasks() {
+            const todoList = document.getElementById('todo-list');
+            const savedTasks = localStorage.getItem('todos');
+
+            if (savedTasks) {
+                const tasks = JSON.parse(savedTasks);
+                for (const task of tasks) {
+                    const li = createTaskElement(task.text, task.completed);
+                    todoList.appendChild(li);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
