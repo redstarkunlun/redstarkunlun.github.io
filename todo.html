@@ -1,339 +1,422 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ダークモード対応Todo リスト</title>
-    <style>
-        :root {
-            --bg-color: #f5f5f5;
-            --container-bg: white;
-            --text-color: #333;
-            --border-color: #eee;
-            --button-color: #4CAF50;
-            --button-hover: #45a049;
-            --delete-button: #f44336;
-            --delete-hover: #d32f2f;
-            --completed-color: #888;
-        }
+  <!-- 基本設定 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Todo リスト</title>
 
-        .dark-mode {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --border-color: #333;
-            --button-color: #388e3c;
-            --button-hover: #2e7d32;
-            --delete-button: #d32f2f;
-            --delete-hover: #b71c1c;
-            --completed-color: #757575;
-        }
+  <!-- ファビコンとOGP設定 -->
+  <meta property="og:title" content="Todo リスト">
+  <meta property="og:description" content="シンプルなTodoリストアプリ">
+  <meta property="og:type" content="website">
 
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+  <!-- スクリプトとスタイル -->
+  <script src="https://kit.fontawesome.com/7cf1aca7fb.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg-color: #f5f5f5;
+      --container-bg: white;
+      --text-color: #333;
+      --border-color: #eee;
+      --button-color: #4CAF50;
+      --button-hover: #45a049;
+      --delete-button: #f44336;
+      --delete-hover: #d32f2f;
+      --completed-color: #888;
+      --header-bg: white;
+      --rainbow-height: 4px;
+    }
 
-        h1 {
-            color: var(--text-color);
-            text-align: center;
-        }
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --container-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --border-color: #333;
+      --button-color: #388e3c;
+      --button-hover: #2e7d32;
+      --delete-button: #d32f2f;
+      --delete-hover: #b71c1c;
+      --completed-color: #757575;
+      --header-bg: #1e1e1e;
+    }
 
-        .todo-container {
-            background-color: var(--container-bg);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .theme-switch {
-            display: flex;
-            align-items: center;
-        }
+    /* レインボーライン */
+    .full {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 24px;
-        }
+    .rainbow {
+      height: var(--rainbow-height);
+      background: linear-gradient(to right, 
+        #ff0000 0%, 
+        #ff9900 16.6%, 
+        #ffff00 33.3%, 
+        #33cc33 50%, 
+        #3399ff 66.6%, 
+        #9933ff 83.3%, 
+        #ff3399 100%);
+    }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+    /* ナビゲーション */
+    .nav {
+      background-color: var(--header-bg);
+      position: sticky;
+      top: var(--rainbow-height);
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
+    .header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text-color);
+    }
 
-        input:checked + .slider {
-            background-color: #555;
-        }
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: transform 0.3s ease;
+    }
 
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+    }
 
-        .mode-icon {
-            margin-right: 8px;
-            font-size: 16px;
-        }
+    /* メインコンテンツ */
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      flex: 1;
+    }
 
-        .input-container {
-            display: flex;
-            margin-bottom: 20px;
-        }
+    .todo-container {
+      background-color: var(--container-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
 
-        #new-todo {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px 0 0 4px;
-            font-size: 16px;
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
 
-        #add-button {
-            padding: 10px 15px;
-            background-color: var(--button-color);
-            color: white;
-            border: none;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background-color: var(--button-color);
+    }
 
-        #add-button:hover {
-            background-color: var(--button-hover);
-        }
+    .input-container {
+      display: flex;
+      margin-bottom: 1.5rem;
+    }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    #new-todo {
+      flex-grow: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px 0 0 4px;
+      font-size: 1rem;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
 
-        li {
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            transition: border-color 0.3s ease;
-        }
+    #add-button {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--button-color);
+      color: white;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
 
-        li:last-child {
-            border-bottom: none;
-        }
+    #add-button:hover {
+      background-color: var(--button-hover);
+    }
 
-        .todo-text {
-            flex-grow: 1;
-            margin-left: 10px;
-            transition: color 0.3s ease;
-        }
+    ul {
+      list-style-type: none;
+    }
 
-        .completed {
-            text-decoration: line-through;
-            color: var(--completed-color);
-        }
+    li {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      transition: border-color 0.3s ease;
+    }
 
-        .delete-button {
-            background-color: var(--delete-button);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s ease;
-        }
+    li:last-child {
+      border-bottom: none;
+    }
 
-        .delete-button:hover {
-            background-color: var(--delete-hover);
-        }
+    .todo-text {
+      flex-grow: 1;
+      margin-left: 0.75rem;
+      transition: color 0.3s ease;
+    }
 
-        /* チェックボックスのスタイル調整 */
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--button-color);
-        }
-    </style>
+    .completed {
+      text-decoration: line-through;
+      color: var(--completed-color);
+    }
+
+    .delete-button {
+      background-color: var(--delete-button);
+      color: white;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 0.75rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .delete-button:hover {
+      background-color: var(--delete-hover);
+    }
+
+    /* チェックボックスのスタイル調整 */
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--button-color);
+    }
+
+    /* フッター */
+    .footer {
+      background-color: var(--header-bg);
+      color: var(--text-color);
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 600px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .theme-toggle {
+        margin-top: 1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="todo-container">
-        <div class="header">
-            <h1>Todo リスト</h1>
-            <div class="theme-switch">
-                <span class="mode-icon">☀️</span>
-                <label class="switch">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-                <span class="mode-icon">🌙</span>
-            </div>
-        </div>
+  <!-- レインボーライン -->
+  <!-- <div class="full" id="rainbow">
+    <div class="rainbow"></div>
+  </div>
 
-        <div class="input-container">
-            <input type="text" id="new-todo" placeholder="新しいタスクを入力してください">
-            <button id="add-button">追加</button>
-        </div>
-
-        <ul id="todo-list">
-            <!-- ここにTodo項目が追加されます -->
-        </ul>
+  <!-- ナビゲーション -->
+  <div class="nav" id="nav">
+    <div class="header" id="header">
+      <div class="app-title">Todo リスト</div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
+        <i class="fas fa-moon"></i>
+      </button>
     </div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // テーマの初期設定
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('theme-toggle').checked = true;
-            }
+  <!-- メインコンテンツ -->
+  <div class="container">
+    <div class="todo-container">
+      <h2 class="section-title">タスク管理</h2>
 
-            // テーマ切り替えの処理
-            document.getElementById('theme-toggle').addEventListener('change', function() {
-                if (this.checked) {
-                    document.body.classList.add('dark-mode');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
+      <div class="input-container">
+        <input type="text" id="new-todo" placeholder="新しいタスクを入力してください">
+        <button id="add-button">追加</button>
+      </div>
 
-            // ローカルストレージからタスクを読み込む
-            loadTasks();
+      <ul id="todo-list">
+        <!-- ここにTodo項目が追加されます -->
+      </ul>
+    </div>
+  </div>
 
-            // 追加ボタンのクリックイベント
-            document.getElementById('add-button').addEventListener('click', addTask);
+  <!-- フッター -->
+  <div class="footer">
+    <p>&copy; 2025 Todo リスト. All Rights Reserved.</p>
+  </div>
 
-            // Enterキーを押したときもタスクを追加
-            document.getElementById('new-todo').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    addTask();
-                }
-            });
-        });
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // テーマの初期設定
+      const savedTheme = localStorage.getItem('theme');
+      const htmlElement = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = themeToggle.querySelector('i');
 
-        // タスクを追加する関数
-        function addTask() {
-            const input = document.getElementById('new-todo');
-            const text = input.value.trim();
+      // 保存されたテーマを適用
+      if (savedTheme === 'dark') {
+        htmlElement.setAttribute('data-theme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      }
 
-            if (text === '') return;
-
-            const todoList = document.getElementById('todo-list');
-            const li = createTaskElement(text, false);
-            todoList.appendChild(li);
-
-            // 入力フィールドをクリア
-            input.value = '';
-
-            // ローカルストレージに保存
-            saveTasks();
+      // テーマ切り替えの処理
+      themeToggle.addEventListener('click', function() {
+        if (htmlElement.getAttribute('data-theme') === 'light') {
+          htmlElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+          themeIcon.classList.remove('fa-moon');
+          themeIcon.classList.add('fa-sun');
+        } else {
+          htmlElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+          themeIcon.classList.remove('fa-sun');
+          themeIcon.classList.add('fa-moon');
         }
+      });
 
-        // タスク要素を作成する関数
-        function createTaskElement(text, completed) {
-            const li = document.createElement('li');
+      // ローカルストレージからタスクを読み込む
+      loadTasks();
 
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = completed;
-            checkbox.addEventListener('change', function() {
-                todoText.classList.toggle('completed', this.checked);
-                saveTasks();
-            });
+      // 追加ボタンのクリックイベント
+      document.getElementById('add-button').addEventListener('click', addTask);
 
-            const todoText = document.createElement('span');
-            todoText.textContent = text;
-            todoText.className = 'todo-text';
-            if (completed) {
-                todoText.classList.add('completed');
-            }
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = '削除';
-            deleteButton.className = 'delete-button';
-            deleteButton.addEventListener('click', function() {
-                li.remove();
-                saveTasks();
-            });
-
-            li.appendChild(checkbox);
-            li.appendChild(todoText);
-            li.appendChild(deleteButton);
-
-            return li;
+      // Enterキーを押したときもタスクを追加
+      document.getElementById('new-todo').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          addTask();
         }
+      });
+    });
 
-        // タスクをローカルストレージに保存する関数
-        function saveTasks() {
-            const todoList = document.getElementById('todo-list');
-            const tasks = [];
+    // タスクを追加する関数
+    function addTask() {
+      const input = document.getElementById('new-todo');
+      const text = input.value.trim();
 
-            for (const li of todoList.children) {
-                const text = li.querySelector('.todo-text').textContent;
-                const completed = li.querySelector('input[type="checkbox"]').checked;
-                tasks.push({ text, completed });
-            }
+      if (text === '') return;
 
-            localStorage.setItem('todos', JSON.stringify(tasks));
+      const todoList = document.getElementById('todo-list');
+      const li = createTaskElement(text, false);
+      todoList.appendChild(li);
+
+      // 入力フィールドをクリア
+      input.value = '';
+
+      // ローカルストレージに保存
+      saveTasks();
+    }
+
+    // タスク要素を作成する関数
+    function createTaskElement(text, completed) {
+      const li = document.createElement('li');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = completed;
+      checkbox.addEventListener('change', function() {
+        todoText.classList.toggle('completed', this.checked);
+        saveTasks();
+      });
+
+      const todoText = document.createElement('span');
+      todoText.textContent = text;
+      todoText.className = 'todo-text';
+      if (completed) {
+        todoText.classList.add('completed');
+      }
+
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'delete-button';
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      deleteButton.addEventListener('click', function() {
+        li.remove();
+        saveTasks();
+      });
+
+      li.appendChild(checkbox);
+      li.appendChild(todoText);
+      li.appendChild(deleteButton);
+
+      return li;
+    }
+
+    // タスクをローカルストレージに保存する関数
+    function saveTasks() {
+      const todoList = document.getElementById('todo-list');
+      const tasks = [];
+
+      for (const li of todoList.children) {
+        const text = li.querySelector('.todo-text').textContent;
+        const completed = li.querySelector('input[type="checkbox"]').checked;
+        tasks.push({ text, completed });
+      }
+
+      localStorage.setItem('todos', JSON.stringify(tasks));
+    }
+
+    // ローカルストレージからタスクを読み込む関数
+    function loadTasks() {
+      const todoList = document.getElementById('todo-list');
+      const savedTasks = localStorage.getItem('todos');
+
+      if (savedTasks) {
+        const tasks = JSON.parse(savedTasks);
+        for (const task of tasks) {
+          const li = createTaskElement(task.text, task.completed);
+          todoList.appendChild(li);
         }
-
-        // ローカルストレージからタスクを読み込む関数
-        function loadTasks() {
-            const todoList = document.getElementById('todo-list');
-            const savedTasks = localStorage.getItem('todos');
-
-            if (savedTasks) {
-                const tasks = JSON.parse(savedTasks);
-                for (const task of tasks) {
-                    const li = createTaskElement(task.text, task.completed);
-                    todoList.appendChild(li);
-                }
-            }
-        }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
