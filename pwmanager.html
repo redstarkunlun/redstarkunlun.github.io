@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パスワードマネージャー</title>
+
+    <!-- ファビコンとOGP設定 -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://kufc111.pages.dev/co275.png" />
+    <meta property="og:title" content="パスワードマネージャー">
+    <meta property="og:description" content="安全なパスワード管理ツール">
+    <meta property="og:image" content="https://kufc111.pages.dev/co275.png">
+    <meta property="og:type" content="website">
+
+    <!-- スクリプトとスタイル -->
+    <script src="https://kit.fontawesome.com/7cf1aca7fb.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="forms.css">
+    <link rel="stylesheet" href="passwords.css">
+    <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+    <div id="app">
+        <!-- マスターパスワード入力画面 -->
+        <div id="master-password-screen" class="container">
+            <div class="master-password-container">
+                <div class="profile-icon">
+                    <img src="https://kufc111.pages.dev/co275.png" alt="プロフィールアイコン">
+                </div>
+                <h2>マスターパスワード</h2>
+                <p>パスワードマネージャーにアクセスするには、マスターパスワードを入力してください。</p>
+                <input type="password" id="master-password-input" placeholder="マスターパスワードを入力">
+                <button id="login-btn">ログイン</button>
+                <p id="login-error" style="color: var(--danger-color); display: none;">マスターパスワードが正しくありません。</p>
+                <p class="info-text">初回利用時は、入力したパスワードが新しいマスターパスワードとして設定されます。</p>
+            </div>
+        </div>
+
+        <!-- メインアプリ画面 -->
+        <div id="main-app" style="display: none;">
+            <div class="nav" id="nav">
+                <div class="header" id="header">
+                    <div class="profile-area">
+                        <div class="profile-icon">
+                            <img src="https://kufc111.pages.dev/co275.png" alt="プロフィールアイコン">
+                        </div>
+                        <div class="name-area">
+                            <span class="name">パスワードマネージャー</span>
+                            <div class="tag-line">安全なパスワード管理ツール</div>
+                        </div>
+                    </div>
+                    <ul class="menu">
+                        <li>
+                            <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
+                                <i class="fas fa-moon"></i>
+                            </button>
+                        </li>
+                        <li>
+                            <button id="logout-btn" class="logout-btn" aria-label="ログアウト">
+                                <i class="fas fa-sign-out-alt"></i><span class="extra">ログアウト</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="container main-container">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="サイト名、ユーザー名で検索...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <div class="main-content">
+                    <div class="password-form">
+                        <h2>パスワードを追加</h2>
+                        <div class="form-group">
+                            <label for="site-name">サイト名</label>
+                            <input type="text" id="site-name" placeholder="例: Google">
+                        </div>
+                        <div class="form-group">
+                            <label for="site-url">URL</label>
+                            <input type="url" id="site-url" placeholder="例: https://google.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">ユーザー名/メールアドレス</label>
+                            <input type="text" id="username" placeholder="例: your.email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">パスワード</label>
+                            <div class="password-container">
+                                <input type="password" id="password" placeholder="パスワードを入力">
+                                <button class="generate-btn" id="generate-btn"><i class="fas fa-key"></i> 生成</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">メモ (任意)</label>
+                            <input type="text" id="notes" placeholder="メモを入力">
+                        </div>
+                        <button class="add-btn" id="add-btn"><i class="fas fa-plus"></i> 追加</button>
+                    </div>
+
+                    <div class="password-list" id="password-list">
+                        <h2>保存済みパスワード</h2>
+                        <div id="passwords-container">
+                            <div class="empty-list" id="empty-list">
+                                <i class="fas fa-lock empty-icon"></i>
+                                <p>パスワードがまだ登録されていません。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2025 パスワードマネージャー. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
