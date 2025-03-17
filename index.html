@@ -4,18 +4,23 @@
   <!-- 基本設定 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HOME</title>
+  <title>かふぇいん - ポートフォリオ</title>
 
   <!-- ファビコンとOGP設定 -->
   <link rel="shortcut icon" type="image/x-icon" href="image/co275.png" />
-  <meta property="og:title" content="HOME">
-  <meta property="og:description" content="Way Back Home">
+  <meta property="og:title" content="かふぇいん - ポートフォリオ">
+  <meta property="og:description" content="かふぇいんのポートフォリオサイト">
   <meta property="og:image" content="image/co275.png">
   <meta property="og:type" content="website">
 
+  <!-- フォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
   <!-- スクリプトとスタイル -->
   <script src="https://kit.fontawesome.com/7cf1aca7fb.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/modern-styles.css">
 </head>
 
 <body>
@@ -32,12 +37,17 @@
           <div class="tag-line">JOJI民/鹿児島ユナイテッドサポ</div>
         </div>
       </div>
-      <ul class="menu">
-        <!-- <li><a href="https://github.com/redstarkunlun" target="_blank"><i class="fab fa-github"></i><span class="extra">GitHub</span></a></li>
-        --> <li><a href="https://www.twitch.tv" target="_blank"><i class="fab fa-twitch"></i><span class="extra">Twitch</span></a></li>
+      <button class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="menu" id="menu">
+        <li><a href="#about"><i class="fas fa-user"></i><span class="extra">自己紹介</span></a></li>
+        <li><a href="#skills"><i class="fas fa-code"></i><span class="extra">スキル</span></a></li>
+        <li><a href="#projects"><i class="fas fa-project-diagram"></i><span class="extra">プロジェクト</span></a></li>
+        <li><a href="#hobbies"><i class="fas fa-heart"></i><span class="extra">趣味</span></a></li>
+        <li><a href="#contact"><i class="fas fa-envelope"></i><span class="extra">コンタクト</span></a></li>
+        <li><a href="https://github.com/redstarkunlun" target="_blank"><i class="fab fa-github"></i><span class="extra">GitHub</span></a></li>
         <li><a href="https://x.com/kufc111" target="_blank"><i class="fab fa-twitter"></i><span class="extra">Twitter</span></a></li>
-        <li><a href="https://discord.com" target="_blank"><i class="fab fa-discord"></i><span class="extra">Discord</span></a></li>
-        <li><a href="mailto:" target="_blank"><i class="fas fa-envelope"></i><span class="extra">Email</span></a></li>
         <li>
           <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
             <i class="fas fa-moon"></i>
@@ -49,53 +59,305 @@
 
   <!-- メインコンテンツ -->
   <div class="container">
-    <!-- 自己紹介セクション（プロフィール画像付き） -->
-    <div class="section">
+    <!-- 自己紹介セクション -->
+    <section class="section fade-in" id="about">
       <h2 class="section-title">自己紹介</h2>
       <div class="profile-section">
         <div class="large-profile-icon">
           <img src="image/co275.png" alt="プロフィールアイコン">
         </div>
         <div class="profile-content">
-          <p>初めまして、かふぇいんと申します
-            <br>ヒメヒナと領国つかささんが好きなオタク。
-            <br>サッカーでは鹿児島ユナイテッドFCが好きです</p>
-          <!-- <p>GitHubでいくつかの個人プロジェクトを公開しています。</p> -->
+          <p>初めまして、かふぇいんと申します。</p>
+          <p>ヒメヒナと領国つかささんが好きなオタクです。音楽鑑賞が趣味で、特にヒメヒナの曲をよく聴いています。</p>
+          <p>サッカーでは鹿児島ユナイテッドFCを応援しています。スタジアムで観戦するのが楽しみの一つです。</p>
+          <p>また、SF小説やファンタジー小説を読むのも好きで、想像力を刺激される物語に惹かれます。</p>
+          <p>このサイトでは、私の趣味や活動、プロジェクトなどを紹介しています。</p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 趣味・特技セクション -->
-    <div class="section">
-      <h2 class="section-title">趣味</h2>
-      <ul>
-        <li>音楽鑑賞（特にヒメヒナの曲）</li>
-        <li>サッカー観戦（鹿児島ユナイテッドFC応援）</li>    
-        <li>読書（SF、ファンタジー小説）</li>
-      </ul>
-    </div>
+    <!-- スキルセクション -->
+    <section class="section fade-in" id="skills">
+      <h2 class="section-title">スキル</h2>
+      <div class="skills-container">
+        <div class="skill-category">
+          <h3>プログラミング</h3>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fab fa-html5"></i>
+              HTML/CSS
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 85%"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fab fa-js"></i>
+              JavaScript
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 75%"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fab fa-python"></i>
+              Python
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 70%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-category">
+          <h3>ツール・フレームワーク</h3>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fab fa-git-alt"></i>
+              Git
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 80%"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fab fa-react"></i>
+              React
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 65%"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fab fa-node-js"></i>
+              Node.js
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 60%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-category">
+          <h3>デザイン</h3>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fas fa-palette"></i>
+              UI/UXデザイン
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 70%"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fas fa-mobile-alt"></i>
+              レスポンシブデザイン
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 85%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-category">
+          <h3>その他</h3>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fas fa-language"></i>
+              英語
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 75%"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-name">
+              <i class="fas fa-tasks"></i>
+              プロジェクト管理
+            </div>
+            <div class="skill-bar">
+              <div class="skill-level" style="width: 80%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- プロジェクトセクション -->
-    <div class="section">
+    <section class="section fade-in" id="projects">
       <h2 class="section-title">プロジェクト</h2>
-      <p>GitHubで公開している主なプロジェクトです</p>
-      <ul>
-        <li><strong>個人ウェブサイト</strong> - このサイトを含む個人的なウェブ制作プロジェクト</li>
+      <p class="mb-3">GitHubで公開している主なプロジェクトです</p>
+      
+      <div class="projects-container">
+        <div class="project-card">
+          <div class="project-image">
+            <img src="image/co275.png" alt="個人ウェブサイト">
+          </div>
+          <div class="project-info">
+            <h3 class="project-title">個人ウェブサイト</h3>
+            <p class="project-description">このサイトを含む個人的なウェブ制作プロジェクト。HTML、CSS、JavaScriptを使用して構築しています。</p>
+            <div class="project-tags">
+              <span class="project-tag">HTML</span>
+              <span class="project-tag">CSS</span>
+              <span class="project-tag">JavaScript</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/redstarkunlun/redstarkunlun.github.io" class="project-link" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="https://redstarkunlun.github.io" class="project-link" target="_blank">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+            </div>
+          </div>
+        </div>
         
-      </ul>
-      <p>詳細は<a href="https://github.com/redstarkunlun" target="_blank">GitHubプロフィール</a>をご覧ください。</p>
-    </div>
+        <div class="project-card">
+          <div class="project-image">
+            <img src="image/co275.png" alt="パスワード生成ツール">
+          </div>
+          <div class="project-info">
+            <h3 class="project-title">パスワード生成ツール</h3>
+            <p class="project-description">安全なパスワードを生成するためのウェブツール。様々なオプションでカスタマイズ可能です。</p>
+            <div class="project-tags">
+              <span class="project-tag">HTML</span>
+              <span class="project-tag">CSS</span>
+              <span class="project-tag">JavaScript</span>
+            </div>
+            <div class="project-links">
+              <a href="passwordgen.html" class="project-link">
+                <i class="fas fa-external-link-alt"></i> アプリを開く
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="project-card">
+          <div class="project-image">
+            <img src="image/co275.png" alt="パスワード管理ツール">
+          </div>
+          <div class="project-info">
+            <h3 class="project-title">パスワード管理ツール</h3>
+            <p class="project-description">パスワードを安全に管理するためのウェブアプリケーション。暗号化技術を使用しています。</p>
+            <div class="project-tags">
+              <span class="project-tag">HTML</span>
+              <span class="project-tag">CSS</span>
+              <span class="project-tag">JavaScript</span>
+            </div>
+            <div class="project-links">
+              <a href="pwmanager.html" class="project-link">
+                <i class="fas fa-external-link-alt"></i> アプリを開く
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4">
+        <p>詳細は<a href="https://github.com/redstarkunlun" target="_blank">GitHubプロフィール</a>をご覧ください。</p>
+      </div>
+    </section>
+
+    <!-- 趣味セクション -->
+    <section class="section fade-in" id="hobbies">
+      <h2 class="section-title">趣味</h2>
+      
+      <div class="hobbies-container">
+        <div class="hobby-card">
+          <div class="hobby-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <div class="hobby-info">
+            <h3 class="hobby-title">音楽鑑賞</h3>
+            <p class="hobby-description">特にヒメヒナの曲を中心に、様々なジャンルの音楽を楽しんでいます。リズムのある曲や心に響く歌詞が好きです。</p>
+          </div>
+        </div>
+        
+        <div class="hobby-card">
+          <div class="hobby-icon">
+            <i class="fas fa-futbol"></i>
+          </div>
+          <div class="hobby-info">
+            <h3 class="hobby-title">サッカー観戦</h3>
+            <p class="hobby-description">鹿児島ユナイテッドFCを応援しています。スタジアムの熱気と一体感が大好きで、できるだけ試合観戦に行くようにしています。</p>
+          </div>
+        </div>
+        
+        <div class="hobby-card">
+          <div class="hobby-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="hobby-info">
+            <h3 class="hobby-title">読書</h3>
+            <p class="hobby-description">SF小説やファンタジー小説を中心に読書を楽しんでいます。想像力を刺激される物語や、未来を描いた作品に特に興味があります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- コンタクトセクション -->
-    <!-- <div class="section">
+    <section class="section fade-in" id="contact">
       <h2 class="section-title">コンタクト</h2>
-      <p>お問い合わせやコラボレーションのご提案は以下からお願いします：</p>
-      <ul>
-        <li>Email: <a href="mailto:amamiya@fbi.ac">amamiya@fbi.ac</a></li>
-        <li>Twitter: <a href="https://twitter.com/lix_hcredstar" target="_blank">@lix_hcredstar</a></li>
-        <li>Discord: <a href="https://discord.com/invite/cappuccino" target="_blank">Discord Server</a></li>
-      </ul>
-    </div>
+      <p class="mb-3">お問い合わせやコラボレーションのご提案は以下からお願いします：</p>
+      
+      <div class="contact-container">
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div>
+              <h3 class="mb-1">メール</h3>
+              <a href="mailto:">お問い合わせフォームをご利用ください</a>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fab fa-twitter"></i>
+            </div>
+            <div>
+              <h3 class="mb-1">Twitter</h3>
+              <a href="https://x.com/kufc111" target="_blank">@kufc111</a>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fab fa-discord"></i>
+            </div>
+            <div>
+              <h3 class="mb-1">Discord</h3>
+              <a href="https://discord.com" target="_blank">Discord Server</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="contact-form">
+          <div class="form-group">
+            <label for="name">お名前</label>
+            <input type="text" id="name" placeholder="お名前を入力してください">
+          </div>
+          
+          <div class="form-group">
+            <label for="email">メールアドレス</label>
+            <input type="email" id="email" placeholder="メールアドレスを入力してください">
+          </div>
+          
+          <div class="form-group">
+            <label for="message">メッセージ</label>
+            <textarea id="message" rows="5" placeholder="メッセージを入力してください"></textarea>
+          </div>
+          
+          <button class="submit-btn" id="submit-form">送信する</button>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- フッター -->
@@ -103,6 +365,63 @@
     <p>&copy; 2025 かふぇいん. All Rights Reserved.</p>
   </div>
 
+  <!-- JavaScriptファイル -->
   <script src="js/script.js"></script>
+  <script>
+    // 現在の年を設定
+    document.querySelector('.footer p').innerHTML = `&copy; ${new Date().getFullYear()} かふぇいん. All Rights Reserved.`;
+    
+    // スキルバーのアニメーション
+    function animateSkillBars() {
+      const skillLevels = document.querySelectorAll('.skill-level');
+      skillLevels.forEach(level => {
+        const width = level.style.width;
+        level.style.width = '0';
+        setTimeout(() => {
+          level.style.width = width;
+        }, 300);
+      });
+    }
+    
+    // スクロールアニメーション
+    function checkFadeElements() {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.style.opacity = '1';
+          element.style.transform = 'translateY(0)';
+        }
+      });
+    }
+    
+    // モバイルメニュートグル
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('menu');
+    
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        menu.classList.toggle('active');
+      });
+    }
+    
+    // コンタクトフォーム送信
+    const submitBtn = document.getElementById('submit-form');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('現在、フォームの送信機能は実装中です。SNSやメールでお問い合わせください。');
+      });
+    }
+    
+    // 初期化
+    window.addEventListener('load', () => {
+      animateSkillBars();
+      checkFadeElements();
+    });
+    
+    window.addEventListener('scroll', checkFadeElements);
+  </script>
 </body>
 </html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light">
+<head>
+  <!-- 基本設定 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ブログ - かふぇいん</title>
+
+  <!-- ファビコンとOGP設定 -->
+  <link rel="shortcut icon" type="image/x-icon" href="image/co275.png" />
+  <meta property="og:title" content="ブログ - かふぇいん">
+  <meta property="og:description" content="かふぇいんのブログページ">
+  <meta property="og:image" content="image/co275.png">
+  <meta property="og:type" content="website">
+
+  <!-- フォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- スクリプトとスタイル -->
+  <script src="https://kit.fontawesome.com/7cf1aca7fb.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/modern-styles.css">
+  <style>
+    /* ブログページ専用スタイル */
+    .blog-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+    
+    .blog-posts {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .blog-post {
+      background-color: var(--card-bg-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px var(--shadow-color);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .blog-post:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px var(--shadow-color);
+    }
+    
+    .blog-image {
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+    }
+    
+    .blog-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .blog-post:hover .blog-image img {
+      transform: scale(1.05);
+    }
+    
+    .blog-content {
+      padding: 1.5rem;
+    }
+    
+    .blog-date {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .blog-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+    }
+    
+    html[data-theme="dark"] .blog-title {
+      color: var(--primary-color);
+    }
+    
+    .blog-excerpt {
+      margin-bottom: 1.5rem;
+    }
+    
+    .read-more {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+    
+    .read-more:hover {
+      background-color: var(--accent-color);
+      color: white;
+    }
+    
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .sidebar-section {
+      background-color: var(--card-bg-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px var(--shadow-color);
+      padding: 1.5rem;
+    }
+    
+    .sidebar-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    html[data-theme="dark"] .sidebar-title {
+      color: var(--primary-color);
+    }
+    
+    .categories-list,
+    .recent-posts-list {
+      list-style: none;
+    }
+    
+    .categories-list li,
+    .recent-posts-list li {
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .categories-list li:last-child,
+    .recent-posts-list li:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    
+    .categories-list a,
+    .recent-posts-list a {
+      display: flex;
+      align-items: center;
+      color: var(--text-color);
+      transition: color 0.3s ease;
+    }
+    
+    .categories-list a:hover,
+    .recent-posts-list a:hover {
+      color: var(--primary-color);
+    }
+    
+    .categories-list i,
+    .recent-posts-list i {
+      margin-right: 0.5rem;
+      color: var(--primary-color);
+    }
+    
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .tag {
+      background-color: var(--border-color);
+      color: var(--text-color);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .tag:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    
+    .page-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--card-bg-color);
+      color: var(--text-color);
+      font-weight: 500;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .page-link:hover,
+    .page-link.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    @media (max-width: 991px) {
+      .blog-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ナビゲーション -->
+  <div class="nav" id="nav">
+    <div class="header" id="header">
+      <div class="profile-area">
+        <div class="profile-icon">
+          <img src="image/co275.png" alt="プロフィールアイコン">
+        </div>
+        <div class="name-area">
+          <span class="name">かふぇいん</span>
+          <div class="tag-line">JOJI民/鹿児島ユナイテッドサポ</div>
+        </div>
+      </div>
+      <button class="menu-toggle" id="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="menu" id="menu">
+        <li><a href="index.html#about"><i class="fas fa-user"></i><span class="extra">自己紹介</span></a></li>
+        <li><a href="index.html#skills"><i class="fas fa-code"></i><span class="extra">スキル</span></a></li>
+        <li><a href="index.html#projects"><i class="fas fa-project-diagram"></i><span class="extra">プロジェクト</span></a></li>
+        <li><a href="index.html#hobbies"><i class="fas fa-heart"></i><span class="extra">趣味</span></a></li>
+        <li><a href="blog.html" class="active"><i class="fas fa-blog"></i><span class="extra">ブログ</span></a></li>
+        <li><a href="index.html#contact"><i class="fas fa-envelope"></i><span class="extra">コンタクト</span></a></li>
+        <li><a href="https://github.com/redstarkunlun" target="_blank"><i class="fab fa-github"></i><span class="extra">GitHub</span></a></li>
+        <li><a href="https://x.com/kufc111" target="_blank"><i class="fab fa-twitter"></i><span class="extra">Twitter</span></a></li>
+        <li>
+          <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
+            <i class="fas fa-moon"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <div class="container">
+    <section class="section fade-in">
+      <h2 class="section-title">ブログ</h2>
+      
+      <div class="blog-container">
+        <div class="blog-posts">
+          <!-- ブログ記事1 -->
+          <article class="blog-post">
+            <div class="blog-image">
+              <img src="image/co275.png" alt="ウェブサイトリニューアル">
+            </div>
+            <div class="blog-content">
+              <div class="blog-date">2025年3月17日</div>
+              <h3 class="blog-title">ウェブサイトをリニューアルしました</h3>
+              <div class="blog-excerpt">
+                <p>長らく更新していなかった個人サイトをリニューアルしました。モダンなデザインと使いやすさを重視し、レスポンシブ対応も強化しています。</p>
+                <p>今回のリニューアルでは、HTMLとCSSを一から見直し、JavaScriptの機能も追加しました。特にダークモード対応やアニメーション効果など、ユーザー体験を向上させる要素を取り入れています。</p>
+              </div>
+              <a href="#" class="read-more">続きを読む</a>
+            </div>
+          </article>
+          
+          <!-- ブログ記事2 -->
+          <article class="blog-post">
+            <div class="blog-image">
+              <img src="image/co275.png" alt="鹿児島ユナイテッドFC">
+            </div>
+            <div class="blog-content">
+              <div class="blog-date">2025年3月10日</div>
+              <h3 class="blog-title">鹿児島ユナイテッドFCの2025シーズン展望</h3>
+              <div class="blog-excerpt">
+                <p>2025シーズンが開幕し、鹿児島ユナイテッドFCの新たな挑戦が始まりました。今シーズンのチーム編成や注目選手、そして目標について考察します。</p>
+                <p>昨シーズンの反省を活かし、新たな戦術や若手選手の台頭など、今シーズンは多くの変化が期待されています。特に新加入の選手たちの活躍に注目です。</p>
+              </div>
+              <a href="#" class="read-more">続きを読む</a>
+            </div>
+          </article>
+          
+          <!-- ブログ記事3 -->
+          <article class="blog-post">
+            <div class="blog-image">
+              <img src="image/co275.png" alt="ヒメヒナ新曲">
+            </div>
+            <div class="blog-content">
+              <div class="blog-date">2025年2月28日</div>
+              <h3 class="blog-title">ヒメヒナの新曲「未来への扉」感想</h3>
+              <div class="blog-excerpt">
+                <p>ヒメヒナの最新曲「未来への扉」がリリースされました。心に響く歌詞とメロディ、そして二人の歌声の調和が素晴らしい一曲です。</p>
+                <p>特に印象的なのは、未来への希望と不安を表現した歌詞の深さです。何度も聴くたびに新たな発見があり、長く愛される名曲になるでしょう。</p>
+              </div>
+              <a href="#" class="read-more">続きを読む</a>
+            </div>
+          </article>
+          
+          <!-- ページネーション -->
+          <div class="pagination">
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+          </div>
+        </div>
+        
+        <!-- サイドバー -->
+        <div class="sidebar">
+          <!-- カテゴリー -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">カテゴリー</h3>
+            <ul class="categories-list">
+              <li><a href="#"><i class="fas fa-laptop-code"></i>ウェブ開発</a></li>
+              <li><a href="#"><i class="fas fa-futbol"></i>サッカー</a></li>
+              <li><a href="#"><i class="fas fa-music"></i>音楽</a></li>
+              <li><a href="#"><i class="fas fa-book"></i>読書</a></li>
+              <li><a href="#"><i class="fas fa-lightbulb"></i>雑記</a></li>
+            </ul>
+          </div>
+          
+          <!-- 最近の投稿 -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">最近の投稿</h3>
+            <ul class="recent-posts-list">
+              <li><a href="#"><i class="fas fa-file-alt"></i>ウェブサイトをリニューアルしました</a></li>
+              <li><a href="#"><i class="fas fa-file-alt"></i>鹿児島ユナイテッドFCの2025シーズン展望</a></li>
+              <li><a href="#"><i class="fas fa-file-alt"></i>ヒメヒナの新曲「未来への扉」感想</a></li>
+              <li><a href="#"><i class="fas fa-file-alt"></i>おすすめのSF小説5選</a></li>
+              <li><a href="#"><i class="fas fa-file-alt"></i>プログラミング学習のコツ</a></li>
+            </ul>
+          </div>
+          
+          <!-- タグクラウド -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">タグ</h3>
+            <div class="tag-cloud">
+              <a href="#" class="tag">ウェブ開発</a>
+              <a href="#" class="tag">HTML</a>
+              <a href="#" class="tag">CSS</a>
+              <a href="#" class="tag">JavaScript</a>
+              <a href="#" class="tag">サッカー</a>
+              <a href="#" class="tag">鹿児島ユナイテッド</a>
+              <a href="#" class="tag">音楽</a>
+              <a href="#" class="tag">ヒメヒナ</a>
+              <a href="#" class="tag">読書</a>
+              <a href="#" class="tag">SF</a>
+              <a href="#" class="tag">ファンタジー</a>
+              <a href="#" class="tag">日常</a>
+            </div>
+          </div>
+          
+          <!-- プロフィール -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">プロフィール</h3>
+            <div class="profile-section" style="flex-direction: column; align-items: center; text-align: center;">
+              <div class="profile-icon" style="width: 100px; height: 100px; margin-bottom: 1rem;">
+                <img src="image/co275.png" alt="プロフィールアイコン">
+              </div>
+              <p class="mb-2">かふぇいん</p>
+              <p>ヒメヒナと領国つかささんが好きなオタク。サッカーでは鹿児島ユナイテッドFCが好きです。</p>
+              <div class="social-links mt-2" style="display: flex; justify-content: center; gap: 1rem;">
+                <a href="https://github.com/redstarkunlun" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://x.com/kufc111" target="_blank"><i class="fab fa-twitter"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- フッター -->
+  <div class="footer">
+    <p>&copy; <span class="current-year">2025</span> かふぇいん. All Rights Reserved.</p>
+  </div>
+
+  <!-- JavaScriptファイル -->
+  <script src="js/script.js"></script>
+</body>
+</html>
