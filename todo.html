@@ -7,8 +7,10 @@
   <title>Todo リスト</title>
 
   <!-- ファビコンとOGP設定 -->
+  <link rel="shortcut icon" type="image/x-icon" href="image/co275.png" />
   <meta property="og:title" content="Todo リスト">
   <meta property="og:description" content="シンプルなTodoリストアプリ">
+  <meta property="og:image" content="image/co275.png">
   <meta property="og:type" content="website">
 
   <!-- スクリプトとスタイル -->
@@ -26,6 +28,13 @@
       --completed-color: #888;
       --header-bg: white;
       --rainbow-height: 4px;
+      --low-priority: #4caf50;
+      --medium-priority: #ff9800;
+      --high-priority: #f44336;
+      --category-work: #3498db;
+      --category-personal: #9b59b6;
+      --category-shopping: #e67e22;
+      --category-other: #7f8c8d;
     }
 
     [data-theme="dark"] {
@@ -48,7 +57,7 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Noto Sans JP', Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
       transition: background-color 0.3s ease, color 0.3s ease;
@@ -92,6 +101,13 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: var(--text-color);
+      display: flex;
+      align-items: center;
+    }
+    
+    .app-title i {
+      margin-right: 0.5rem;
+      color: var(--button-color);
     }
 
     .theme-toggle {
@@ -123,6 +139,7 @@
       padding: 1.5rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s ease;
+      margin-bottom: 2rem;
     }
 
     .section-title {
@@ -145,18 +162,63 @@
 
     .input-container {
       display: flex;
+      flex-direction: column;
       margin-bottom: 1.5rem;
+      gap: 0.75rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
     }
 
     #new-todo {
       flex-grow: 1;
       padding: 0.75rem 1rem;
       border: 1px solid var(--border-color);
-      border-radius: 4px 0 0 4px;
+      border-radius: 4px;
       font-size: 1rem;
       background-color: var(--container-bg);
       color: var(--text-color);
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .select-container {
+      position: relative;
+      min-width: 120px;
+    }
+
+    select {
+      appearance: none;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .select-container::after {
+      content: '\f078';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    #due-date {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      min-width: 150px;
     }
 
     #add-button {
@@ -164,14 +226,52 @@
       background-color: var(--button-color);
       color: white;
       border: none;
-      border-radius: 0 4px 4px 0;
+      border-radius: 4px;
       cursor: pointer;
       font-size: 1rem;
       transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #add-button i {
+      margin-right: 0.5rem;
     }
 
     #add-button:hover {
       background-color: var(--button-hover);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background-color: rgba(0, 0, 0, 0.03);
+      border-radius: 4px;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 0.75rem;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn.active {
+      background-color: var(--button-color);
+      color: white;
+      border-color: var(--button-color);
+    }
+
+    .filter-btn:hover:not(.active) {
+      background-color: rgba(0, 0, 0, 0.05);
     }
 
     ul {
@@ -183,37 +283,116 @@
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, background-color 0.2s ease;
+    }
+
+    li:hover {
+      background-color: rgba(0, 0, 0, 0.02);
     }
 
     li:last-child {
       border-bottom: none;
     }
 
-    .todo-text {
+    .todo-content {
       flex-grow: 1;
       margin-left: 0.75rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .todo-text {
       transition: color 0.3s ease;
     }
 
-    .completed {
+    .todo-meta {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--completed-color);
+    }
+
+    .todo-category {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      color: white;
+    }
+
+    .category-work {
+      background-color: var(--category-work);
+    }
+
+    .category-personal {
+      background-color: var(--category-personal);
+    }
+
+    .category-shopping {
+      background-color: var(--category-shopping);
+    }
+
+    .category-other {
+      background-color: var(--category-other);
+    }
+
+    .todo-priority {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .priority-low {
+      background-color: var(--low-priority);
+    }
+
+    .priority-medium {
+      background-color: var(--medium-priority);
+    }
+
+    .priority-high {
+      background-color: var(--high-priority);
+    }
+
+    .completed .todo-text {
       text-decoration: line-through;
       color: var(--completed-color);
     }
 
-    .delete-button {
-      background-color: var(--delete-button);
-      color: white;
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .edit-button, .delete-button {
+      background: none;
       border: none;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
       cursor: pointer;
-      margin-left: 0.75rem;
+      padding: 0.3rem;
+      border-radius: 4px;
       transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .edit-button {
+      color: #3498db;
+    }
+
+    .edit-button:hover {
+      background-color: rgba(52, 152, 219, 0.1);
+    }
+
+    .delete-button {
+      color: var(--delete-button);
     }
 
     .delete-button:hover {
-      background-color: var(--delete-hover);
+      background-color: rgba(244, 67, 54, 0.1);
     }
 
     /* チェックボックスのスタイル調整 */
@@ -222,6 +401,49 @@
       height: 18px;
       cursor: pointer;
       accent-color: var(--button-color);
+    }
+
+    /* 統計セクション */
+    .stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 120px;
+      background-color: var(--container-bg);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--button-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--completed-color);
+    }
+
+    /* 空のリスト表示 */
+    .empty-list {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--completed-color);
+    }
+
+    .empty-list i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
     }
 
     /* フッター */
@@ -244,16 +466,34 @@
       .theme-toggle {
         margin-top: 1rem;
       }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .select-container, #due-date {
+        width: 100%;
+      }
+
+      .stats-container {
+        flex-direction: column;
+      }
+
+      .stat-card {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- レインボーライン -->
+  <div class="rainbow"></div>
   
   <!-- ナビゲーション -->
   <div class="nav" id="nav">
     <div class="header" id="header">
-      <div class="app-title">Todo リスト</div>
+      <div class="app-title"><i class="fas fa-tasks"></i>Todo リスト</div>
       <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
         <i class="fas fa-moon"></i>
       </button>
@@ -262,17 +502,76 @@
 
   <!-- メインコンテンツ -->
   <div class="container">
+    <!-- 統計セクション -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-value" id="total-tasks">0</div>
+        <div class="stat-label">全タスク</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="completed-tasks">0</div>
+        <div class="stat-label">完了</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="pending-tasks">0</div>
+        <div class="stat-label">未完了</div>
+      </div>
+    </div>
+
+    <!-- タスク入力セクション -->
     <div class="todo-container">
-      <h2 class="section-title">タスク管理</h2>
+      <h2 class="section-title">新しいタスク</h2>
 
       <div class="input-container">
         <input type="text" id="new-todo" placeholder="新しいタスクを入力してください">
-        <button id="add-button">追加</button>
+        
+        <div class="input-row">
+          <div class="select-container">
+            <select id="task-category">
+              <option value="work">仕事</option>
+              <option value="personal">個人</option>
+              <option value="shopping">買い物</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+          
+          <div class="select-container">
+            <select id="task-priority">
+              <option value="low">低優先度</option>
+              <option value="medium">中優先度</option>
+              <option value="high">高優先度</option>
+            </select>
+          </div>
+          
+          <input type="date" id="due-date">
+        </div>
+        
+        <button id="add-button"><i class="fas fa-plus"></i>タスクを追加</button>
+      </div>
+    </div>
+
+    <!-- タスクリストセクション -->
+    <div class="todo-container">
+      <h2 class="section-title">タスク一覧</h2>
+      
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">すべて</button>
+        <button class="filter-btn" data-filter="active">未完了</button>
+        <button class="filter-btn" data-filter="completed">完了済み</button>
+        <button class="filter-btn" data-filter="work">仕事</button>
+        <button class="filter-btn" data-filter="personal">個人</button>
+        <button class="filter-btn" data-filter="shopping">買い物</button>
+        <button class="filter-btn" data-filter="other">その他</button>
       </div>
 
       <ul id="todo-list">
         <!-- ここにTodo項目が追加されます -->
       </ul>
+      
+      <div class="empty-list" id="empty-list">
+        <i class="fas fa-clipboard-list"></i>
+        <p>タスクがまだ登録されていません。</p>
+      </div>
     </div>
   </div>
 
@@ -283,11 +582,32 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // DOM要素
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = themeToggle.querySelector('i');
+      const newTodoInput = document.getElementById('new-todo');
+      const taskCategorySelect = document.getElementById('task-category');
+      const taskPrioritySelect = document.getElementById('task-priority');
+      const dueDateInput = document.getElementById('due-date');
+      const addButton = document.getElementById('add-button');
+      const todoList = document.getElementById('todo-list');
+      const emptyList = document.getElementById('empty-list');
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const totalTasksElement = document.getElementById('total-tasks');
+      const completedTasksElement = document.getElementById('completed-tasks');
+      const pendingTasksElement = document.getElementById('pending-tasks');
+      
+      // 現在の日付を設定
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      dueDateInput.value = formattedDate;
+      
+      // 現在のフィルター
+      let currentFilter = 'all';
+
       // テーマの初期設定
       const savedTheme = localStorage.getItem('theme');
       const htmlElement = document.documentElement;
-      const themeToggle = document.getElementById('theme-toggle');
-      const themeIcon = themeToggle.querySelector('i');
 
       // 保存されたテーマを適用
       if (savedTheme === 'dark') {
@@ -311,99 +631,312 @@
         }
       });
 
+      // フィルターボタンのイベント
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // アクティブクラスを切り替え
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // フィルター値を設定
+          currentFilter = this.getAttribute('data-filter');
+          
+          // タスクをフィルタリング
+          filterTasks();
+        });
+      });
+
+      // タスクをフィルタリングする関数
+      function filterTasks() {
+        const tasks = todoList.querySelectorAll('li');
+        
+        tasks.forEach(task => {
+          const isCompleted = task.querySelector('input[type="checkbox"]').checked;
+          const category = task.getAttribute('data-category');
+          
+          if (currentFilter === 'all') {
+            task.style.display = '';
+          } else if (currentFilter === 'active' && !isCompleted) {
+            task.style.display = '';
+          } else if (currentFilter === 'completed' && isCompleted) {
+            task.style.display = '';
+          } else if (currentFilter === category) {
+            task.style.display = '';
+          } else {
+            task.style.display = 'none';
+          }
+        });
+        
+        // 空のリスト表示を更新
+        updateEmptyListVisibility();
+      }
+
+      // 空のリスト表示を更新する関数
+      function updateEmptyListVisibility() {
+        const visibleTasks = Array.from(todoList.querySelectorAll('li')).filter(task => {
+          return task.style.display !== 'none';
+        });
+        
+        if (visibleTasks.length === 0) {
+          emptyList.style.display = 'block';
+        } else {
+          emptyList.style.display = 'none';
+        }
+      }
+
+      // 統計を更新する関数
+      function updateStats() {
+        const allTasks = todoList.querySelectorAll('li');
+        const completedTasks = todoList.querySelectorAll('li input[type="checkbox"]:checked');
+        
+        totalTasksElement.textContent = allTasks.length;
+        completedTasksElement.textContent = completedTasks.length;
+        pendingTasksElement.textContent = allTasks.length - completedTasks.length;
+      }
+
       // ローカルストレージからタスクを読み込む
       loadTasks();
 
       // 追加ボタンのクリックイベント
-      document.getElementById('add-button').addEventListener('click', addTask);
+      addButton.addEventListener('click', addTask);
 
       // Enterキーを押したときもタスクを追加
-      document.getElementById('new-todo').addEventListener('keypress', function(e) {
+      newTodoInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
           addTask();
         }
       });
-    });
 
-    // タスクを追加する関数
-    function addTask() {
-      const input = document.getElementById('new-todo');
-      const text = input.value.trim();
+      // タスクを追加する関数
+      function addTask() {
+        const text = newTodoInput.value.trim();
+        const category = taskCategorySelect.value;
+        const priority = taskPrioritySelect.value;
+        const dueDate = dueDateInput.value;
 
-      if (text === '') return;
+        if (text === '') return;
 
-      const todoList = document.getElementById('todo-list');
-      const li = createTaskElement(text, false);
-      todoList.appendChild(li);
+        const task = createTaskElement(text, false, category, priority, dueDate);
+        todoList.appendChild(task);
 
-      // 入力フィールドをクリア
-      input.value = '';
+        // 入力フィールドをクリア
+        newTodoInput.value = '';
 
-      // ローカルストレージに保存
-      saveTasks();
-    }
+        // 空のリスト表示を更新
+        updateEmptyListVisibility();
+        
+        // 統計を更新
+        updateStats();
 
-    // タスク要素を作成する関数
-    function createTaskElement(text, completed) {
-      const li = document.createElement('li');
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = completed;
-      checkbox.addEventListener('change', function() {
-        todoText.classList.toggle('completed', this.checked);
+        // ローカルストレージに保存
         saveTasks();
-      });
-
-      const todoText = document.createElement('span');
-      todoText.textContent = text;
-      todoText.className = 'todo-text';
-      if (completed) {
-        todoText.classList.add('completed');
       }
 
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'delete-button';
-      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-      deleteButton.addEventListener('click', function() {
-        li.remove();
-        saveTasks();
-      });
+      // タスク要素を作成する関数
+      function createTaskElement(text, completed, category, priority, dueDate) {
+        const li = document.createElement('li');
+        li.setAttribute('data-category', category);
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = completed;
+        checkbox.addEventListener('change', function() {
+          todoContent.classList.toggle('completed', this.checked);
+          saveTasks();
+          updateStats();
+        });
 
-      li.appendChild(checkbox);
-      li.appendChild(todoText);
-      li.appendChild(deleteButton);
+        const todoContent = document.createElement('div');
+        todoContent.className = 'todo-content';
+        if (completed) {
+          todoContent.classList.add('completed');
+        }
+        
+        const todoText = document.createElement('span');
+        todoText.textContent = text;
+        todoText.className = 'todo-text';
+        
+        const todoMeta = document.createElement('div');
+        todoMeta.className = 'todo-meta';
+        
+        const categorySpan = document.createElement('span');
+        categorySpan.className = `todo-category category-${category}`;
+        
+        switch(category) {
+          case 'work':
+            categorySpan.textContent = '仕事';
+            break;
+          case 'personal':
+            categorySpan.textContent = '個人';
+            break;
+          case 'shopping':
+            categorySpan.textContent = '買い物';
+            break;
+          default:
+            categorySpan.textContent = 'その他';
+        }
+        
+        const prioritySpan = document.createElement('span');
+        prioritySpan.innerHTML = `<span class="todo-priority priority-${priority}"></span>`;
+        
+        switch(priority) {
+          case 'high':
+            prioritySpan.innerHTML += '高優先度';
+            break;
+          case 'medium':
+            prioritySpan.innerHTML += '中優先度';
+            break;
+          default:
+            prioritySpan.innerHTML += '低優先度';
+        }
+        
+        const dateSpan = document.createElement('span');
+        dateSpan.innerHTML = `<i class="far fa-calendar-alt"></i> ${formatDate(dueDate)}`;
+        
+        todoMeta.appendChild(categorySpan);
+        todoMeta.appendChild(prioritySpan);
+        todoMeta.appendChild(dateSpan);
+        
+        todoContent.appendChild(todoText);
+        todoContent.appendChild(todoMeta);
 
-      return li;
-    }
+        const actionButtons = document.createElement('div');
+        actionButtons.className = 'action-buttons';
+        
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-button';
+        editButton.innerHTML = '<i class="fas fa-edit"></i>';
+        editButton.addEventListener('click', function() {
+          editTask(li, text, category, priority, dueDate);
+        });
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteButton.addEventListener('click', function() {
+          li.remove();
+          updateEmptyListVisibility();
+          updateStats();
+          saveTasks();
+        });
+        
+        actionButtons.appendChild(editButton);
+        actionButtons.appendChild(deleteButton);
 
-    // タスクをローカルストレージに保存する関数
-    function saveTasks() {
-      const todoList = document.getElementById('todo-list');
-      const tasks = [];
+        li.appendChild(checkbox);
+        li.appendChild(todoContent);
+        li.appendChild(actionButtons);
 
-      for (const li of todoList.children) {
-        const text = li.querySelector('.todo-text').textContent;
-        const completed = li.querySelector('input[type="checkbox"]').checked;
-        tasks.push({ text, completed });
+        return li;
       }
-
-      localStorage.setItem('todos', JSON.stringify(tasks));
-    }
-
-    // ローカルストレージからタスクを読み込む関数
-    function loadTasks() {
-      const todoList = document.getElementById('todo-list');
-      const savedTasks = localStorage.getItem('todos');
-
-      if (savedTasks) {
-        const tasks = JSON.parse(savedTasks);
-        for (const task of tasks) {
-          const li = createTaskElement(task.text, task.completed);
-          todoList.appendChild(li);
+      
+      // 日付をフォーマットする関数
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const dateOptions = { month: 'short', day: 'numeric' };
+        
+        if (date.getTime() === today.getTime()) {
+          return '今日';
+        } else if (date.getTime() === tomorrow.getTime()) {
+          return '明日';
+        } else {
+          return date.toLocaleDateString('ja-JP', dateOptions);
         }
       }
-    }
+      
+      // タスクを編集する関数
+      function editTask(taskElement, currentText, currentCategory, currentPriority, currentDueDate) {
+        newTodoInput.value = currentText;
+        taskCategorySelect.value = currentCategory;
+        taskPrioritySelect.value = currentPriority;
+        dueDateInput.value = currentDueDate;
+        
+        // 追加ボタンを更新ボタンに変更
+        addButton.innerHTML = '<i class="fas fa-save"></i>タスクを更新';
+        
+        // 元のタスクを削除
+        taskElement.remove();
+        
+        // 更新ボタンのイベントを変更
+        const originalClickHandler = addButton.onclick;
+        addButton.onclick = function() {
+          // 通常の追加処理を実行
+          addTask();
+          
+          // ボタンを元に戻す
+          addButton.innerHTML = '<i class="fas fa-plus"></i>タスクを追加';
+          addButton.onclick = originalClickHandler;
+        };
+        
+        // 統計とリスト表示を更新
+        updateEmptyListVisibility();
+        updateStats();
+        saveTasks();
+      }
+
+      // タスクをローカルストレージに保存する関数
+      function saveTasks() {
+        const tasks = [];
+
+        for (const li of todoList.children) {
+          const text = li.querySelector('.todo-text').textContent;
+          const completed = li.querySelector('input[type="checkbox"]').checked;
+          const category = li.getAttribute('data-category');
+          const priorityElement = li.querySelector('.todo-priority');
+          const priority = priorityElement.classList.contains('priority-high') ? 'high' : 
+                          priorityElement.classList.contains('priority-medium') ? 'medium' : 'low';
+          
+          const dateText = li.querySelector('.todo-meta span:last-child').textContent;
+          let dueDate = formattedDate; // デフォルトは今日
+          
+          // 日付テキストから日付を抽出
+          if (dateText.includes('今日')) {
+            dueDate = formattedDate;
+          } else if (dateText.includes('明日')) {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dueDate = tomorrow.toISOString().split('T')[0];
+          } else {
+            // その他の日付形式の場合は元の日付を使用
+          }
+          
+          tasks.push({ text, completed, category, priority, dueDate });
+        }
+
+        localStorage.setItem('todos', JSON.stringify(tasks));
+      }
+
+      // ローカルストレージからタスクを読み込む関数
+      function loadTasks() {
+        const savedTasks = localStorage.getItem('todos');
+
+        if (savedTasks) {
+          const tasks = JSON.parse(savedTasks);
+          for (const task of tasks) {
+            const li = createTaskElement(
+              task.text, 
+              task.completed, 
+              task.category || 'other', 
+              task.priority || 'low', 
+              task.dueDate || formattedDate
+            );
+            todoList.appendChild(li);
+          }
+          
+          // 空のリスト表示を更新
+          updateEmptyListVisibility();
+          
+          // 統計を更新
+          updateStats();
+        }
+      }
+    });
   </script>
 </body>
 </html>
