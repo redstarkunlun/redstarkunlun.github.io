@@ -1,446 +1,968 @@
 <!DOCTYPE html>
-<html lang="ja" data-theme="light">
+<html lang="ja">
 <head>
-  <!-- 基本設定 -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>かふぇいん - ポートフォリオ</title>
- <!-- 
-  888    888 8888888 888b     d888 8888888888 888    888 8888888 888b    888        d8888
-888    888   888   8888b   d8888 888        888    888   888   8888b   888       d88888
-888    888   888   88888b.d88888 888        888    888   888   88888b  888      d88P888
-8888888888   888   888Y88888P888 8888888    8888888888   888   888Y88b 888     d88P 888
-888    888   888   888 Y888P 888 888        888    888   888   888 Y88b888    d88P  888
-888    888   888   888  Y8P  888 888        888    888   888   888  Y88888   d88P   888
-888    888   888   888   "   888 888        888    888   888   888   Y8888  d8888888888
-888    888 8888888 888       888 8888888888 888    888 8888888 888    Y888 d88P     888
- -->
-  <!-- ファビコンとOGP設定 -->
-  <link rel="shortcut icon" type="image/x-icon" href="image/co275.png" />
-  <meta property="og:title" content="かふぇいん - ポートフォリオ">
-  <meta property="og:description" content="かふぇいんのポートフォリオサイト">
-  <meta property="og:image" content="image/co275.png">
-  <meta property="og:type" content="website">
-
-  <!-- フォント -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- スクリプトとスタイル -->
-  <script src="https://kit.fontawesome.com/7cf1aca7fb.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/modern-styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>かふぇいん - 個人ポートフォリオ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3182ce;
+            --secondary-color: #4c51bf;
+            --accent-color: #ed8936;
+            --text-color: #2d3748;
+            --text-color-light: #718096;
+            --bg-color: #f7fafc;
+            --bg-color-alt: #ffffff;
+            --bg-color-secondary: #f0f5fa;
+            --border-color: #e2e8f0;
+            --card-bg: #ffffff;
+            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --skill-bg: #e2e8f0;
+            --footer-bg: #2d3748;
+            --footer-text: #ffffff;
+        }
+        
+        .dark {
+            --primary-color: #4DA6FF;
+            --secondary-color: #66CCFF;
+            --accent-color: #FFB145;
+            --text-color: #f0f0f0;
+            --text-color-light: #b0b8c1;
+            --bg-color: #121212;
+            --bg-color-alt: #1a1a1a;
+            --bg-color-secondary: #1e1e1e;
+            --border-color: #333333;
+            --card-bg: #2a2a2a;
+            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --skill-bg: #3a3a3a;
+            --footer-bg: #1a1a1a;
+            --footer-text: #f0f0f0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.7;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        
+        .section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .skill-bar {
+            height: 10px;
+            background-color: var(--skill-bg);
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .skill-level {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .project-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: var(--card-bg);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .hobby-card {
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--card-bg);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .hobby-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .hobby-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 0;
+            background-color: var(--accent-color);
+            transition: height 0.3s;
+        }
+        
+        .hobby-card:hover::before {
+            height: 100%;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-item::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            transition: border-color 0.3s;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+        
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--primary-color);
+        }
+        
+        .social-icon {
+            transition: transform 0.3s, color 0.3s;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+            color: var(--accent-color);
+        }
+        
+        /* Theme toggle button */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: scale(1.1);
+        }
+        
+        .dark .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to right, #ebf4ff, #ebf7ff);
+        }
+        
+        .dark .hero-gradient {
+            background: linear-gradient(to right, #1e293b, #1a2234);
+        }
+        
+        header, footer, .contact-form button {
+            transition: background-color 0.5s, color 0.5s;
+        }
+        
+        header {
+            background-color: var(--bg-color-alt);
+        }
+        
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+        }
+        
+        .skill-box, .contact-card, .info-card, .tag {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        }
+        
+        .tag {
+            background-color: rgba(66, 153, 225, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .dark .tag {
+            background-color: rgba(77, 166, 255, 0.15);
+        }
+        
+        /* Dark mode specific styles */
+        .dark .bg-blue-100 {
+            background-color: rgba(77, 166, 255, 0.15);
+        }
+        
+        .dark .bg-blue-600 {
+            background-color: #4DA6FF;
+        }
+        
+        .dark .bg-blue-700:hover {
+            background-color: #66CCFF;
+        }
+        
+        .dark .hover\:bg-blue-700:hover {
+            background-color: #66CCFF;
+        }
+        
+        .dark .border-blue-200 {
+            border-color: #333;
+        }
+        
+        .dark .text-blue-600 {
+            color: #4DA6FF;
+        }
+        
+        .dark .hover\:text-blue-800:hover {
+            color: #66CCFF;
+        }
+        
+        .dark .hover\:text-blue-600:hover {
+            color: #66CCFF;
+        }
+        
+        .dark .bg-gradient-to-br.from-blue-100.to-indigo-100 {
+            background: linear-gradient(to bottom right, #1e293b, #1a2238);
+        }
+        
+        .dark .bg-gradient-to-r.from-blue-400.to-indigo-500 {
+            background: linear-gradient(to right, #4DA6FF, #667eea);
+        }
+        
+        .dark .bg-gradient-to-r.from-purple-400.to-pink-500 {
+            background: linear-gradient(to right, #9f7aea, #ed64a6);
+        }
+        
+        .dark .bg-gradient-to-r.from-green-400.to-teal-500 {
+            background: linear-gradient(to right, #48bb78, #38b2ac);
+        }
+        
+        .dark .text-blue-300,
+        .dark .dark\:text-blue-300 {
+            color: #90cdf4;
+        }
+        
+        .dark .text-blue-400,
+        .dark .dark\:text-blue-400 {
+            color: #4DA6FF;
+        }
+        
+        .dark .text-blue-500 {
+            color: #4DA6FF;
+        }
+        
+        .dark .text-blue-700 {
+            color: #66CCFF;
+        }
+        
+        .dark .dark\:text-blue-300 {
+            color: #90cdf4;
+        }
+        
+        .dark .dark\:hover\:text-blue-300:hover {
+            color: #66CCFF;
+        }
+        
+        .dark .dark\:hover\:bg-gray-700:hover {
+            background-color: #2d3748;
+        }
+        
+        .dark .dark\:bg-blue-900 {
+            background-color: rgba(30, 58, 138, 0.3);
+        }
+        
+        .dark .dark\:from-blue-900.dark\:to-indigo-900 {
+            background: linear-gradient(to bottom right, rgba(30, 58, 138, 0.3), rgba(49, 46, 129, 0.3));
+        }
+        
+        .dark .dark\:bg-gray-800 {
+            background-color: #252525;
+        }
+        
+        .dark .dark\:bg-gray-900 {
+            background-color: #1e1e1e;
+        }
+        
+        .dark .dark\:border-gray-700 {
+            border-color: #333333;
+        }
+        
+        .dark .dark\:border-blue-800 {
+            border-color: #2c5282;
+        }
+        
+        .dark .dark\:text-gray-300 {
+            color: #d1d5db;
+        }
+    </style>
 </head>
-
 <body>
-
-  <!-- ナビゲーション -->
-  <div class="nav" id="nav">
-    <div class="header" id="header">
-      <div class="profile-area">
-        <div class="profile-icon">
-          <img src="image/co275.png" alt="プロフィールアイコン">
+    <!-- ヘッダー -->
+    <header class="shadow-md fixed top-0 left-0 w-full z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold">
+                <a href="#" class="text-blue-600 hover:text-blue-800 transition">かふぇいん</a>
+            </h1>
+            
+            <div class="flex items-center">
+                <!-- ダークモードトグル -->
+                <button id="theme-toggle" class="theme-toggle mr-4" aria-label="ダークモード切替">
+                    <i id="theme-icon" class="fas fa-moon text-xl"></i>
+                </button>
+                
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-6">
+                        <li><a href="#about" class="nav-item py-2 px-1 hover:text-blue-600 transition">自己紹介</a></li>
+                        <li><a href="#skills" class="nav-item py-2 px-1 hover:text-blue-600 transition">スキル</a></li>
+                        <li><a href="#projects" class="nav-item py-2 px-1 hover:text-blue-600 transition">プロジェクト</a></li>
+                        <li><a href="#hobbies" class="nav-item py-2 px-1 hover:text-blue-600 transition">趣味</a></li>
+                        <li><a href="#contact" class="nav-item py-2 px-1 hover:text-blue-600 transition">コンタクト</a></li>
+                    </ul>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
         </div>
-        <div class="name-area">
-          <span class="name">かふぇいん</span>
-          <div class="tag-line">JOJI民/鹿児島ユナイテッドサポ</div>
+        <!-- モバイルメニュー -->
+        <div id="mobile-menu" class="hidden md:hidden shadow-md absolute w-full">
+            <ul class="py-2 px-4">
+                <li><a href="#about" class="block py-2 hover:text-blue-600 transition">自己紹介</a></li>
+                <li><a href="#skills" class="block py-2 hover:text-blue-600 transition">スキル</a></li>
+                <li><a href="#projects" class="block py-2 hover:text-blue-600 transition">プロジェクト</a></li>
+                <li><a href="#hobbies" class="block py-2 hover:text-blue-600 transition">趣味</a></li>
+                <li><a href="#contact" class="block py-2 hover:text-blue-600 transition">コンタクト</a></li>
+            </ul>
         </div>
-      </div>
-      <button class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </button>
-      <ul class="menu" id="menu">
-        <li><a href="#about"><i class="fas fa-user"></i><span class="extra">自己紹介</span></a></li>
-        <li><a href="#skills"><i class="fas fa-code"></i><span class="extra">スキル</span></a></li>
-        <li><a href="#projects"><i class="fas fa-project-diagram"></i><span class="extra">プロジェクト</span></a></li>
-        <li><a href="#hobbies"><i class="fas fa-heart"></i><span class="extra">趣味</span></a></li>
-        <li><a href="#contact"><i class="fas fa-envelope"></i><span class="extra">コンタクト</span></a></li>
-        <li><a href="https://github.com/redstarkunlun" target="_blank"><i class="fab fa-github"></i><span class="extra">GitHub</span></a></li>
-        <li><a href="https://x.com/kufc111" target="_blank"><i class="fab fa-twitter"></i><span class="extra">Twitter</span></a></li>
-        <li>
-          <button id="theme-toggle" class="theme-toggle" aria-label="テーマの切り替え">
-            <i class="fas fa-moon"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </div>
+    </header>
 
-  <!-- メインコンテンツ -->
-  <div class="container">
+    <!-- ヒーローセクション -->
+    <section class="pt-24 pb-12 hero-gradient">
+        <div class="container mx-auto px-4 flex flex-col items-center justify-center text-center">
+            <div class="inline-block p-2 px-5 bg-blue-100 rounded-full mb-4 dark:bg-blue-900">
+                <span class="text-blue-700 font-medium dark:text-blue-300">JOJI民 / 鹿児島ユナイテッドサポ</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">かふぇいん</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mb-8 dark:text-gray-300">
+                Web開発者 • オタク • サッカーファン • 読書愛好家
+            </p>
+            <div class="flex space-x-4">
+                <a href="#about" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md">詳しく見る</a>
+                <a href="#contact" class="px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition border border-blue-200 shadow-sm dark:bg-gray-800 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-gray-700">お問い合わせ</a>
+            </div>
+            <div class="mt-12 flex space-x-6">
+                <a href="https://github.com/" target="_blank" class="social-icon text-gray-700 hover:text-blue-600 dark:text-gray-300">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="https://twitter.com/kufc111" target="_blank" class="social-icon text-gray-700 hover:text-blue-600 dark:text-gray-300">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="#" class="social-icon text-gray-700 hover:text-blue-600 dark:text-gray-300">
+                    <i class="fab fa-discord text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- 自己紹介セクション -->
-    <section class="section fade-in" id="about">
-      <h2 class="section-title">自己紹介</h2>
-      <div class="profile-section">
-        <div class="large-profile-icon">
-          <img src="image/co275.png" alt="プロフィールアイコン">
+    <section id="about" class="section">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-2xl md:text-3xl font-bold">自己紹介</h2>
+            <div class="flex flex-col md:flex-row gap-8 mt-8">
+                <div class="md:w-1/2">
+                    <div class="bg-gradient-to-br from-blue-100 to-indigo-100 p-6 rounded-lg shadow-sm dark:from-blue-900 dark:to-indigo-900">
+                        <h3 class="text-xl font-semibold mb-4">初めまして、かふぇいんと申します。</h3>
+                        <p class="mb-4">
+                            ヒメヒナと領国つかささんが好きなオタクです。音楽鑑賞が趣味で、特にヒメヒナの曲をよく聴いています。
+                        </p>
+                        <p class="mb-4">
+                            サッカーでは鹿児島ユナイテッドFCを応援しています。スタジアムで観戦するのが楽しみの一つです。
+                        </p>
+                        <p class="mb-4">
+                            また、SF小説やファンタジー小説を読むのも好きで、想像力を刺激される物語に惹かれます。
+                        </p>
+                        <p>
+                            このサイトでは、私の趣味や活動、プロジェクトなどを紹介しています。
+                        </p>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="skill-box shadow-sm rounded-lg p-4 border border-gray-100 dark:border-gray-700">
+                            <div class="text-blue-500 mb-2">
+                                <i class="fas fa-code text-2xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">Web開発</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                HTML、CSS、JavaScriptを使用したフロントエンド開発を行っています。
+                            </p>
+                        </div>
+                        <div class="skill-box shadow-sm rounded-lg p-4 border border-gray-100 dark:border-gray-700">
+                            <div class="text-blue-500 mb-2">
+                                <i class="fas fa-futbol text-2xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">サッカーファン</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                鹿児島ユナイテッドFCの熱心なサポーターです。
+                            </p>
+                        </div>
+                        <div class="skill-box shadow-sm rounded-lg p-4 border border-gray-100 dark:border-gray-700">
+                            <div class="text-blue-500 mb-2">
+                                <i class="fas fa-music text-2xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">音楽鑑賞</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                ヒメヒナを中心に様々な音楽を楽しんでいます。
+                            </p>
+                        </div>
+                        <div class="skill-box shadow-sm rounded-lg p-4 border border-gray-100 dark:border-gray-700">
+                            <div class="text-blue-500 mb-2">
+                                <i class="fas fa-book text-2xl"></i>
+                            </div>
+                            <h4 class="font-semibold mb-2">読書家</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                SF小説やファンタジー小説を中心に読書を楽しんでいます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="profile-content">
-          <p>初めまして、かふぇいんと申します。</p>
-          <p>ヒメヒナと領国つかささんが好きなオタクです。音楽鑑賞が趣味で、特にヒメヒナの曲をよく聴いています。</p>
-          <p>サッカーでは鹿児島ユナイテッドFCを応援しています。スタジアムで観戦するのが楽しみの一つです。</p>
-          <p>また、SF小説やファンタジー小説を読むのも好きで、想像力を刺激される物語に惹かれます。</p>
-          <p>このサイトでは、私の趣味や活動、プロジェクトなどを紹介しています。</p>
-        </div>
-      </div>
     </section>
 
     <!-- スキルセクション -->
-    <section class="section fade-in" id="skills">
-      <h2 class="section-title">スキル</h2>
-      <div class="skills-container">
-        <div class="skill-category">
-          <h3>プログラミング</h3>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fab fa-html5"></i>
-              HTML/CSS
+    <section id="skills" class="section bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-2xl md:text-3xl font-bold">スキル</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                <div class="skill-box p-6 rounded-lg shadow-sm">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-code text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-6">プログラミング</h3>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">HTML/CSS</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">JavaScript</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">Python</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-box p-6 rounded-lg shadow-sm">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-tools text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-6">ツール・フレームワーク</h3>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">Git</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">React</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">Node.js</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 65%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="skill-box p-6 rounded-lg shadow-sm">
+                    <div class="text-blue-500 mb-4">
+                        <i class="fas fa-palette text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-6">その他のスキル</h3>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">UI/UXデザイン</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">レスポンシブデザイン</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">英語</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium">プロジェクト管理</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 15%"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fab fa-js"></i>
-              JavaScript
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 23%"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fab fa-python"></i>
-              Python
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 3%"></div>
-            </div>
-          </div>
         </div>
-        
-        <div class="skill-category">
-          <h3>ツール・フレームワーク</h3>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fab fa-git-alt"></i>
-              Git
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 10%"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fab fa-react"></i>
-              React
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 3%"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fab fa-node-js"></i>
-              Node.js
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 25%"></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="skill-category">
-          <h3>デザイン</h3>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fas fa-palette"></i>
-              UI/UXデザイン
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 65%"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fas fa-mobile-alt"></i>
-              レスポンシブデザイン
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 80%"></div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="skill-category">
-          <h3>その他</h3>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fas fa-language"></i>
-              英語
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 30%"></div>
-            </div>
-          </div>
-          <div class="skill-item">
-            <div class="skill-name">
-              <i class="fas fa-tasks"></i>
-              プロジェクト管理
-            </div>
-            <div class="skill-bar">
-              <div class="skill-level" style="width: 2%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- プロジェクトセクション -->
-    <section class="section fade-in" id="projects">
-      <h2 class="section-title">プロジェクト</h2>
-      <p class="mb-3">GitHubで公開している主なプロジェクトです</p>
-      
-      <div class="projects-container">
-        <div class="project-card">
-          <div class="project-image">
-            <img src="image/co275.png" alt="個人ウェブサイト">
-          </div>
-          <div class="project-info">
-            <h3 class="project-title">個人ウェブサイト</h3>
-            <p class="project-description">このサイトを含む個人的なウェブ制作プロジェクト。HTML、CSS、JavaScriptを使用して構築しています。</p>
-            <div class="project-tags">
-              <span class="project-tag">HTML</span>
-              <span class="project-tag">CSS</span>
-              <span class="project-tag">JavaScript</span>
+    <section id="projects" class="section">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-2xl md:text-3xl font-bold">プロジェクト</h2>
+            <p class="text-gray-600 mb-8 dark:text-gray-300">GitHubで公開している主なプロジェクトです</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- プロジェクト1 -->
+                <div class="project-card rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="h-48 bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center">
+                        <i class="fas fa-globe text-white text-5xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">個人ウェブサイト</h3>
+                        <p class="text-gray-600 mb-4 dark:text-gray-300">
+                            このサイトを含む個人的なウェブ制作プロジェクト。HTML、CSS、JavaScriptを使用して構築しています。
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 tag rounded-full text-sm">HTML</span>
+                            <span class="px-3 py-1 tag rounded-full text-sm">CSS</span>
+                            <span class="px-3 py-1 tag rounded-full text-sm">JavaScript</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 transition flex items-center dark:text-blue-400 dark:hover:text-blue-300">
+                                <i class="fab fa-github mr-1"></i> GitHub
+                            </a>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 transition flex items-center dark:text-blue-400 dark:hover:text-blue-300">
+                                <i class="fas fa-external-link-alt mr-1"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- プロジェクト2 -->
+                <div class="project-card rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="h-48 bg-gradient-to-r from-purple-400 to-pink-500 flex items-center justify-center">
+                        <i class="fas fa-key text-white text-5xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">パスワード生成ツール</h3>
+                        <p class="text-gray-600 mb-4 dark:text-gray-300">
+                            安全なパスワードを生成するためのウェブツール。様々なオプションでカスタマイズ可能です。
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 tag rounded-full text-sm">HTML</span>
+                            <span class="px-3 py-1 tag rounded-full text-sm">CSS</span>
+                            <span class="px-3 py-1 tag rounded-full text-sm">JavaScript</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 transition flex items-center dark:text-blue-400 dark:hover:text-blue-300">
+                                <i class="fas fa-external-link-alt mr-1"></i> アプリを開く
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- プロジェクト3 -->
+                <div class="project-card rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="h-48 bg-gradient-to-r from-green-400 to-teal-500 flex items-center justify-center">
+                        <i class="fas fa-tasks text-white text-5xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Todoリストアプリ</h3>
+                        <p class="text-gray-600 mb-4 dark:text-gray-300">
+                            タスクを効率的に管理するためのウェブアプリケーション。カテゴリ分け、優先度設定、期限管理機能を備えています。
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 tag rounded-full text-sm">HTML</span>
+                            <span class="px-3 py-1 tag rounded-full text-sm">CSS</span>
+                            <span class="px-3 py-1 tag rounded-full text-sm">JavaScript</span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 transition flex items-center dark:text-blue-400 dark:hover:text-blue-300">
+                                <i class="fas fa-external-link-alt mr-1"></i> アプリを開く
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="project-links">
-              <a href="https://github.com/redstarkunlun/redstarkunlun.github.io" class="project-link" target="_blank">
-                <i class="fab fa-github"></i> GitHub
-              </a>
-              <a href="https://redstarkunlun.github.io" class="project-link" target="_blank">
-                <i class="fas fa-external-link-alt"></i> Live Demo
-              </a>
+            
+            <div class="text-center mt-8">
+                <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition dark:text-blue-400 dark:hover:text-blue-300">
+                    詳細はGitHubプロフィールをご覧ください <i class="fas fa-arrow-right ml-2"></i>
+                </a>
             </div>
-          </div>
         </div>
-        
-        <div class="project-card">
-          <div class="project-image">
-            <img src="image/example_pwgen1.png" alt="パスワード生成ツール">
-          </div>
-          <div class="project-info">
-            <h3 class="project-title">パスワード生成ツール</h3>
-            <p class="project-description">安全なパスワードを生成するためのウェブツール。様々なオプションでカスタマイズ可能です。</p>
-            <div class="project-tags">
-              <span class="project-tag">HTML</span>
-              <span class="project-tag">CSS</span>
-              <span class="project-tag">JavaScript</span>
-            </div>
-            <div class="project-links">
-              <a href="passwordgen.html" class="project-link">
-                <i class="fas fa-external-link-alt"></i> アプリを開く
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="project-card">
-          <div class="project-image">
-            <img src="image/example_todo1.png" alt="Todoリストアプリ">
-          </div>
-          <div class="project-info">
-            <h3 class="project-title">Todoリストアプリ</h3>
-            <p class="project-description">タスクを効率的に管理するためのウェブアプリケーション。カテゴリ分け、優先度設定、期限管理機能を備えています。</p>
-            <div class="project-tags">
-              <span class="project-tag">HTML</span>
-              <span class="project-tag">CSS</span>
-              <span class="project-tag">JavaScript</span>
-            </div>
-            <div class="project-links">
-              <a href="todo.html" class="project-link">
-                <i class="fas fa-external-link-alt"></i> アプリを開く
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="text-center mt-4">
-        <p>詳細は<a href="https://github.com/redstarkunlun" target="_blank">GitHubプロフィール</a>をご覧ください。</p>
-      </div>
     </section>
 
     <!-- 趣味セクション -->
-    <section class="section fade-in" id="hobbies">
-      <h2 class="section-title">趣味</h2>
-      
-      <div class="hobbies-container">
-        <div class="hobby-card">
-          <div class="hobby-icon">
-            <i class="fas fa-music"></i>
-          </div>
-          <div class="hobby-info">
-            <h3 class="hobby-title">音楽鑑賞</h3>
-            <p class="hobby-description">特にヒメヒナの曲を中心に、様々なジャンルの音楽を楽しんでいます。リズムのある曲や心に響く歌詞が好きです。</p>
-          </div>
+    <section id="hobbies" class="section bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-2xl md:text-3xl font-bold">趣味</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <!-- 音楽鑑賞 -->
+                <div class="hobby-card p-6 pl-8 rounded-lg">
+                    <div class="flex items-start mb-4">
+                        <div class="text-blue-500 mr-4">
+                            <i class="fas fa-music text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">音楽鑑賞</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                特にヒメヒナの曲を中心に、様々なジャンルの音楽を楽しんでいます。リズムのある曲や心に響く歌詞が好きです。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pl-12 mt-2">
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">ヒメヒナ</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">J-POP</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">ロック</div>
+                    </div>
+                </div>
+                
+                <!-- サッカー観戦 -->
+                <div class="hobby-card p-6 pl-8 rounded-lg">
+                    <div class="flex items-start mb-4">
+                        <div class="text-blue-500 mr-4">
+                            <i class="fas fa-futbol text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">サッカー観戦</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                鹿児島ユナイテッドFCと東京ヴェルディを応援しています。スタジアムの熱気と一体感が大好きで、できるだけ試合観戦に行くようにしています。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pl-12 mt-2">
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">鹿児島ユナイテッドFC</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">東京ヴェルディ</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">Jリーグ</div>
+                    </div>
+                </div>
+                
+                <!-- バスケ観戦 -->
+                <div class="hobby-card p-6 pl-8 rounded-lg">
+                    <div class="flex items-start mb-4">
+                        <div class="text-blue-500 mr-4">
+                            <i class="fas fa-basketball-ball text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">バスケ観戦</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                鹿児島レブナイズを応援しています。アリーナの熱気と一体感が大好きで、できるだけ試合観戦に行くようにしています。特に接戦の終盤は興奮します。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pl-12 mt-2">
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">鹿児島レブナイズ</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">バスケットボール</div>
+                    </div>
+                </div>
+                
+                <!-- 読書 -->
+                <div class="hobby-card p-6 pl-8 rounded-lg">
+                    <div class="flex items-start mb-4">
+                        <div class="text-blue-500 mr-4">
+                            <i class="fas fa-book text-3xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">読書</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                SF小説やファンタジー小説を中心に読書を楽しんでいます。想像力を刺激される物語や、未来を描いた作品に特に興味があります。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="pl-12 mt-2">
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">SF</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">ファンタジー</div>
+                        <div class="inline-block px-3 py-1 tag rounded-full text-sm mr-2 mb-2">小説</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="hobby-card">
-          <div class="hobby-icon">
-            <i class="fas fa-futbol"></i>
-          </div>
-          <div class="hobby-info">
-            <h3 class="hobby-title">サッカー観戦</h3>
-            <p class="hobby-description">鹿児島ユナイテッドFCと東京ヴェルディを応援しています。スタジアムの熱気と一体感が大好きで、できるだけ試合観戦に行くようにしています。</p>
-          </div>
-        </div>
-<!-- バスケ観戦セクション -->
-<div class="hobby-card">
-  <div class="hobby-icon">
-    <i class="fas fa-basketball-ball"></i>
-  </div>
-  <div class="hobby-info">
-    <h3 class="hobby-title">バスケ観戦</h3>
-    <p class="hobby-description">鹿児島レブナイズを応援しています。アリーナの熱気と一体感が大好きで、できるだけ試合観戦に行くようにしています。特に接戦の終盤は興奮します。</p>
-  </div>
-</div>
-    
-        <div class="hobby-card">
-          <div class="hobby-icon">
-            <i class="fas fa-book"></i>
-          </div>
-          <div class="hobby-info">
-            <h3 class="hobby-title">読書</h3>
-            <p class="hobby-description">SF小説やファンタジー小説を中心に読書を楽しんでいます。想像力を刺激される物語や、未来を描いた作品に特に興味があります。</p>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- コンタクトセクション -->
-    <section class="section fade-in" id="contact">
-      <h2 class="section-title">コンタクト</h2>
-      <p class="mb-3">お問い合わせは以下からお願いします：</p>
-      
-      <div class="contact-container">
-        <div class="contact-info">
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fas fa-envelope"></i>
+    <section id="contact" class="section">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-2xl md:text-3xl font-bold">コンタクト</h2>
+            <p class="text-gray-600 mb-8 dark:text-gray-300">お問い合わせは以下からお願いします：</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm dark:bg-gray-800">
+                    <h3 class="text-xl font-semibold mb-6">お問い合わせフォーム</h3>
+                    <form class="contact-form">
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-700 mb-2 dark:text-gray-300">お名前</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700 mb-2 dark:text-gray-300">メールアドレス</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="message" class="block text-gray-700 mb-2 dark:text-gray-300">メッセージ</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md">送信する</button>
+                    </form>
+                </div>
+                
+                <div>
+                    <div class="contact-card p-6 rounded-lg shadow-sm border border-gray-100 mb-6 dark:border-gray-700">
+                        <div class="flex items-center">
+                            <div class="text-blue-500 mr-4">
+                                <i class="fas fa-envelope text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">メール</h3>
+                                <p class="text-gray-600 dark:text-gray-300">お問い合わせフォームをご利用ください</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card p-6 rounded-lg shadow-sm border border-gray-100 mb-6 dark:border-gray-700">
+                        <div class="flex items-center">
+                            <div class="text-blue-500 mr-4">
+                                <i class="fab fa-twitter text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">Twitter</h3>
+                                <a href="https://twitter.com/kufc111" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">@kufc111</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center">
+                            <div class="text-blue-500 mr-4">
+                                <i class="fab fa-discord text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-1">Discord</h3>
+                                <a href="#" class="text-blue-600 hover:underline dark:text-blue-400">Discord Server</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-              <h3 class="mb-1">メール</h3>
-              <a href="mailto:">お問い合わせフォームをご利用ください</a>
-            </div>
-          </div>
-          
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fab fa-twitter"></i>
-            </div>
-            <div>
-              <h3 class="mb-1">Twitter</h3>
-              <a href="https://x.com/kufc111" target="_blank">@kufc111</a>
-            </div>
-          </div>
-          
-          <div class="contact-item">
-            <div class="contact-icon">
-              <i class="fab fa-discord"></i>
-            </div>
-            <div>
-              <h3 class="mb-1">Discord</h3>
-              <a href="https://discord.gg/X7JmjMyHER" target="_blank">Discord Server</a>
-            </div>
-          </div>
         </div>
-        
-        <div class="contact-form">
-          <div class="form-group">
-            <label for="name">お名前</label>
-            <input type="text" id="name" placeholder="お名前を入力してください">
-          </div>
-          
-          <div class="form-group">
-            <label for="email">メールアドレス</label>
-            <input type="email" id="email" placeholder="メールアドレスを入力してください">
-          </div>
-          
-          <div class="form-group">
-            <label for="message">メッセージ</label>
-            <textarea id="message" rows="5" placeholder="メッセージを入力してください"></textarea>
-          </div>
-          
-          <button class="submit-btn" id="submit-form">送信する</button>
-        </div>
-      </div>
     </section>
-  </div>
 
-  <!-- フッター -->
-  <div class="footer">
-    <p>&copy; 2025 かふぇいん. All Rights Reserved.</p>
-  </div>
+    <!-- フッター -->
+    <footer class="py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a href="#" class="text-xl font-bold text-blue-400 hover:text-blue-300 transition">かふぇいん</a>
+                </div>
+                <nav class="mb-4 md:mb-0">
+                    <ul class="flex space-x-6">
+                        <li><a href="#about" class="hover:text-blue-300 transition">自己紹介</a></li>
+                        <li><a href="#skills" class="hover:text-blue-300 transition">スキル</a></li>
+                        <li><a href="#projects" class="hover:text-blue-300 transition">プロジェクト</a></li>
+                        <li><a href="#hobbies" class="hover:text-blue-300 transition">趣味</a></li>
+                        <li><a href="#contact" class="hover:text-blue-300 transition">コンタクト</a></li>
+                    </ul>
+                </nav>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/" target="_blank" class="social-icon hover:text-blue-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://twitter.com/kufc111" target="_blank" class="social-icon hover:text-blue-300">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="social-icon hover:text-blue-300">
+                        <i class="fab fa-discord text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-sm text-gray-400">
+                © 2025 かふぇいん. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
 
-  <!-- JavaScriptファイル -->
-  <script src="js/script.js"></script>
-  <script>
-    // 現在の年を設定
-    document.querySelector('.footer p').innerHTML = `&copy; ${new Date().getFullYear()} かふぇいん. All Rights Reserved.`;
-    
-    // スキルバーのアニメーション
-    function animateSkillBars() {
-      const skillLevels = document.querySelectorAll('.skill-level');
-      skillLevels.forEach(level => {
-        const width = level.style.width;
-        level.style.width = '0';
-        setTimeout(() => {
-          level.style.width = width;
-        }, 300);
-      });
-    }
-    
-    // スクロールアニメーション
-    function checkFadeElements() {
-      const fadeElements = document.querySelectorAll('.fade-in');
-      fadeElements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-        if (elementTop < window.innerHeight - elementVisible) {
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0)';
+    <script>
+        // ダークモードの設定
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        // ユーザーのシステム設定とローカルストレージからテーマ設定を取得
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const savedTheme = localStorage.getItem('theme');
+        
+        // テーマの初期設定
+        if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
+            document.documentElement.classList.add('dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
         }
-      });
-    }
-    
-    // モバイルメニュートグル
-    const menuToggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('menu');
-    
-    if (menuToggle) {
-      menuToggle.addEventListener('click', () => {
-        menu.classList.toggle('active');
-      });
-    }
-    
-    // コンタクトフォーム送信
-    const submitBtn = document.getElementById('submit-form');
-    if (submitBtn) {
-      submitBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('現在、フォームの送信機能は実装中です。SNSやメールでお問い合わせください。');
-      });
-    }
-    
-    // 初期化
-    window.addEventListener('load', () => {
-      animateSkillBars();
-      checkFadeElements();
-    });
-    
-    window.addEventListener('scroll', checkFadeElements);
-  </script>
+        
+        // テーマトグルボタンのクリックイベント
+        themeToggle.addEventListener('click', function() {
+            const isDarkMode = document.documentElement.classList.contains('dark');
+            
+            if (isDarkMode) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+        
+        // モバイルメニュートグル
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // メニューリンククリック時にモバイルメニューを閉じる
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // スクロールに応じてヘッダーの背景を変更
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+        
+        // フォーム送信ハンドラ
+        const contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('フォームはいつか実装します');
+            });
+        }
+    </script>
 </body>
 </html>
+
