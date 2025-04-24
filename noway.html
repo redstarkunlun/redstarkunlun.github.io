@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>編集可能な返済計画表</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #4472c4;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .total-row {
+      font-weight: bold;
+      background-color: #e6f0ff;
+    }
+    .complete {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .input-form {
+      background-color: #eef5fe;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .card-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .input-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4472c4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #3a5ea9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>編集可能な返済計画表</h1>
+    
+    <div class="input-form">
+      <h2>カード情報の編集</h2>
+      <div class="card-inputs">
+        <div class="input-group">
+          <label for="paypay">PayPayカード残高 (円)</label>
+          <input type="number" id="paypay" value="49737">
+        </div>
+        <div class="input-group">
+          <label for="saison">セゾンカード残高 (円)</label>
+          <input type="number" id="saison" value="49000">
+        </div>
+        <div class="input-group">
+          <label for="aeon">イオンカード残高 (円)</label>
+          <input type="number" id="aeon" value="100000">
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="monthly">月々の返済額 (円)</label>
+        <input type="number" id="monthly" value="40000">
+      </div>
+      <button onclick="calculatePlan()">返済計画を再計算</button>
+    </div>
+    
+    <h2>返済計画</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>月</th>
+          <th>返済額</th>
+          <th>返済内訳</th>
+          <th>残債合計</th>
+        </tr>
+      </thead>
+      <tbody id="plan-table">
+        <!-- ここに計画が生成されます -->
+      </tbody>
+    </table>
+    
+    <div id="completion-message" class="complete"></div>
+    
+    <h2>カード別返済内訳</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>カード名</th>
+          <th>初期残高</th>
+          <th>返済総額</th>
+        </tr>
+      </thead>
+      <tbody id="card-summary">
+        <!-- ここにカード別の内訳が生成されます -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // ページ読み込み時に計算を実行
+    window.onload = function() {
+      calculatePlan();
+    };
+    
+    function calculatePlan() {
+      // 入力値の取得
+      const paypayBalance = parseInt(document.getElementById('paypay').value) || 0;
+      const saisonBalance = parseInt(document.getElementById('saison').value) || 0;
+      const aeonBalance = parseInt(document.getElementById('aeon').value) || 0;
+      const monthlyPayment = parseInt(document.getElementById('monthly').value) || 0;
+      
+      // 初期残高の記録
+      const initialBalances = {
+        'PayPayカード': paypayBalance,
+        'セゾンカード': saisonBalance,
+        'イオンカード': aeonBalance
+      };
+      
+      // 返済計画の生成
+      const cards = [
+        { name: 'セゾンカード', balance: saisonBalance },
+        { name: 'PayPayカード', balance: paypayBalance },
+        { name: 'イオンカード', balance: aeonBalance }
+      ].filter(card => card.balance > 0).sort((a, b) => a.balance - b.balance);
+      
+      let totalBalance = paypayBalance + saisonBalance + aeonBalance;
+      const payments = [];
+      let month = 1;
+      
+      while (totalBalance > 0) {
+        const payment = Math.min(monthlyPayment, totalBalance);
+        let remainingPayment = payment;
+        const breakdown = [];
+        
+        for (let card of cards) {
+          if (card.balance > 0) {
+            const cardPayment = Math.min(card.balance, remainingPayment);
+            if (cardPayment > 0) {
+              breakdown.push(`${card.name}: ${cardPayment.toLocaleString()}円`);
+              card.balance -= cardPayment;
+              remainingPayment -= cardPayment;
+              
+              if (remainingPayment <= 0) break;
+            }
+          }
+        }
+        
+        totalBalance -= payment;
+        payments.push({
+          month,
+          payment,
+          breakdown: breakdown.join('、'),
+          remaining: totalBalance
+        });
+        month++;
+        
+        // 残高0のカードを消去
+        cards.sort((a, b) => a.balance - b.balance);
+      }
+      
+      // テーブルの更新
+      const tableBody = document.getElementById('plan-table');
+      tableBody.innerHTML = '';
+      
+      payments.forEach(p => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${p.month}ヶ月目</td>
+          <td>${p.payment.toLocaleString()}円</td>
+          <td>${p.breakdown}</td>
+          <td>${p.remaining.toLocaleString()}円</td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // 完了メッセージの更新
+      document.getElementById('completion-message').innerText = 
+        `完済達成！所要期間：${payments.length}ヶ月`;
+      
+      // カード別内訳の更新
+      const summary = document.getElementById('card-summary');
+      summary.innerHTML = '';
+      
+      Object.entries(initialBalances).forEach(([name, balance]) => {
+        if (balance > 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${name}</td>
+            <td>${balance.toLocaleString()}円</td>
+            <td>${balance.toLocaleString()}円</td>
+          `;
+          summary.appendChild(row);
+        }
+      });
+      
+      // 合計行
+      const totalRow = document.createElement('tr');
+      const total = paypayBalance + saisonBalance + aeonBalance;
+      totalRow.className = 'total-row';
+      totalRow.innerHTML = `
+        <td>合計</td>
+        <td>${total.toLocaleString()}円</td>
+        <td>${total.toLocaleString()}円</td>
+      `;
+      summary.appendChild(totalRow);
+    }
+  </script>
+</body>
+</html>
