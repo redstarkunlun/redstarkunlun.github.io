@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>シンプル家計管理 - ADHDフレンドリー</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+      color: #343a40;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #6200ee;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #e9ecef;
+      border-radius: 5px 5px 0 0;
+      margin-right: 5px;
+    }
+    .tab.active {
+      background-color: #6200ee;
+      color: white;
+    }
+    .content {
+      display: none;
+    }
+    .content.active {
+      display: block;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ced4da;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #6200ee;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #5000cc;
+    }
+    .transaction {
+      background-color: #f8f9fa;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border-left: 5px solid;
+      display: flex;
+      justify-content: space-between;
+    }
+    .expense {
+      border-left-color: #dc3545;
+    }
+    .income {
+      border-left-color: #28a745;
+    }
+    .amount {
+      font-weight: bold;
+    }
+    .expense .amount {
+      color: #dc3545;
+    }
+    .income .amount {
+      color: #28a745;
+    }
+    .summary {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .summary div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .balance {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .positive {
+      color: #28a745;
+    }
+    .negative {
+      color: #dc3545;
+    }
+    .visual-prompt {
+      background-color: #e6f7ff;
+      border-left: 5px solid #1890ff;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .category-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .category-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 20px;
+      background-color: #e9ecef;
+      cursor: pointer;
+      font-size: 14px;
+      width: auto;
+    }
+    .category-btn.selected {
+      background-color: #6200ee;
+      color: white;
+    }
+    .chart-container {
+      height: 200px;
+      margin-top: 20px;
+      position: relative;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .bar {
+      position: absolute;
+      bottom: 0;
+      width: 40px;
+      background-color: #6200ee;
+      border-radius: 5px 5px 0 0;
+      transition: height 0.5s;
+    }
+    .date-picker {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .date-picker button {
+      width: auto;
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>シンプル家計管理</h1>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="changeTab('dashboard')">ダッシュボード</div>
+      <div class="tab" onclick="changeTab('add')">追加</div>
+      <div class="tab" onclick="changeTab('history')">履歴</div>
+    </div>
+    
+    <div id="dashboard" class="content active">
+      <div class="visual-prompt">
+        📅 今月の予算管理状況です。あと<span id="days-left">20</span>日で使えるお金は<span id="daily-budget">¥2,000</span>/日です。
+      </div>
+      
+      <div class="summary">
+        <div>
+          <span>今月の収入:</span>
+          <span id="total-income">¥200,000</span>
+        </div>
+        <div>
+          <span>今月の支出:</span>
+          <span id="total-expenses">¥60,000</span>
+        </div>
+        <div class="balance">
+          <span>残高:</span>
+          <span id="balance" class="positive">¥140,000</span>
+        </div>
+      </div>
+      
+      <div class="date-picker">
+        <button>&lt; 前月</button>
+        <span>2025年4月</span>
+        <button>次月 &gt;</button>
+      </div>
+      
+      <h3>カテゴリー別支出</h3>
+      <div class="chart-container">
+        <div class="bar" style="height: 80%; left: 10%;" title="食費: ¥24,000"></div>
+        <div class="bar" style="height: 50%; left: 25%;" title="交通費: ¥15,000"></div>
+        <div class="bar" style="height: 30%; left: 40%;" title="光熱費: ¥9,000"></div>
+        <div class="bar" style="height: 20%; left: 55%;" title="娯楽: ¥6,000"></div>
+        <div class="bar" style="height: 20%; left: 70%;" title="その他: ¥6,000"></div>
+      </div>
+      
+      <h3>最近の取引</h3>
+      <div class="transaction expense">
+        <div>
+          <div>コンビニ</div>
+          <div>4月26日</div>
+        </div>
+        <div class="amount">-¥980</div>
+      </div>
+      <div class="transaction expense">
+        <div>
+          <div>レストラン</div>
+          <div>4月25日</div>
+        </div>
+        <div class="amount">-¥3,200</div>
+      </div>
+      <div class="transaction income">
+        <div>
+          <div>給料</div>
+          <div>4月20日</div>
+        </div>
+        <div class="amount">+¥200,000</div>
+      </div>
+    </div>
+    
+    <div id="add" class="content">
+      <div class="visual-prompt">
+        💡 取引を追加しましょう！頻繁にお金を使ったらすぐに記録すると管理しやすくなります。
+      </div>
+      
+      <div class="input-group">
+        <label for="type">種類</label>
+        <select id="type">
+          <option value="expense">支出</option>
+          <option value="income">収入</option>
+        </select>
+      </div>
+      
+      <div class="input-group">
+        <label for="amount">金額 (¥)</label>
+        <input type="number" id="amount" placeholder="1000">
+      </div>
+      
+      <div class="input-group">
+        <label>カテゴリー</label>
+        <div class="category-selector">
+          <button class="category-btn selected">食費</button>
+          <button class="category-btn">交通費</button>
+          <button class="category-btn">住居費</button>
+          <button class="category-btn">光熱費</button>
+          <button class="category-btn">娯楽</button>
+          <button class="category-btn">その他</button>
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <label for="description">説明</label>
+        <input type="text" id="description" placeholder="コンビニでお弁当">
+      </div>
+      
+      <div class="input-group">
+        <label for="date">日付</label>
+        <input type="date" id="date">
+      </div>
+      
+      <button onclick="addTransaction()">追加する</button>
+    </div>
+    
+    <div id="history" class="content">
+      <div class="date-picker">
+        <button>&lt; 前月</button>
+        <span>2025年4月</span>
+        <button>次月 &gt;</button>
+      </div>
+      
+      <div class="transaction expense">
+        <div>
+          <div>コンビニ</div>
+          <div>4月26日 - 食費</div>
+        </div>
+        <div class="amount">-¥980</div>
+      </div>
+      <div class="transaction expense">
+        <div>
+          <div>レストラン</div>
+          <div>4月25日 - 食費</div>
+        </div>
+        <div class="amount">-¥3,200</div>
+      </div>
+      <div class="transaction expense">
+        <div>
+          <div>電車</div>
+          <div>4月23日 - 交通費</div>
+        </div>
+        <div class="amount">-¥560</div>
+      </div>
+      <div class="transaction expense">
+        <div>
+          <div>映画</div>
+          <div>4月22日 - 娯楽</div>
+        </div>
+        <div class="amount">-¥1,800</div>
+      </div>
+      <div class="transaction income">
+        <div>
+          <div>給料</div>
+          <div>4月20日 - 収入</div>
+        </div>
+        <div class="amount">+¥200,000</div>
+      </div>
+      <div class="transaction expense">
+        <div>
+          <div>電気代</div>
+          <div>4月15日 - 光熱費</div>
+        </div>
+        <div class="amount">-¥9,000</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 現在の日付を設定
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      document.getElementById('date').valueAsDate = today;
+      
+      // カテゴリーボタンの選択機能
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          categoryButtons.forEach(btn => btn.classList.remove('selected'));
+          this.classList.add('selected');
+        });
+      });
+    });
+    
+    // タブ切り替え機能
+    function changeTab(tabId) {
+      // すべてのタブとコンテンツを非アクティブにする
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // 選択されたタブをアクティブにする
+      document.querySelector(`.tab:nth-child(${tabId === 'dashboard' ? 1 : tabId === 'add' ? 2 : 3})`).classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+    
+    // 取引追加機能（デモ用）
+    function addTransaction() {
+      const type = document.getElementById('type').value;
+      const amount = document.getElementById('amount').value;
+      const description = document.getElementById('description').value;
+      
+      if (!amount || !description) {
+        alert('金額と説明を入力してください');
+        return;
+      }
+      
+      alert('取引が追加されました！');
+      
+      // フォームをリセット
+      document.getElementById('amount').value = '';
+      document.getElementById('description').value = '';
+      
+      // ダッシュボードに戻る
+      changeTab('dashboard');
+    }
+  </script>
+</body>
+</html>
