@@ -170,6 +170,37 @@
       width: auto;
       padding: 5px 10px;
     }
+    .no-transactions {
+      text-align: center;
+      padding: 20px;
+      color: #6c757d;
+    }
+    .settings-btn {
+      background-color: #6c757d;
+      margin-left: 5px;
+    }
+    .month-display {
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+    .reset-section {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8d7da;
+      border-radius: 5px;
+    }
+    .reset-section h3 {
+      color: #721c24;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    .tabs {
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -180,64 +211,43 @@
       <div class="tab active" onclick="changeTab('dashboard')">ダッシュボード</div>
       <div class="tab" onclick="changeTab('add')">追加</div>
       <div class="tab" onclick="changeTab('history')">履歴</div>
+      <div class="tab settings-btn" onclick="changeTab('settings')">設定</div>
     </div>
     
     <div id="dashboard" class="content active">
       <div class="visual-prompt">
-        📅 今月の予算管理状況です。あと<span id="days-left">20</span>日で使えるお金は<span id="daily-budget">¥2,000</span>/日です。
+        📅 今月の予算管理状況です。あと<span id="days-left">0</span>日で使えるお金は<span id="daily-budget">¥0</span>/日です。
       </div>
       
       <div class="summary">
         <div>
           <span>今月の収入:</span>
-          <span id="total-income">¥200,000</span>
+          <span id="total-income">¥0</span>
         </div>
         <div>
           <span>今月の支出:</span>
-          <span id="total-expenses">¥60,000</span>
+          <span id="total-expenses">¥0</span>
         </div>
         <div class="balance">
           <span>残高:</span>
-          <span id="balance" class="positive">¥140,000</span>
+          <span id="balance" class="positive">¥0</span>
         </div>
       </div>
       
       <div class="date-picker">
-        <button>&lt; 前月</button>
-        <span>2025年4月</span>
-        <button>次月 &gt;</button>
+        <button onclick="changeMonth(-1)">&lt; 前月</button>
+        <span id="current-month" class="month-display">2025年4月</span>
+        <button onclick="changeMonth(1)">次月 &gt;</button>
       </div>
       
       <h3>カテゴリー別支出</h3>
-      <div class="chart-container">
-        <div class="bar" style="height: 80%; left: 10%;" title="食費: ¥24,000"></div>
-        <div class="bar" style="height: 50%; left: 25%;" title="交通費: ¥15,000"></div>
-        <div class="bar" style="height: 30%; left: 40%;" title="光熱費: ¥9,000"></div>
-        <div class="bar" style="height: 20%; left: 55%;" title="娯楽: ¥6,000"></div>
-        <div class="bar" style="height: 20%; left: 70%;" title="その他: ¥6,000"></div>
+      <div class="chart-container" id="expense-chart">
+        <!-- チャートはJavaScriptで動的に生成 -->
       </div>
       
       <h3>最近の取引</h3>
-      <div class="transaction expense">
-        <div>
-          <div>コンビニ</div>
-          <div>4月26日</div>
-        </div>
-        <div class="amount">-¥980</div>
-      </div>
-      <div class="transaction expense">
-        <div>
-          <div>レストラン</div>
-          <div>4月25日</div>
-        </div>
-        <div class="amount">-¥3,200</div>
-      </div>
-      <div class="transaction income">
-        <div>
-          <div>給料</div>
-          <div>4月20日</div>
-        </div>
-        <div class="amount">+¥200,000</div>
+      <div id="recent-transactions">
+        <div class="no-transactions">取引記録がありません</div>
       </div>
     </div>
     
@@ -261,13 +271,13 @@
       
       <div class="input-group">
         <label>カテゴリー</label>
-        <div class="category-selector">
-          <button class="category-btn selected">食費</button>
-          <button class="category-btn">交通費</button>
-          <button class="category-btn">住居費</button>
-          <button class="category-btn">光熱費</button>
-          <button class="category-btn">娯楽</button>
-          <button class="category-btn">その他</button>
+        <div class="category-selector" id="category-selector">
+          <button class="category-btn selected" data-category="食費">食費</button>
+          <button class="category-btn" data-category="交通費">交通費</button>
+          <button class="category-btn" data-category="住居費">住居費</button>
+          <button class="category-btn" data-category="光熱費">光熱費</button>
+          <button class="category-btn" data-category="娯楽">娯楽</button>
+          <button class="category-btn" data-category="その他">その他</button>
         </div>
       </div>
       
@@ -286,61 +296,93 @@
     
     <div id="history" class="content">
       <div class="date-picker">
-        <button>&lt; 前月</button>
-        <span>2025年4月</span>
-        <button>次月 &gt;</button>
+        <button onclick="changeMonth(-1)">&lt; 前月</button>
+        <span id="history-month" class="month-display">2025年4月</span>
+        <button onclick="changeMonth(1)">次月 &gt;</button>
       </div>
       
-      <div class="transaction expense">
-        <div>
-          <div>コンビニ</div>
-          <div>4月26日 - 食費</div>
-        </div>
-        <div class="amount">-¥980</div>
+      <div id="transactions-history">
+        <div class="no-transactions">取引記録がありません</div>
       </div>
-      <div class="transaction expense">
-        <div>
-          <div>レストラン</div>
-          <div>4月25日 - 食費</div>
-        </div>
-        <div class="amount">-¥3,200</div>
+    </div>
+    
+    <div id="settings" class="content">
+      <h2>設定</h2>
+      
+      <div class="input-group">
+        <label for="monthly-budget">月間予算 (¥)</label>
+        <input type="number" id="monthly-budget" placeholder="200000">
       </div>
-      <div class="transaction expense">
-        <div>
-          <div>電車</div>
-          <div>4月23日 - 交通費</div>
-        </div>
-        <div class="amount">-¥560</div>
-      </div>
-      <div class="transaction expense">
-        <div>
-          <div>映画</div>
-          <div>4月22日 - 娯楽</div>
-        </div>
-        <div class="amount">-¥1,800</div>
-      </div>
-      <div class="transaction income">
-        <div>
-          <div>給料</div>
-          <div>4月20日 - 収入</div>
-        </div>
-        <div class="amount">+¥200,000</div>
-      </div>
-      <div class="transaction expense">
-        <div>
-          <div>電気代</div>
-          <div>4月15日 - 光熱費</div>
-        </div>
-        <div class="amount">-¥9,000</div>
+      
+      <button onclick="saveSettings()">設定を保存</button>
+      
+      <div class="reset-section">
+        <h3>データリセット</h3>
+        <p>すべての取引記録と設定をリセットします。この操作は元に戻せません。</p>
+        <button class="btn-danger" onclick="resetAllData()">すべてのデータをリセット</button>
       </div>
     </div>
   </div>
 
   <script>
+    // データ構造
+    let transactions = [];
+    let selectedCategory = '食費';
+    let currentDate = new Date();
+    let monthlyBudget = 0;
+    
+    // ローカルストレージからデータを読み込む
+    function loadData() {
+      const savedTransactions = localStorage.getItem('budgetAppTransactions');
+      if (savedTransactions) {
+        transactions = JSON.parse(savedTransactions);
+      }
+      
+      const savedBudget = localStorage.getItem('budgetAppMonthlyBudget');
+      if (savedBudget) {
+        monthlyBudget = parseInt(savedBudget);
+        document.getElementById('monthly-budget').value = monthlyBudget;
+      }
+      
+      updateUI();
+    }
+    
+    // データをローカルストレージに保存
+    function saveData() {
+      localStorage.setItem('budgetAppTransactions', JSON.stringify(transactions));
+      localStorage.setItem('budgetAppMonthlyBudget', monthlyBudget.toString());
+    }
+    
+    // すべてのデータをリセット
+    function resetAllData() {
+      if (confirm('すべてのデータをリセットしますか？この操作は元に戻せません。')) {
+        transactions = [];
+        monthlyBudget = 0;
+        document.getElementById('monthly-budget').value = '';
+        localStorage.removeItem('budgetAppTransactions');
+        localStorage.removeItem('budgetAppMonthlyBudget');
+        updateUI();
+        alert('すべてのデータがリセットされました。');
+      }
+    }
+    
+    // 設定を保存
+    function saveSettings() {
+      const budgetInput = document.getElementById('monthly-budget').value;
+      if (budgetInput) {
+        monthlyBudget = parseInt(budgetInput);
+        saveData();
+        updateUI();
+        alert('設定が保存されました。');
+      } else {
+        alert('月間予算を入力してください。');
+      }
+    }
+    
     // 現在の日付を設定
     document.addEventListener('DOMContentLoaded', function() {
-      const today = new Date();
-      document.getElementById('date').valueAsDate = today;
+      setCurrentDateInDatePicker();
+      updateMonthDisplay();
       
       // カテゴリーボタンの選択機能
       const categoryButtons = document.querySelectorAll('.category-btn');
@@ -348,9 +390,34 @@
         button.addEventListener('click', function() {
           categoryButtons.forEach(btn => btn.classList.remove('selected'));
           this.classList.add('selected');
+          selectedCategory = this.getAttribute('data-category');
         });
       });
+      
+      // データ読み込み
+      loadData();
     });
+    
+    function setCurrentDateInDatePicker() {
+      const today = new Date();
+      document.getElementById('date').valueAsDate = today;
+    }
+    
+    // 月表示を更新
+    function updateMonthDisplay() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth() + 1;
+      const monthStr = `${year}年${month}月`;
+      document.getElementById('current-month').textContent = monthStr;
+      document.getElementById('history-month').textContent = monthStr;
+    }
+    
+    // 月を変更
+    function changeMonth(diff) {
+      currentDate.setMonth(currentDate.getMonth() + diff);
+      updateMonthDisplay();
+      updateUI();
+    }
     
     // タブ切り替え機能
     function changeTab(tabId) {
@@ -363,29 +430,255 @@
       });
       
       // 選択されたタブをアクティブにする
-      document.querySelector(`.tab:nth-child(${tabId === 'dashboard' ? 1 : tabId === 'add' ? 2 : 3})`).classList.add('active');
+      let tabIndex;
+      switch(tabId) {
+        case 'dashboard': tabIndex = 1; break;
+        case 'add': tabIndex = 2; break;
+        case 'history': tabIndex = 3; break;
+        case 'settings': tabIndex = 4; break;
+      }
+      document.querySelector(`.tab:nth-child(${tabIndex})`).classList.add('active');
       document.getElementById(tabId).classList.add('active');
     }
     
-    // 取引追加機能（デモ用）
+    // 取引追加機能
     function addTransaction() {
       const type = document.getElementById('type').value;
-      const amount = document.getElementById('amount').value;
+      const amountInput = document.getElementById('amount').value;
       const description = document.getElementById('description').value;
+      const dateInput = document.getElementById('date').value;
       
-      if (!amount || !description) {
+      if (!amountInput || !description) {
         alert('金額と説明を入力してください');
         return;
       }
+      
+      const amount = parseInt(amountInput);
+      const date = new Date(dateInput);
+      
+      const newTransaction = {
+        type: type,
+        amount: amount,
+        category: selectedCategory,
+        description: description,
+        date: date.toISOString()
+      };
+      
+      transactions.push(newTransaction);
+      saveData();
+      updateUI();
       
       alert('取引が追加されました！');
       
       // フォームをリセット
       document.getElementById('amount').value = '';
       document.getElementById('description').value = '';
+      setCurrentDateInDatePicker();
       
       // ダッシュボードに戻る
       changeTab('dashboard');
+    }
+    
+    // 表示の更新
+    function updateUI() {
+      updateDashboard();
+      updateHistory();
+    }
+    
+    // 月に応じた取引をフィルタリング
+    function filterTransactionsByMonth(transactions) {
+      return transactions.filter(transaction => {
+        const transDate = new Date(transaction.date);
+        return transDate.getMonth() === currentDate.getMonth() && 
+               transDate.getFullYear() === currentDate.getFullYear();
+      });
+    }
+    
+    // ダッシュボードの更新
+    function updateDashboard() {
+      const monthTransactions = filterTransactionsByMonth(transactions);
+      
+      // 収入と支出の計算
+      let totalIncome = 0;
+      let totalExpenses = 0;
+      
+      monthTransactions.forEach(transaction => {
+        if (transaction.type === 'income') {
+          totalIncome += transaction.amount;
+        } else {
+          totalExpenses += transaction.amount;
+        }
+      });
+      
+      const balance = totalIncome - totalExpenses;
+      
+      // 残り日数の計算
+      const today = new Date();
+      const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      const daysLeft = lastDay.getDate() - today.getDate();
+      
+      // 1日あたりの予算
+      let dailyBudget = 0;
+      if (daysLeft > 0) {
+        dailyBudget = Math.floor(balance / daysLeft);
+      }
+      
+      // UI更新
+      document.getElementById('total-income').textContent = `¥${totalIncome.toLocaleString()}`;
+      document.getElementById('total-expenses').textContent = `¥${totalExpenses.toLocaleString()}`;
+      
+      const balanceElement = document.getElementById('balance');
+      balanceElement.textContent = `¥${balance.toLocaleString()}`;
+      if (balance >= 0) {
+        balanceElement.className = 'positive';
+      } else {
+        balanceElement.className = 'negative';
+      }
+      
+      document.getElementById('days-left').textContent = daysLeft;
+      document.getElementById('daily-budget').textContent = `¥${dailyBudget.toLocaleString()}`;
+      
+      // カテゴリー別支出チャートの更新
+      updateExpenseChart(monthTransactions);
+      
+      // 最近の取引を更新
+      updateRecentTransactions(monthTransactions);
+    }
+    
+    // カテゴリー別支出チャートの更新
+    function updateExpenseChart(monthTransactions) {
+      const chartContainer = document.getElementById('expense-chart');
+      chartContainer.innerHTML = '';
+      
+      // カテゴリー別に支出を集計
+      const categories = {};
+      monthTransactions.forEach(transaction => {
+        if (transaction.type === 'expense') {
+          if (!categories[transaction.category]) {
+            categories[transaction.category] = 0;
+          }
+          categories[transaction.category] += transaction.amount;
+        }
+      });
+      
+      // 最大値を取得
+      let maxAmount = 0;
+      for (const category in categories) {
+        if (categories[category] > maxAmount) {
+          maxAmount = categories[category];
+        }
+      }
+      
+      // チャートを生成
+      let index = 0;
+      for (const category in categories) {
+        const height = Math.max(10, (categories[category] / maxAmount) * 100);
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${height}%`;
+        bar.style.left = `${10 + index * 15}%`;
+        bar.title = `${category}: ¥${categories[category].toLocaleString()}`;
+        
+        const label = document.createElement('div');
+        label.style.position = 'absolute';
+        label.style.bottom = '-20px';
+        label.style.left = '0';
+        label.style.width = '100%';
+        label.style.textAlign = 'center';
+        label.style.fontSize = '12px';
+        label.textContent = category;
+        
+        bar.appendChild(label);
+        chartContainer.appendChild(bar);
+        index++;
+      }
+      
+      // データがない場合のメッセージ
+      if (index === 0) {
+        const noData = document.createElement('div');
+        noData.className = 'no-transactions';
+        noData.textContent = '支出データがありません';
+        chartContainer.appendChild(noData);
+      }
+    }
+    
+    // 最近の取引を更新
+    function updateRecentTransactions(monthTransactions) {
+      const container = document.getElementById('recent-transactions');
+      container.innerHTML = '';
+      
+      if (monthTransactions.length === 0) {
+        const noTransactions = document.createElement('div');
+        noTransactions.className = 'no-transactions';
+        noTransactions.textContent = '取引記録がありません';
+        container.appendChild(noTransactions);
+        return;
+      }
+      
+      // 日付順にソート（新しい順）
+      const sortedTransactions = [...monthTransactions].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+      
+      // 最新の3件を表示
+      const recentTransactions = sortedTransactions.slice(0, 3);
+      
+      recentTransactions.forEach(transaction => {
+        const transactionEl = document.createElement('div');
+        transactionEl.className = `transaction ${transaction.type}`;
+        
+        const date = new Date(transaction.date);
+        const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`;
+        
+        transactionEl.innerHTML = `
+          <div>
+            <div>${transaction.description}</div>
+            <div>${dateStr} - ${transaction.category}</div>
+          </div>
+          <div class="amount">${transaction.type === 'income' ? '+' : '-'}¥${transaction.amount.toLocaleString()}</div>
+        `;
+        
+        container.appendChild(transactionEl);
+      });
+    }
+    
+    // 履歴ページの更新
+    function updateHistory() {
+      const container = document.getElementById('transactions-history');
+      container.innerHTML = '';
+      
+      const monthTransactions = filterTransactionsByMonth(transactions);
+      
+      if (monthTransactions.length === 0) {
+        const noTransactions = document.createElement('div');
+        noTransactions.className = 'no-transactions';
+        noTransactions.textContent = '取引記録がありません';
+        container.appendChild(noTransactions);
+        return;
+      }
+      
+      // 日付順にソート（新しい順）
+      const sortedTransactions = [...monthTransactions].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+      
+      sortedTransactions.forEach(transaction => {
+        const transactionEl = document.createElement('div');
+        transactionEl.className = `transaction ${transaction.type}`;
+        
+        const date = new Date(transaction.date);
+        const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`;
+        
+        transactionEl.innerHTML = `
+          <div>
+            <div>${transaction.description}</div>
+            <div>${dateStr} - ${transaction.category}</div>
+          </div>
+          <div class="amount">${transaction.type === 'income' ? '+' : '-'}¥${transaction.amount.toLocaleString()}</div>
+        `;
+        
+        container.appendChild(transactionEl);
+      });
     }
   </script>
 </body>
