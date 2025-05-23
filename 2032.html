@@ -1,0 +1,306 @@
+import React, { useState } from 'react';
+import { Plus, Edit2, Save, X, Trash2 } from 'lucide-react';
+
+const StockTracker = () => {
+  const [stocks, setStocks] = useState([
+    { id: 1, name: 'トヨタ自動車', code: '7203', targetShares: 100, currentShares: 45, notes: '' },
+    { id: 2, name: 'ソフトバンクグループ', code: '9984', targetShares: 50, currentShares: 20, notes: '' },
+  ]);
+  
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newStock, setNewStock] = useState({
+    name: '',
+    code: '',
+    targetShares: '',
+    currentShares: '',
+    notes: ''
+  });
+
+  const calculateProgress = (current, target) => {
+    if (target === 0) return 0;
+    return Math.min((current / target) * 100, 100);
+  };
+
+  const getProgressColor = (progress) => {
+    if (progress >= 100) return 'bg-green-500';
+    if (progress >= 75) return 'bg-blue-500';
+    if (progress >= 50) return 'bg-yellow-500';
+    if (progress >= 25) return 'bg-orange-500';
+    return 'bg-red-500';
+  };
+
+  const startEdit = (stock) => {
+    setEditingId(stock.id);
+    setEditForm({ ...stock });
+  };
+
+  const saveEdit = () => {
+    setStocks(stocks.map(stock => 
+      stock.id === editingId ? { ...editForm } : stock
+    ));
+    setEditingId(null);
+    setEditForm({});
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm({});
+  };
+
+  const deleteStock = (id) => {
+    setStocks(stocks.filter(stock => stock.id !== id));
+  };
+
+  const addStock = () => {
+    if (newStock.name && newStock.code) {
+      const id = Math.max(...stocks.map(s => s.id), 0) + 1;
+      setStocks([...stocks, {
+        id,
+        name: newStock.name,
+        code: newStock.code,
+        targetShares: parseInt(newStock.targetShares) || 0,
+        currentShares: parseInt(newStock.currentShares) || 0,
+        notes: newStock.notes
+      }]);
+      setNewStock({ name: '', code: '', targetShares: '', currentShares: '', notes: '' });
+      setShowAddForm(false);
+    }
+  };
+
+  const totalProgress = stocks.length > 0 
+    ? stocks.reduce((sum, stock) => sum + calculateProgress(stock.currentShares, stock.targetShares), 0) / stocks.length
+    : 0;
+
+  return (
+    <div className="max-w-6xl mx-auto p-6 bg-white">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">S株積立管理リスト</h1>
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-600">全体の平均達成度</span>
+            <span className="text-lg font-semibold text-gray-800">{totalProgress.toFixed(1)}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div 
+              className={`h-3 rounded-full transition-all duration-300 ${getProgressColor(totalProgress)}`}
+              style={{ width: `${totalProgress}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <button
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Plus size={20} />
+          新しい銘柄を追加
+        </button>
+      </div>
+
+      {showAddForm && (
+        <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <h3 className="text-lg font-semibold mb-4">新しい銘柄を追加</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <input
+              type="text"
+              placeholder="銘柄名"
+              value={newStock.name}
+              onChange={(e) => setNewStock({...newStock, name: e.target.value})}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="text"
+              placeholder="銘柄コード"
+              value={newStock.code}
+              onChange={(e) => setNewStock({...newStock, code: e.target.value})}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="number"
+              placeholder="目標株数"
+              value={newStock.targetShares}
+              onChange={(e) => setNewStock({...newStock, targetShares: e.target.value})}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="number"
+              placeholder="現在株数"
+              value={newStock.currentShares}
+              onChange={(e) => setNewStock({...newStock, currentShares: e.target.value})}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="text"
+              placeholder="メモ"
+              value={newStock.notes}
+              onChange={(e) => setNewStock({...newStock, notes: e.target.value})}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={addStock}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              追加
+            </button>
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+            >
+              キャンセル
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        {stocks.map((stock) => {
+          const progress = calculateProgress(stock.currentShares, stock.targetShares);
+          const isEditing = editingId === stock.id;
+          
+          return (
+            <div key={stock.id} className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                <div className="lg:col-span-3">
+                  {isEditing ? (
+                    <div className="space-y-2">
+                      <input
+                        type="text"
+                        value={editForm.name}
+                        onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <input
+                        type="text"
+                        value={editForm.code}
+                        onChange={(e) => setEditForm({...editForm, code: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <h3 className="font-semibold text-gray-800">{stock.name}</h3>
+                      <p className="text-sm text-gray-600">{stock.code}</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="lg:col-span-2">
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      value={editForm.targetShares}
+                      onChange={(e) => setEditForm({...editForm, targetShares: parseInt(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  ) : (
+                    <div>
+                      <p className="text-sm text-gray-600">目標株数</p>
+                      <p className="font-semibold">{stock.targetShares.toLocaleString()}株</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="lg:col-span-2">
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      value={editForm.currentShares}
+                      onChange={(e) => setEditForm({...editForm, currentShares: parseInt(e.target.value) || 0})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  ) : (
+                    <div>
+                      <p className="text-sm text-gray-600">現在株数</p>
+                      <p className="font-semibold">{stock.currentShares.toLocaleString()}株</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="lg:col-span-2">
+                  <div>
+                    <p className="text-sm text-gray-600">達成度</p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(progress)}`}
+                          style={{ width: `${progress}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-sm font-semibold min-w-12">{progress.toFixed(1)}%</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="lg:col-span-2">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.notes}
+                      onChange={(e) => setEditForm({...editForm, notes: e.target.value})}
+                      placeholder="メモ"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  ) : (
+                    <div>
+                      <p className="text-sm text-gray-600">メモ</p>
+                      <p className="text-sm">{stock.notes || '-'}</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="lg:col-span-1">
+                  {isEditing ? (
+                    <div className="flex gap-1">
+                      <button
+                        onClick={saveEdit}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                      >
+                        <Save size={16} />
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="p-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => startEdit(stock)}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => deleteStock(stock.id)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {stocks.length === 0 && (
+        <div className="text-center py-12 text-gray-500">
+          <p>まだ銘柄が登録されていません。</p>
+          <p>「新しい銘柄を追加」ボタンから始めましょう。</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default StockTracker;
