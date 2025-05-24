@@ -1,556 +1,583 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投資ポートフォリオ管理</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+import React, { useState, useEffect } from 'react';
+import { Plus, Edit2, Trash2, TrendingUp, Target, Calendar, RefreshCw, AlertCircle } from 'lucide-react';
+
+const StockTracker = () => {
+  const [stocks, setStocks] = useState([
+    {
+      id: 1,
+      name: 'トヨタ自動車',
+      code: '7203.T',
+      currentShares: 100,
+      plannedShares: 50,
+      targetShares: 200,
+      currentPrice: 0,
+      priceChange: 0,
+      priceChangePercent: 0,
+      acquisitionDate: '2024-01-15',
+      lastUpdated: null,
+      loading: false,
+      error: null
+    },
+    {
+      id: 2,
+      name: 'ソフトバンクグループ',
+      code: '9984.T',
+      currentShares: 50,
+      plannedShares: 25,
+      targetShares: 100,
+      currentPrice: 0,
+      priceChange: 0,
+      priceChangePercent: 0,
+      acquisitionDate: '2024-02-01',
+      lastUpdated: null,
+      loading: false,
+      error: null
+    }
+  ]);
+
+  const [isAddingStock, setIsAddingStock] = useState(false);
+  const [editingStock, setEditingStock] = useState(null);
+  const [allPricesLoading, setAllPricesLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    code: '',
+    currentShares: 0,
+    plannedShares: 0,
+    targetShares: 0,
+    acquisitionDate: ''
+  });
+
+  // Yahoo Finance APIから株価を取得する関数
+  const fetchStockPrice = async (symbol) => {
+    try {
+      // CORS対応のため、プロキシサービスを使用
+      const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch stock data');
+      }
+      
+      const data = await response.json();
+      
+      if (data.chart && data.chart.result && data.chart.result[0]) {
+        const result = data.chart.result[0];
+        const meta = result.meta;
+        const currentPrice = meta.regularMarketPrice || 0;
+        const previousClose = meta.previousClose || currentPrice;
+        const priceChange = currentPrice - previousClose;
+        const priceChangePercent = previousClose !== 0 ? (priceChange / previousClose) * 100 : 0;
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        
-        .header h1 {
-            color: #2d3748;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .total-value {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        
-        .profit-loss {
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-        
-        .positive { color: #48bb78; }
-        .negative { color: #f56565; }
-        
-        .add-form {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        label {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #4a5568;
-        }
-        
-        input, select {
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-        
-        .portfolio-section {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .holdings {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .chart-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .holding {
-            background: #f8fafc;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-            transition: all 0.3s ease;
-        }
-        
-        .holding:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .holding-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .symbol {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #2d3748;
-        }
-        
-        .type-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            font-weight: 600;
-        }
-        
-        .stock { background: #e6fffa; color: #047857; }
-        .crypto { background: #fef7e0; color: #b45309; }
-        
-        .holding-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            font-size: 0.9em;
-        }
-        
-        .detail-item {
-            text-align: center;
-        }
-        
-        .detail-label {
-            color: #718096;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .detail-value {
-            font-weight: 700;
-            font-size: 1.1em;
-        }
-        
-        .delete-btn {
-            background: #f56565;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-        
-        .delete-btn:hover {
-            background: #e53e3e;
-        }
-        
-        .section-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #2d3748;
-        }
-        
-        @media (max-width: 768px) {
-            .portfolio-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>投資ポートフォリオ管理</h1>
-            <div class="total-value" id="totalValue">¥0</div>
-            <div class="profit-loss" id="totalProfitLoss">損益: ¥0 (0%)</div>
-        </div>
-        
-        <div class="add-form">
-            <h2 class="section-title">新しい投資を追加</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>銘柄/通貨</label>
-                    <input type="text" id="symbol" placeholder="例: AAPL, BTC">
-                </div>
-                <div class="form-group">
-                    <label>種類</label>
-                    <select id="type">
-                        <option value="stock">株式</option>
-                        <option value="crypto">仮想通貨</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>数量</label>
-                    <input type="number" id="quantity" step="0.00001" placeholder="保有数量">
-                </div>
-                <div class="form-group">
-                    <label>購入価格 (¥)</label>
-                    <input type="number" id="buyPrice" step="0.01" placeholder="購入時の価格">
-                </div>
-            </div>
-            <button class="btn" onclick="addHolding()">追加</button>
-        </div>
-        
-        <div class="portfolio-section">
-            <div class="holdings">
-                <h2 class="section-title">保有資産</h2>
-                <div id="holdingsList"></div>
-            </div>
-            <div class="chart-container">
-                <h2 class="section-title">資産配分</h2>
-                <canvas id="allocationChart"></canvas>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        let holdings = [];
-        let chart = null;
-        
-        // 疑似価格データ（実際のAPIの代わり）
-        const mockPrices = {
-            // 株式 (USD→JPY換算)
-            'AAPL': 19000,
-            'GOOGL': 17500,
-            'MSFT': 42000,
-            'TSLA': 25000,
-            'AMZN': 18500,
-            'NVDA': 135000,
-            'META': 52000,
-            // 日本株
-            '7203': 3200,  // トヨタ
-            '6758': 6800,  // ソニー
-            '9984': 9500,  // ソフトバンク
-            // 仮想通貨
-            'BTC': 10500000,
-            'ETH': 550000,
-            'XRP': 80,
-            'ADA': 65,
-            'DOT': 900
+        return {
+          price: currentPrice,
+          change: priceChange,
+          changePercent: priceChangePercent,
+          timestamp: new Date().toLocaleString('ja-JP')
         };
-        
-        // 現在の価格を取得する関数
-        async function getCurrentPrice(symbol, type) {
-            try {
-                if (type === 'crypto') {
-                    // 【仮想通貨API例】CoinGecko API（無料）
-                    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${getCoinId(symbol)}&vs_currencies=jpy`);
-                    const data = await response.json();
-                    return data[getCoinId(symbol)].jpy;
-                    
-                    // 現在は疑似データを使用
-                    const basePrice = mockPrices[symbol.toUpperCase()] || 1000;
-                    const variation = (Math.random() - 0.5) * 0.1;
-                    return Math.round(basePrice * (1 + variation));
-                    
-                } else if (type === 'stock') {
-                    // 【株式API例】Alpha Vantage API（無料枠あり）
-                    const apiKey = 'ZSZ19R9JY29RLVDY';
-                    const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`);
-                    const data = await response.json();
-                    const priceUSD = parseFloat(data['Global Quote']['05. price']);
-                    const priceJPY = priceUSD * 150; // USD→JPY換算（為替レートも別途取得が理想）
-                    return Math.round(priceJPY);
-                    
-                    // 現在は疑似データを使用
-                    const basePrice = mockPrices[symbol.toUpperCase()] || 1000;
-                    const variation = (Math.random() - 0.5) * 0.1;
-                    return Math.round(basePrice * (1 + variation));
-                }
-            } catch (error) {
-                console.error('価格取得エラー:', error);
-                // エラー時は前回の価格またはデフォルト値を返す
-                return mockPrices[symbol.toUpperCase()] || 1000;
-            }
+      }
+      
+      throw new Error('Invalid data format');
+    } catch (error) {
+      console.error('Error fetching stock price:', error);
+      throw error;
+    }
+  };
+
+  // 個別銘柄の株価を更新
+  const updateStockPrice = async (stockId) => {
+    setStocks(prev => prev.map(stock => 
+      stock.id === stockId ? { ...stock, loading: true, error: null } : stock
+    ));
+
+    try {
+      const stock = stocks.find(s => s.id === stockId);
+      const priceData = await fetchStockPrice(stock.code);
+      
+      setStocks(prev => prev.map(stock => 
+        stock.id === stockId ? {
+          ...stock,
+          currentPrice: priceData.price,
+          priceChange: priceData.change,
+          priceChangePercent: priceData.changePercent,
+          lastUpdated: priceData.timestamp,
+          loading: false,
+          error: null
+        } : stock
+      ));
+    } catch (error) {
+      setStocks(prev => prev.map(stock => 
+        stock.id === stockId ? {
+          ...stock,
+          loading: false,
+          error: '価格取得に失敗しました'
+        } : stock
+      ));
+    }
+  };
+
+  // 全銘柄の株価を一括更新
+  const updateAllPrices = async () => {
+    setAllPricesLoading(true);
+    
+    const updatePromises = stocks.map(async (stock) => {
+      try {
+        const priceData = await fetchStockPrice(stock.code);
+        return {
+          id: stock.id,
+          currentPrice: priceData.price,
+          priceChange: priceData.change,
+          priceChangePercent: priceData.changePercent,
+          lastUpdated: priceData.timestamp,
+          error: null
+        };
+      } catch (error) {
+        return {
+          id: stock.id,
+          error: '価格取得に失敗しました'
+        };
+      }
+    });
+
+    try {
+      const results = await Promise.all(updatePromises);
+      
+      setStocks(prev => prev.map(stock => {
+        const result = results.find(r => r.id === stock.id);
+        return {
+          ...stock,
+          ...result,
+          loading: false
+        };
+      }));
+    } catch (error) {
+      console.error('Error updating all prices:', error);
+    }
+    
+    setAllPricesLoading(false);
+  };
+
+  // 初回読み込み時に全株価を取得
+  useEffect(() => {
+    if (stocks.length > 0) {
+      updateAllPrices();
+    }
+  }, []); // 空の依存配列で初回のみ実行
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: name.includes('Shares') ? Number(value) : value
+    }));
+  };
+
+  const handleSubmit = () => {
+    if (editingStock) {
+      setStocks(prev => prev.map(stock => 
+        stock.id === editingStock.id ? { 
+          ...stock, 
+          ...formData,
+          currentPrice: 0,
+          lastUpdated: null,
+          loading: false,
+          error: null
+        } : stock
+      ));
+      setEditingStock(null);
+      
+      // 編集後に価格を取得
+      setTimeout(() => {
+        const updatedStock = stocks.find(s => s.id === editingStock.id);
+        if (updatedStock) {
+          updateStockPrice(editingStock.id);
         }
-        
-        // 仮想通貨のシンボルをCoinGecko IDに変換する関数
-        function getCoinId(symbol) {
-            const coinIds = {
-                'BTC': 'bitcoin',
-                'ETH': 'ethereum',
-                'XRP': 'ripple',
-                'ADA': 'cardano',
-                'DOT': 'polkadot'
-            };
-            return coinIds[symbol.toUpperCase()] || symbol.toLowerCase();
-        }
-        
-        async function addHolding() {
-            const symbol = document.getElementById('symbol').value.trim().toUpperCase();
-            const type = document.getElementById('type').value;
-            const quantity = parseFloat(document.getElementById('quantity').value);
-            const buyPrice = parseFloat(document.getElementById('buyPrice').value);
-            
-            if (!symbol || !quantity || !buyPrice) {
-                alert('すべての項目を入力してください');
-                return;
-            }
-            
-            // 価格取得中の表示
-            const btn = document.querySelector('.btn');
-            const originalText = btn.textContent;
-            btn.textContent = '価格取得中...';
-            btn.disabled = true;
-            
-            try {
-                const currentPrice = await getCurrentPrice(symbol, type);
-                
-                const holding = {
-                    id: Date.now(),
-                    symbol,
-                    type,
-                    quantity,
-                    buyPrice,
-                    currentPrice
-                };
-                
-                holdings.push(holding);
-                updateDisplay();
-                clearForm();
-            } catch (error) {
-                alert('価格の取得に失敗しました。もう一度お試しください。');
-            } finally {
-                btn.textContent = originalText;
-                btn.disabled = false;
-            }
-        }
-        
-        function removeHolding(id) {
-            holdings = holdings.filter(h => h.id !== id);
-            updateDisplay();
-        }
-        
-        function clearForm() {
-            document.getElementById('symbol').value = '';
-            document.getElementById('quantity').value = '';
-            document.getElementById('buyPrice').value = '';
-        }
-        
-        async function updateDisplay() {
-            await updatePrices();
-            renderHoldings();
-            updateTotals();
-            updateChart();
-        }
-        
-        async function updatePrices() {
-            // 価格を並行して取得（効率化）
-            const pricePromises = holdings.map(async (holding) => {
-                try {
-                    holding.currentPrice = await getCurrentPrice(holding.symbol, holding.type);
-                } catch (error) {
-                    console.error(`${holding.symbol}の価格取得失敗:`, error);
-                    // エラー時は前回の価格を維持
-                }
-            });
-            
-            await Promise.all(pricePromises);
-        }
-        
-        function renderHoldings() {
-            const container = document.getElementById('holdingsList');
-            
-            if (holdings.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #718096; font-size: 1.1em;">まだ投資が追加されていません</p>';
-                return;
-            }
-            
-            container.innerHTML = holdings.map(holding => {
-                const currentValue = holding.quantity * holding.currentPrice;
-                const totalCost = holding.quantity * holding.buyPrice;
-                const profitLoss = currentValue - totalCost;
-                const profitLossPercent = ((profitLoss / totalCost) * 100).toFixed(2);
-                const isProfit = profitLoss >= 0;
-                
-                return `
-                    <div class="holding">
-                        <div class="holding-header">
-                            <div class="symbol">${holding.symbol}</div>
-                            <div class="type-badge ${holding.type}">${holding.type === 'stock' ? '株式' : '仮想通貨'}</div>
-                        </div>
-                        <div class="holding-details">
-                            <div class="detail-item">
-                                <div class="detail-label">保有数量</div>
-                                <div class="detail-value">${holding.quantity.toLocaleString()}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">現在価格</div>
-                                <div class="detail-value">¥${holding.currentPrice.toLocaleString()}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">購入価格</div>
-                                <div class="detail-value">¥${holding.buyPrice.toLocaleString()}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">現在価値</div>
-                                <div class="detail-value">¥${Math.round(currentValue).toLocaleString()}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">損益</div>
-                                <div class="detail-value ${isProfit ? 'positive' : 'negative'}">
-                                    ¥${Math.round(profitLoss).toLocaleString()} (${profitLossPercent}%)
-                                </div>
-                            </div>
-                        </div>
-                        <button class="delete-btn" onclick="removeHolding(${holding.id})">削除</button>
+      }, 100);
+    } else {
+      const newStock = { 
+        ...formData, 
+        id: Date.now(),
+        currentPrice: 0,
+        priceChange: 0,
+        priceChangePercent: 0,
+        lastUpdated: null,
+        loading: false,
+        error: null
+      };
+      setStocks(prev => [...prev, newStock]);
+      setIsAddingStock(false);
+      
+      // 新規追加後に価格を取得
+      setTimeout(() => {
+        updateStockPrice(newStock.id);
+      }, 100);
+    }
+    
+    setFormData({
+      name: '',
+      code: '',
+      currentShares: 0,
+      plannedShares: 0,
+      targetShares: 0,
+      acquisitionDate: ''
+    });
+  };
+
+  const handleEdit = (stock) => {
+    setEditingStock(stock);
+    setFormData({
+      name: stock.name,
+      code: stock.code,
+      currentShares: stock.currentShares,
+      plannedShares: stock.plannedShares,
+      targetShares: stock.targetShares,
+      acquisitionDate: stock.acquisitionDate
+    });
+    setIsAddingStock(false);
+  };
+
+  const handleDelete = (id) => {
+    setStocks(prev => prev.filter(stock => stock.id !== id));
+  };
+
+  const calculateTotalValue = (shares, price) => {
+    return (shares * price).toLocaleString();
+  };
+
+  const calculateProgress = (current, target) => {
+    return target > 0 ? (current / target) * 100 : 0;
+  };
+
+  const totalPortfolioValue = stocks.reduce((sum, stock) => 
+    sum + (stock.currentShares * stock.currentPrice), 0
+  );
+
+  const formatPrice = (price) => {
+    return price ? `¥${price.toLocaleString()}` : '¥0';
+  };
+
+  const formatPriceChange = (change, changePercent) => {
+    if (!change && !changePercent) return '';
+    const sign = change >= 0 ? '+' : '';
+    const color = change >= 0 ? 'text-green-600' : 'text-red-600';
+    return (
+      <span className={`text-sm ${color}`}>
+        {sign}{change.toFixed(2)} ({sign}{changePercent.toFixed(2)}%)
+      </span>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+              <TrendingUp className="text-blue-600" />
+              株式管理アプリ
+            </h1>
+            <div className="text-right">
+              <p className="text-sm text-gray-600">ポートフォリオ総額</p>
+              <p className="text-2xl font-bold text-green-600">
+                ¥{totalPortfolioValue.toLocaleString()}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              onClick={() => setIsAddingStock(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
+            >
+              <Plus size={20} />
+              株式を追加
+            </button>
+            <button
+              onClick={updateAllPrices}
+              disabled={allPricesLoading}
+              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
+            >
+              <RefreshCw size={20} className={allPricesLoading ? 'animate-spin' : ''} />
+              {allPricesLoading ? '更新中...' : '全価格更新'}
+            </button>
+          </div>
+        </div>
+
+        {(isAddingStock || editingStock) && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4">
+              {editingStock ? '株式を編集' : '新しい株式を追加'}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  銘柄名
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  証券コード (例: 7203.T)
+                </label>
+                <input
+                  type="text"
+                  name="code"
+                  value={formData.code}
+                  onChange={handleInputChange}
+                  placeholder="7203.T"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  日本株は「.T」、米国株は何もつけません
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  現在の株数
+                </label>
+                <input
+                  type="number"
+                  name="currentShares"
+                  value={formData.currentShares}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  min="0"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  予定取得数
+                </label>
+                <input
+                  type="number"
+                  name="plannedShares"
+                  value={formData.plannedShares}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  min="0"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  目標株数
+                </label>
+                <input
+                  type="number"
+                  name="targetShares"
+                  value={formData.targetShares}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  min="0"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  取得予定日
+                </label>
+                <input
+                  type="date"
+                  name="acquisitionDate"
+                  value={formData.acquisitionDate}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="md:col-span-2 flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors"
+                >
+                  {editingStock ? '更新' : '追加'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAddingStock(false);
+                    setEditingStock(null);
+                    setFormData({
+                      name: '',
+                      code: '',
+                      currentShares: 0,
+                      plannedShares: 0,
+                      targetShares: 0,
+                      acquisitionDate: ''
+                    });
+                  }}
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors"
+                >
+                  キャンセル
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="grid gap-6">
+          {stocks.map(stock => {
+            const progress = calculateProgress(stock.currentShares, stock.targetShares);
+            return (
+              <div key={stock.id} className="bg-white rounded-xl shadow-lg p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {stock.name}
+                    </h3>
+                    <p className="text-gray-600">証券コード: {stock.code}</p>
+                    {stock.lastUpdated && (
+                      <p className="text-xs text-gray-500">
+                        最終更新: {stock.lastUpdated}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => updateStockPrice(stock.id)}
+                      disabled={stock.loading}
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
+                      title="価格を更新"
+                    >
+                      <RefreshCw size={16} className={stock.loading ? 'animate-spin' : ''} />
+                    </button>
+                    <button
+                      onClick={() => handleEdit(stock)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(stock.id)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                {stock.error && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 flex items-center gap-2">
+                    <AlertCircle size={16} className="text-red-600" />
+                    <span className="text-red-700 text-sm">{stock.error}</span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp size={16} className="text-blue-600" />
+                      <span className="text-sm font-medium text-gray-700">現在株数</span>
                     </div>
-                `;
-            }).join('');
-        }
-        
-        function updateTotals() {
-            const totalCurrentValue = holdings.reduce((sum, h) => sum + (h.quantity * h.currentPrice), 0);
-            const totalCost = holdings.reduce((sum, h) => sum + (h.quantity * h.buyPrice), 0);
-            const totalProfitLoss = totalCurrentValue - totalCost;
-            const totalProfitLossPercent = totalCost > 0 ? ((totalProfitLoss / totalCost) * 100).toFixed(2) : 0;
-            
-            document.getElementById('totalValue').textContent = `¥${Math.round(totalCurrentValue).toLocaleString()}`;
-            
-            const profitLossElement = document.getElementById('totalProfitLoss');
-            profitLossElement.textContent = `損益: ¥${Math.round(totalProfitLoss).toLocaleString()} (${totalProfitLossPercent}%)`;
-            profitLossElement.className = `profit-loss ${totalProfitLoss >= 0 ? 'positive' : 'negative'}`;
-        }
-        
-        function updateChart() {
-            const ctx = document.getElementById('allocationChart').getContext('2d');
-            
-            if (chart) {
-                chart.destroy();
-            }
-            
-            if (holdings.length === 0) {
-                return;
-            }
-            
-            const data = {};
-            holdings.forEach(holding => {
-                const value = holding.quantity * holding.currentPrice;
-                const category = holding.type === 'stock' ? '株式' : '仮想通貨';
-                data[category] = (data[category] || 0) + value;
-            });
-            
-            chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(data),
-                    datasets: [{
-                        data: Object.values(data),
-                        backgroundColor: [
-                            '#667eea',
-                            '#764ba2',
-                            '#f093fb',
-                            '#f5576c'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // 価格を定期的に更新（30秒間隔）
-        setInterval(() => {
-            if (holdings.length > 0) {
-                updateDisplay();
-            }
-        }, 30000);
-        
-        // 初期表示
-        updateDisplay();
-    </script>
-</body>
-</html>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {stock.currentShares.toLocaleString()}株
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {formatPrice(stock.currentShares * stock.currentPrice)}
+                    </p>
+                  </div>
+
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar size={16} className="text-orange-600" />
+                      <span className="text-sm font-medium text-gray-700">予定取得数</span>
+                    </div>
+                    <p className="text-2xl font-bold text-orange-600">
+                      {stock.plannedShares.toLocaleString()}株
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {formatPrice(stock.plannedShares * stock.currentPrice)}
+                    </p>
+                  </div>
+
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Target size={16} className="text-green-600" />
+                      <span className="text-sm font-medium text-gray-700">目標株数</span>
+                    </div>
+                    <p className="text-2xl font-bold text-green-600">
+                      {stock.targetShares.toLocaleString()}株
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {formatPrice(stock.targetShares * stock.currentPrice)}
+                    </p>
+                  </div>
+
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-medium text-gray-700">現在価格</span>
+                      {stock.loading && <RefreshCw size={12} className="animate-spin text-gray-500" />}
+                    </div>
+                    <p className="text-2xl font-bold text-purple-600">
+                      {formatPrice(stock.currentPrice)}
+                    </p>
+                    <div className="text-sm">
+                      {formatPriceChange(stock.priceChange, stock.priceChangePercent)}
+                    </div>
+                    {stock.acquisitionDate && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        取得予定: {stock.acquisitionDate}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mb-2">
+                  <div className="flex justify-between text-sm text-gray-600 mb-1">
+                    <span>目標達成率</span>
+                    <span>{progress.toFixed(1)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.min(progress, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 text-sm text-gray-600">
+                  <div>
+                    <span className="font-medium">取得後株数予定:</span>
+                    <br />
+                    {(stock.currentShares + stock.plannedShares).toLocaleString()}株
+                  </div>
+                  <div>
+                    <span className="font-medium">目標まで残り:</span>
+                    <br />
+                    {Math.max(0, stock.targetShares - stock.currentShares).toLocaleString()}株
+                  </div>
+                  <div>
+                    <span className="font-medium">必要投資額:</span>
+                    <br />
+                    {formatPrice(Math.max(0, stock.targetShares - stock.currentShares) * stock.currentPrice)}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {stocks.length === 0 && (
+          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+            <TrendingUp size={48} className="text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              株式が登録されていません
+            </h3>
+            <p className="text-gray-500 mb-4">
+              「株式を追加」ボタンから最初の株式を登録してください
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default StockTracker;
