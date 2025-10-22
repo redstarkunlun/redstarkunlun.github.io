@@ -6,21 +6,21 @@ export const siteConfig = {
   name: "かふぇいん",
   nameEn: "caffeine",
   title: "鹿児島ユナイテッドサポ",
-  titleEn: "鹿児島ユナイテッドサポ",
+  titleEn: "kagosima United FC supporter",
 
   // 📝 自己紹介
-  bio: "美しいユーザー体験を作ることに情熱を注いでいます。",
-  bioEn: "I build accessible, pixel-perfect digital experiences for the web.",
+  bio: "VTuber見たりスポーツ観戦が趣味",
+  bioEn: "Watching VTubers and watching sports are my hobbies.",
 
   // 📧 連絡先
   email: "hello@example.com",
-  location: "東京, 日本",
+  location: "鹿児島, 日本",
 
   // 🔗 SNSリンク（使わないものは空文字""にしてください）
   social: {
-    github: "https://github.com/yourusername",
-    twitter: "https://twitter.com/yourusername",
-    linkedin: "https://linkedin.com/in/yourusername",
+    github: "https://github.com/redsterkunlun",
+    twitter: "https://twitter.com/kaff_081",
+    linkedin: "",
     instagram: "",
   },
 
