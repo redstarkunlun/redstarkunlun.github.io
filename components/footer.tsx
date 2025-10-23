@@ -16,13 +16,13 @@ export function Footer() {
           {/* 追加リンク（必要に応じて追加） */}
           <div className="flex gap-6">
             <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              About
+              私について
             </a>
             <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Projects
+              プロジェクト
             </a>
             <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Contact
+              お問い合わせ
             </a>
           </div>
         </div>

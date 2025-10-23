@@ -75,7 +75,6 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -113,43 +112,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* 📝 フォント設定 */
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", "Courier New", monospace;
-
-  /* 🎨 カラーパレット - 16進数カラーコードで自由に変更できます */
-
-  /* メインカラー（背景色） */
-  --color-background: #0a0a0a;
-  --color-foreground: #ffffff;
-
-  /* カード・セクション背景 */
-  --color-card: #111111;
-  --color-card-foreground: #ffffff;
-
-  /* アクセントカラー（ボタンやリンクなど） */
-  --color-primary: #3b82f6;
-  --color-primary-foreground: #ffffff;
-
-  /* セカンダリカラー */
-  --color-secondary: #1f1f1f;
-  --color-secondary-foreground: #ffffff;
-
-  /* ミュートカラー（控えめな要素） */
-  --color-muted: #171717;
-  --color-muted-foreground: #a1a1a1;
-
-  /* アクセントカラー */
-  --color-accent: #262626;
-  --color-accent-foreground: #ffffff;
-
-  /* ボーダーカラー */
-  --color-border: #262626;
-  --color-input: #262626;
-  --color-ring: #3b82f6;
-
-  /* 角丸の大きさ */
-  --radius: 0.5rem;
+  --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
 @layer base {
@@ -157,31 +121,72 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply antialiased;
+    background: radial-gradient(ellipse at top, #1e3a8a 0%, #0f172a 50%, #020617 100%);
+    background-attachment: fixed;
+    color: #f1f5f9;
   }
 }
 
-/* 🌈 スムーズなスクロール */
+.paper-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1), 0 10px 40px rgba(0, 0, 0, 0.4), 0 20px 60px rgba(0, 0, 0, 0.3), inset 0
+    0 0 1px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.paper-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), 0 15px 50px rgba(0, 0, 0, 0.5), 0 25px 70px rgba(0, 0, 0, 0.4), inset 0
+    0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.paper-texture {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.02) 2px,
+    rgba(255, 255, 255, 0.02) 4px
+  );
+}
+
 html {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #1e293b;
 }
 
-/* 📱 全体のベーススタイル */
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+html::-webkit-scrollbar {
+  width: 10px;
 }
 
-/* ✨ アニメーション用のクラス */
+html::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 5px;
+  border: 2px solid #1e293b;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* より洗練されたアニメーション */
 .fade-in {
-  animation: fadeIn 0.6s ease-in;
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -189,15 +194,108 @@ body {
   }
 }
 
-/* 🎯 セクション間のスペーシング */
+/* スライドインアニメーション追加 */
+.slide-in-left {
+  animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* セクション間のスペーシングを最適化 */
 .section-spacing {
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
 }
 
 @media (max-width: 768px) {
   .section-spacing {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
   }
+}
+
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1), 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px
+    rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px
+    rgba(255, 255, 255, 0.08);
+}
+
+/* グロー効果 */
+.glow-effect {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.glow-effect:hover {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+/* テキストグラデーション */
+.text-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

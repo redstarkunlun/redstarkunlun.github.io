@@ -1,42 +1,61 @@
 import { siteConfig } from "@/config/site-config"
-import { ArrowDown } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
-// 🎯 ヒーローセクション - サイトの第一印象を決める重要な部分
 export function HeroSection() {
   return (
-    <section className="min-h-screen flex items-center justify-center relative px-4">
-      {/* 背景の装飾的な要素 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-      </div>
+    <section className="min-h-screen flex items-center justify-center relative px-4 py-20">
+      {/* 背景に動的なグラデーションオーバーレイを追加 */}
+      <div className="absolute inset-0 bg-gradient-to-b from-blue-950/20 via-transparent to-transparent pointer-events-none" />
 
       <div className="container mx-auto relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-8 fade-in">
-          {/* 小さな見出し */}
-          <p className="text-sm text-primary font-mono">Portfolio 2024</p>
+          <div className="paper-card paper-texture rounded-2xl p-12 md:p-16 space-y-8">
+            {/* バッジにパルスグローエフェクトを追加 */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-400/30 pulse-glow">
+              <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+              <span className="text-sm font-medium tracking-wide text-blue-300">{siteConfig.name}</span>
+            </div>
 
-          {/* メインの名前 */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-balance">
-            {siteConfig.nameEn}
-          </h1>
+            {/* タイトルにテキストグラデーションを追加 */}
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+              <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                {siteConfig.title}
+              </span>
+            </h1>
 
-          {/* 肩書き */}
-          <p className="text-xl md:text-2xl text-muted-foreground">{siteConfig.titleEn}</p>
+            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed whitespace-pre-line">
+              {siteConfig.bio}
+            </p>
 
-          {/* 自己紹介 */}
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            {siteConfig.bioEn}
-          </p>
+            {/* ボタンのホバーエフェクトを強化 */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Button
+                size="lg"
+                className="bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 text-base font-medium transition-all duration-300"
+                asChild
+              >
+                <a href="#about">詳しく見る</a>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-transparent border-2 border-blue-400 hover:bg-blue-500/10 hover:scale-105 text-blue-300 text-base font-medium transition-all duration-300"
+                asChild
+              >
+                <a href="#contact">お問い合わせ</a>
+              </Button>
+            </div>
+          </div>
 
-          {/* スクロールダウンアイコン */}
-          <div className="pt-12">
+          <div className="pt-8">
             <a
               href="#about"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex flex-col items-center gap-2 text-sm text-slate-400 hover:text-blue-400 transition-colors"
             >
-              <span>Scroll to explore</span>
-              <ArrowDown className="h-4 w-4 animate-bounce" />
+              <span className="font-medium text-xs tracking-widest">SCROLL</span>
+              <svg className="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
             </a>
           </div>
         </div>
