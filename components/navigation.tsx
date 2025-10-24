@@ -40,12 +40,15 @@ export function Navigation() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black/80 backdrop-blur-xl" : "bg-black/60 backdrop-blur-lg"
-      } border-b border-white/10`}
+        isScrolled ? "bg-slate-950/95 backdrop-blur-xl shadow-lg shadow-blue-500/5" : "bg-slate-950/80 backdrop-blur-lg"
+      } border-b ${isScrolled ? "border-blue-500/20" : "border-white/5"}`}
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
-          <Link href="/" className="text-2xl font-bold tracking-tight hover:text-blue-400 transition-colors">
+          <Link
+            href="/"
+            className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-300 transition-all duration-300"
+          >
             {siteConfig.name}
           </Link>
 
@@ -59,7 +62,7 @@ export function Navigation() {
                 className="text-sm font-medium text-gray-300 hover:text-white transition-colors relative group"
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 transition-all group-hover:w-full" />
               </a>
             ))}
           </div>

@@ -60,16 +60,20 @@ export function InterestsSection() {
               return (
                 <div
                   key={index}
-                  className="p-6 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 backdrop-blur-sm group"
+                  className="p-6 rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 hover:border-blue-500/70 hover:shadow-2xl hover:shadow-blue-500/30 hover:-translate-y-2 hover:scale-105 transition-all duration-500 backdrop-blur-sm group relative overflow-hidden"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30 group-hover:bg-blue-500/30 group-hover:scale-110 transition-all duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-500 rounded-xl" />
+                  <div className="space-y-3 relative z-10">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30 group-hover:bg-gradient-to-br group-hover:from-blue-500/40 group-hover:to-purple-500/40 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg shadow-blue-500/20">
                       {icon}
                     </div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
                       {interest.title}
                     </h3>
-                    <p className="text-sm text-gray-400 leading-relaxed">{interest.description}</p>
+                    <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                      {interest.description}
+                    </p>
                   </div>
                 </div>
               )
