@@ -10,6 +10,7 @@ import { ExperienceSection } from "@/components/experience-section"
 import { ProjectsSection } from "@/components/projects-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import { siteConfig } from "@/config/site-config"
 
 // 🏠 メインページ - すべてのセクションを組み合わせています
@@ -88,6 +89,9 @@ export default function Home() {
 
       {/* フッター */}
       <Footer />
+
+      {/* ページトップへ戻るボタン */}
+      <ScrollToTop />
     </main>
   )
 }

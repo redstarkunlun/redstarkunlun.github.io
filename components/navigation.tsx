@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { siteConfig } from "@/config/site-config"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -53,7 +54,7 @@ export function Navigation() {
           </Link>
 
           {/* デスクトップメニュー */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -65,6 +66,7 @@ export function Navigation() {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 transition-all group-hover:w-full" />
               </a>
             ))}
+            <ThemeToggle />
           </div>
 
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(!isOpen)}>

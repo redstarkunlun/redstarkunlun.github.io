@@ -1,5 +1,6 @@
 import { siteConfig } from "@/config/site-config"
 import { Button } from "@/components/ui/button"
+import { ContactForm } from "@/components/contact-form"
 
 export function ContactSection() {
   const socialLinks = [
@@ -71,24 +72,20 @@ export function ContactSection() {
             </p>
           </div>
 
-          <div className="flex justify-center relative z-10">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 shadow-xl shadow-blue-500/30 text-base font-medium gap-2 hover:scale-105 transition-all duration-300"
-              asChild
-            >
-              <a href={`mailto:${siteConfig.email}`}>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                メールを送る
+          <div className="max-w-2xl mx-auto relative z-10">
+            <ContactForm />
+          </div>
+
+          <div className="flex justify-center relative z-10 pt-6">
+            <p className="text-sm text-gray-400">
+              または直接メールでもお問い合わせいただけます：{" "}
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="text-blue-400 hover:text-blue-300 underline transition-colors"
+              >
+                {siteConfig.email}
               </a>
-            </Button>
+            </p>
           </div>
 
           {socialLinks.length > 0 && (

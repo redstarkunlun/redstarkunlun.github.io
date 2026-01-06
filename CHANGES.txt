@@ -1,0 +1,32 @@
+改善されたファイル一覧
+====================
+
+新規作成ファイル:
+- components/scroll-to-top.tsx (ページトップへ戻るボタン)
+- components/theme-toggle.tsx (テーマ切り替えボタン)
+- components/contact-form.tsx (お問い合わせフォーム)
+- components/ui/input.tsx (入力フィールドコンポーネント)
+- components/ui/textarea.tsx (テキストエリアコンポーネント)
+- IMPROVEMENTS.md (改善内容の詳細)
+- TEST_RESULTS.md (テスト結果)
+- FINAL_REPORT.md (最終レポート)
+
+修正ファイル:
+- app/layout.tsx (メタデータ修正、ThemeProvider追加)
+- app/page.tsx (ScrollToTopコンポーネント追加)
+- app/globals.css (ライトモード用スタイル追加)
+- components/hero-section.tsx (title表示の条件分岐追加)
+- components/navigation.tsx (ThemeToggle追加)
+- components/contact-section.tsx (ContactForm統合)
+- components/footer.tsx (nameEn → name修正)
+- next.config.mjs (eslint設定削除、最適化)
+- package.json (TypeScriptバージョン更新)
+
+主な改善点:
+1. メタデータとSEOの最適化
+2. TypeScript 5.9.3へのアップデート
+3. ダークモード/ライトモード切り替え機能
+4. ページトップへ戻るボタン
+5. お問い合わせフォーム
+6. UIコンポーネントの改善
+7. ビルドエラーの解消

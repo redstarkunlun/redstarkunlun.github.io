@@ -17,11 +17,13 @@ export function HeroSection() {
             </div>
 
             {/* タイトルにテキストグラデーションを追加 */}
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-              <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {siteConfig.title}
-              </span>
-            </h1>
+            {siteConfig.title && (
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+                <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+                  {siteConfig.title}
+                </span>
+              </h1>
+            )}
 
             <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed whitespace-pre-line">
               {siteConfig.bio}

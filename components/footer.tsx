@@ -10,7 +10,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* コピーライト */}
           <p className="text-sm text-gray-400">
-            © {currentYear} {siteConfig.nameEn}. All rights reserved.
+            © {currentYear} {siteConfig.name}. All rights reserved.
           </p>
 
           {/* 追加リンク（必要に応じて追加） */}
