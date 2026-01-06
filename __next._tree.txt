@@ -1,0 +1,9 @@
+1:"$Sreact.fragment"
+2:I[69450,["/_next/static/chunks/5d5e03acf2f3037a.js","/_next/static/chunks/1e109efa3fe1594f.js"],"ViewportBoundary"]
+4:I[69450,["/_next/static/chunks/5d5e03acf2f3037a.js","/_next/static/chunks/1e109efa3fe1594f.js"],"MetadataBoundary"]
+5:"$Sreact.suspense"
+:HL["/_next/static/chunks/00c34330034ff257.css","style"]
+:HL["/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"buildId":"eDIFT-Qra-Ic38Frjk8zK","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"head":["$","$1","h",{"children":[null,["$","$L2",null,{"children":"$@3"}],["$","div",null,{"hidden":true,"children":["$","$L4",null,{"children":["$","$5",null,{"name":"Next.Metadata","children":"$@6"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isHeadPartial":false,"staleTime":300}
+3:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+6:[["$","title","0",{"children":"かふぇいん"}],["$","meta","1",{"name":"description","content":"鹿児島ユナイテッドFCサポ\n両国民"}],["$","meta","2",{"name":"author","content":"かふぇいん"}],["$","meta","3",{"name":"generator","content":"v0.app"}],["$","meta","4",{"name":"keywords","content":"ポートフォリオ,Web開発,フロントエンド,かふぇいん"}],["$","meta","5",{"property":"og:title","content":"かふぇいん"}],["$","meta","6",{"property":"og:description","content":"鹿児島ユナイテッドFCサポ\n両国民"}],["$","meta","7",{"property":"og:locale","content":"ja_JP"}],["$","meta","8",{"property":"og:type","content":"website"}],["$","meta","9",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","10",{"name":"twitter:title","content":"かふぇいん"}],["$","meta","11",{"name":"twitter:description","content":"鹿児島ユナイテッドFCサポ\n両国民"}]]
