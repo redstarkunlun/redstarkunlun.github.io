@@ -3,354 +3,475 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>【公式】64ffe1ne.cloud - 準備中！！！</title>
+  <title>†*。64ffe1ne's ROOM。*† 〜永遠の工事中〜</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "MS PGothic", "ＭＳ Ｐゴシック", "Hiragino Kaku Gothic ProN", sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
     body {
-      background-color: #000080;
-      background-image: radial-gradient(#1a1a8c 15%, transparent 16%), radial-gradient(#1a1a8c 15%, transparent 16%);
-      background-size: 60px 60px;
-      background-position: 0 0, 30px 30px;
-      color: #ffff00;
-      font-family: "MS PGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-      overflow-x: hidden;
+      background-color: #000033;
+      background-image: 
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 20px);
+      background-size: 350px 350px, 200px 200px, 150px 150px;
+      background-position: 0 0, 40px 60px, 130px 270px;
+      color: #ffffff;
+      padding: 10px;
       cursor: crosshair;
     }
 
-    .marquee-bar {
-      background: #ff0000;
-      color: #ffffff;
+    a { color: #00ffff; text-decoration: underline; }
+    a:hover { color: #ff00ff; background-color: #ffff00; }
+
+    .marquee-container {
+      border: 2px ridge #ffffff;
+      background: #000080;
+      color: #ffff00;
       font-weight: bold;
-      font-size: 1.2rem;
-      padding: 6px 0;
-      border-bottom: 3px dashed #ffff00;
+      padding: 4px;
+      margin-bottom: 12px;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 15px auto;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.95);
-      color: #000;
-      border: 5px ridge #c0c0c0;
-      box-shadow: 0 0 25px #ff00ff;
+    .rainbow {
+      font-size: 20px;
+      font-weight: bold;
+      animation: rainbow-anim 1s infinite alternate;
+      letter-spacing: 2px;
+    }
+    @keyframes rainbow-anim {
+      0% { color: #ff0000; text-shadow: 0 0 4px #ff0000; }
+      20% { color: #ff8800; text-shadow: 0 0 4px #ff8800; }
+      40% { color: #ffff00; text-shadow: 0 0 4px #ffff00; }
+      60% { color: #00ff00; text-shadow: 0 0 4px #00ff00; }
+      80% { color: #00ffff; text-shadow: 0 0 4px #00ffff; }
+      100% { color: #ff00ff; text-shadow: 0 0 4px #ff00ff; }
     }
 
-    header {
-      text-align: center;
-      padding: 20px 10px;
-      background: linear-gradient(180deg, #ff007f, #7f00ff);
-      color: #fff;
-      border: 3px solid #ffeb3b;
-      margin-bottom: 15px;
-    }
-
-    .rainbow-text {
-      font-size: 2.2rem;
-      font-weight: 900;
-      animation: rainbow 1s infinite alternate;
-      text-shadow: 2px 2px 0 #000;
-    }
-
-    @keyframes rainbow {
-      0% { color: #ff0000; }
-      20% { color: #ff9900; }
-      40% { color: #ffff00; }
-      60% { color: #00ff00; }
-      80% { color: #00ffff; }
-      100% { color: #ff00ff; }
-    }
-
-    .blink { animation: blink-anim 0.4s infinite; }
+    .blink { animation: blink-anim 0.5s infinite steps(1); }
     @keyframes blink-anim { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 220px 1fr 220px;
-      gap: 15px;
-    }
-    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
-
-    .ad-card {
-      border: 3px solid #f00;
-      padding: 10px;
-      margin-bottom: 15px;
-      background: #fff;
-      text-align: center;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.1s;
-    }
-    .ad-card:hover { transform: scale(1.03); }
-    .ad-card.flashing { animation: border-flash 0.3s infinite alternate; }
-    @keyframes border-flash {
-      from { border-color: red; background-color: #ffffcc; }
-      to { border-color: blue; background-color: #ffcccc; }
+    .main-table {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border: 4px ridge #c0c0c0;
+      background-color: #000000;
+      border-collapse: collapse;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
     }
 
-    .ad-tag {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: #888;
-      color: #fff;
-      font-size: 9px;
-      padding: 1px 4px;
-    }
-
-    .ad-winner { background: linear-gradient(45deg, #ffe082, #ffb300); border: 4px dashed #d50000; }
-    .ad-winner h3 { font-size: 1.1rem; color: #b71c1c; }
-    .ad-virus { background: #000; color: #00ff00; font-family: monospace; border: 3px solid #00ff00; }
-    .ad-caffeine { background: #3e2723; color: #d7ccc8; border: 3px solid #ffab00; }
-
-    .ad-btn {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 8px 16px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #fff;
-      background: linear-gradient(180deg, #ff3d00, #dd2c00);
-      border: 2px outset #fff;
-      border-radius: 4px;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #8b0000;
-    }
-    .ad-btn:active { transform: translateY(3px); box-shadow: none; }
-
-    .main-content {
-      text-align: center;
+    .header-cell {
       padding: 15px;
-      border: 2px dashed #999;
-      background: #fafafa;
+      text-align: center;
+      border-bottom: 3px double #ffffff;
+      background: linear-gradient(to bottom, #000080, #000033);
     }
 
-    .counter-box {
-      background: #000;
-      color: #0f0;
-      font-family: "Courier New", monospace;
-      font-size: 1.5rem;
+    .sidebar-cell {
+      width: 200px;
+      vertical-align: top;
+      border-right: 2px groove #ffffff;
+      padding: 10px;
+      background-color: #000044;
+    }
+
+    .content-cell {
+      vertical-align: top;
+      padding: 15px;
+      background-color: #050510;
+    }
+
+    .counter-wrapper {
+      margin: 10px 0;
+      padding: 5px;
+      border: 2px inset #ffffff;
       display: inline-block;
-      padding: 5px 15px;
-      border: 2px inset #fff;
+      background: #000000;
+    }
+    .counter-digit {
+      background: #000;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 2px 4px;
+      border: 1px solid #333;
+      margin: 0 1px;
+    }
+
+    .menu-box {
+      border: 2px solid #0088ff;
+      margin-bottom: 12px;
+      background: #000022;
+    }
+    .menu-title {
+      background: #0088ff;
+      color: #ffffff;
+      font-weight: bold;
+      padding: 3px 6px;
+      text-align: center;
+    }
+    .menu-list { list-style: none; padding: 6px; }
+    .menu-list li { margin: 4px 0; padding-left: 5px; }
+    .menu-list li:before { content: "◆ "; color: #ff00ff; }
+
+    .info-box {
+      border: 2px dashed #ffff00;
+      padding: 8px;
+      margin: 10px 0;
+      background: #222200;
+      color: #ffffcc;
+    }
+
+    .construction-banner {
+      border: 2px solid #ff0000;
+      background: #330000;
+      color: #ff9999;
+      padding: 6px;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .bbs-container {
+      border: 2px groove #ffffff;
+      padding: 10px;
+      margin-top: 15px;
+      background: #111122;
+    }
+    .bbs-header {
+      background: #800000;
+      color: #fff;
+      padding: 4px 8px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .bbs-form input, .bbs-form textarea {
+      background: #ffffff;
+      color: #000000;
+      border: 2px inset #999;
+      padding: 3px;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    .bbs-btn {
+      background: #c0c0c0;
+      border: 2px outset #fff;
+      padding: 3px 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .bbs-btn:active { border: 2px inset #fff; }
+
+    .bbs-posts {
+      margin-top: 10px;
+      max-height: 250px;
+      overflow-y: scroll;
+      border: 1px inset #555;
+      padding: 6px;
+      background: #000;
+    }
+    .bbs-post {
+      border-bottom: 1px dashed #555;
+      padding: 6px 0;
+    }
+
+    .banner-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
       margin: 10px 0;
     }
-
-    .popup-window {
-      position: fixed;
-      width: 300px;
-      background: #c0c0c0;
-      border: 3px outset #ffffff;
-      box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
-      z-index: 9999;
-      user-select: none;
-    }
-    .popup-header {
-      background: linear-gradient(90deg, #000080, #1084d0);
-      color: #fff;
-      padding: 3px 6px;
-      font-size: 12px;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
+    .retro-banner {
+      width: 88px;
+      height: 31px;
+      border: 1px solid #ffffff;
+      display: inline-flex;
       align-items: center;
-      cursor: move;
-    }
-    .popup-close {
-      background: #c0c0c0;
-      border: 2px outset #fff;
-      font-weight: bold;
-      width: 18px;
-      height: 18px;
-      line-height: 14px;
+      justify-content: center;
+      font-size: 9px;
       text-align: center;
+      font-weight: bold;
       cursor: pointer;
-      font-size: 11px;
+      text-decoration: none;
+      box-shadow: 1px 1px 0 #000;
     }
-    .popup-body {
-      padding: 12px;
-      color: #000;
-      text-align: center;
-      background: #fff;
-      margin: 3px;
-      border: 2px inset #808080;
-    }
+    .banner-caffeine { background: linear-gradient(135deg, #4e342e, #ff6f00); color: #fff; }
+    .banner-night { background: linear-gradient(135deg, #1a237e, #4a148c); color: #ffff00; }
+    .banner-ie { background: linear-gradient(135deg, #0288d1, #01579b); color: #fff; }
+    .banner-html { background: linear-gradient(135deg, #e65100, #bf360c); color: #fff; }
 
-    .bottom-floating-ad {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(255, 235, 59, 0.95);
-      color: #d50000;
-      border-top: 4px solid #f44336;
-      padding: 10px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      font-weight: bold;
-      z-index: 1000;
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 14px;
+      animation: sparkle-anim 0.8s forwards;
+      z-index: 99999;
+    }
+    @keyframes sparkle-anim {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: scale(0.2) translateY(20px) rotate(180deg); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="marquee-bar">
-    <marquee scrollamount="12">
-      🔥【重要なお知らせ】現在 64ffe1ne.cloud は超絶準備中です！ ☕ カフェインが足りません！ 💥 クリックしてサイトを爆速構築！ 🎁 訪問者数 1,000,000 人突破記念大感謝セール実施中！！！
+
+  <div class="marquee-container">
+    <marquee scrollamount="6">
+      ようこそ！ここは「64ffe1ne.cloud」のホームページです★　只今リニューアル工事中…　キリ番（1000000）踏んだ人は必ずBBSにカキコしてね！！　相互リンク募集中です！
     </marquee>
   </div>
 
-  <div class="container">
-    <header>
-      <div class="rainbow-text">★☆★ 64ffe1ne.cloud ★☆★</div>
-      <p class="blink" style="font-size: 1.3rem; margin-top: 8px; font-weight: bold; color: #ffeb3b;">
-        ⚠️ サイトのコードが消滅したため現在工事中です ⚠️
-      </p>
-    </header>
-
-    <div class="grid">
-      <aside>
-        <div class="ad-card flashing" onclick="spawnAd()">
-          <span class="ad-tag">広告 [PR]</span>
-          <p style="color:red; font-weight:bold; font-size:12px;">【急募】</p>
-          <h4 style="color:#0000cd;">HTMLが書ける人</h4>
-          <p style="font-size:11px; margin-top:4px;">時給: ☕3杯<br>コード消去した責任者を救え！</p>
-          <div class="ad-btn" style="font-size:12px;">今すぐ応募 ＞</div>
-        </div>
-
-        <div class="ad-card ad-winner" onclick="spawnAd()">
-          <span class="ad-tag">広告</span>
-          <h3>🎉 当選おめでとうございます！</h3>
-          <p style="font-size:11px; margin:5px 0;">あなたはこのサーバーで<b>1,000,000人目</b>のアクセス者です！</p>
-          <div style="font-size: 24px;">☕☕☕</div>
-          <div class="ad-btn">カフェインを受け取る</div>
-        </div>
-      </aside>
-
-      <main class="main-content">
-        <h2 style="color:#b71c1c; margin-bottom:10px;">🚧 UNDER CONSTRUCTION 🚧</h2>
-        <p>当サイト（<strong>64ffe1ne.cloud</strong>）は、管理人が誤ってコードを吹き飛ばしたため、一時的に何もない空間となっております。</p>
+  <table class="main-table">
+    <tr>
+      <td colspan="2" class="header-cell">
+        <div class="rainbow">†*。 64ffe1ne's Cyber Cafe 。*†</div>
+        <p style="color: #ff00ff; margin-top: 5px;">〜 Caffeine Driven Development 〜</p>
         
-        <div style="margin: 20px 0;">
-          <p style="font-size: 12px; color: #666;">あなたは</p>
-          <div class="counter-box" id="counter">0001000000</div>
-          <p style="font-size: 12px; color: #666;">人目の犠牲者です</p>
+        <div style="margin-top: 10px;">
+          あなたは
+          <div class="counter-wrapper">
+            <span class="counter-digit">0</span>
+            <span class="counter-digit">9</span>
+            <span class="counter-digit">9</span>
+            <span class="counter-digit">9</span>
+            <span class="counter-digit">9</span>
+            <span class="counter-digit">8</span>
+          </div>
+          人目のお客様です！（キリ番踏み逃げ禁止）
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="sidebar-cell">
+        <div class="menu-box">
+          <div class="menu-title">★ MENU ★</div>
+          <ul class="menu-list">
+            <li><a href="#top">TOP</a></li>
+            <li><a href="#profile">PROFILE</a></li>
+            <li><a href="#diary">WEB DIARY</a></li>
+            <li><a href="#bbs">BBS (掲示板)</a></li>
+            <li><a href="#links">LINK (同盟)</a></li>
+            <li><a href="mailto:admin@64ffe1ne.cloud">MAIL (管理人)</a></li>
+          </ul>
         </div>
 
-        <div class="ad-card flashing" style="padding: 15px; margin: 20px 0;" onclick="spawnAd()">
-          <span class="ad-tag">スポンサー</span>
-          <h3 class="blink" style="color: red; font-size: 1.4rem;">💥 押すな危険 💥</h3>
-          <p style="font-size: 13px; margin: 8px 0;">ここをクリックすると何かが起こります（広告が増えます）</p>
-          <button class="ad-btn" style="font-size: 1.2rem; padding: 10px 24px;">広告を増殖させる</button>
-        </div>
-      </main>
-
-      <aside>
-        <div class="ad-card ad-caffeine" onclick="spawnAd()">
-          <span class="ad-tag">広告 [PR]</span>
-          <h4 style="color:#ffd54f;">眠気と戦うあなたへ</h4>
-          <p style="font-size:11px; margin:5px 0;">カフェイン純度 99.9%！<br>飲むだけで徹夜開発が可能に！？</p>
-          <div style="font-size: 20px;">⚡☕⚡</div>
-          <div class="ad-btn" style="background:linear-gradient(#ff6f00, #e65100);">詳しく見る</div>
+        <div class="menu-box">
+          <div class="menu-title">🎵 BGM</div>
+          <div style="padding: 6px; text-align: center;">
+            <button class="bbs-btn" id="bgm-toggle" onclick="toggleBGM()">♪ BGM再生 (MIDI風)</button>
+            <p style="font-size: 9px; color: #aaa; margin-top: 4px;">音量注意！</p>
+          </div>
         </div>
 
-        <div class="ad-card ad-virus" onclick="spawnAd()">
-          <span class="ad-tag">SYSTEM</span>
-          <p style="color:#ff3333; font-weight:bold;">⚠️ SYSTEM ALERT</p>
-          <p style="font-size:11px; margin:5px 0;">警告！あなたのブラウザはカフェインが枯渇しています。</p>
-          <div class="ad-btn" style="background:#333; border-color:#0f0; color:#0f0; font-size:11px;">今すぐスキャン</div>
+        <div class="menu-box">
+          <div class="menu-title">⚠️ 注意事項</div>
+          <div style="padding: 5px; font-size: 10px; color: #ffcccc;">
+            ・当サイトはリンクフリーです<br>
+            ・無断転載・直リンク厳禁<br>
+            ・荒らしはスルー推奨
+          </div>
         </div>
-      </aside>
-    </div>
 
-    <footer style="text-align: center; margin-top: 25px; padding: 15px; border-top: 2px dashed #ccc; font-size: 12px; color: #555;">
-      <p>© 2026 64ffe1ne.cloud - All Rights Confused.</p>
-    </footer>
-  </div>
+        <div style="text-align: center; margin-top: 10px;">
+          <p style="font-size: 10px; color: #ffff00;">▼ 当サイトのバナー ▼</p>
+          <div class="retro-banner banner-caffeine" style="margin: 5px auto;">64ffe1ne</div>
+          <p style="font-size: 9px; color: #888;">(88x31 直リンク禁止/お持ち帰り推奨)</p>
+        </div>
+      </td>
 
-  <div class="bottom-floating-ad">
-    <div>🚨【限定オファー】64ffe1ne.cloud のリニューアルをお見逃しなく！🚨</div>
-    <div class="ad-btn" onclick="spawnAd()" style="margin:0; padding:6px 12px; font-size:12px;">通知を受け取る (広告+)</div>
-  </div>
+      <td class="content-cell">
+        <div class="construction-banner">
+          🚧 <span class="blink">UNDER CONSTRUCTION (工事中)</span> 🚧<br>
+          <span style="font-size: 11px; font-weight: normal;">管理人が誤ってコードを全消去したため、現在突貫工事中です。</span>
+        </div>
+
+        <div class="info-box">
+          <b style="color:#ffff00;">【NEWS】サイト開設しました！ (2026/09/03)</b><br>
+          カフェインを燃料に生きるエンジニアの隠れ家です。<br>
+          Internet Explorer 6.0 / 画面解像度 800×600 での閲覧を推奨します。
+        </div>
+
+        <h3 id="profile" style="color: #00ffcc; border-bottom: 2px dotted #00ffcc; padding-bottom: 3px; margin: 15px 0 8px;">
+          ◆ PROFILE (管理人について) ◆
+        </h3>
+        <table style="width: 100%; border: 1px solid #555; background: #000022; margin-bottom: 15px;">
+          <tr><td style="width: 80px; padding: 4px; border: 1px solid #333; color: #ffff00;">HN</td><td style="padding: 4px; border: 1px solid #333;">64ffe1ne (カフェイン)</td></tr>
+          <tr><td style="padding: 4px; border: 1px solid #333; color: #ffff00;">生息地</td><td style="padding: 4px; border: 1px solid #333;">PCの前（深夜）</td></tr>
+          <tr><td style="padding: 4px; border: 1px solid #333; color: #ffff00;">主食</td><td style="padding: 4px; border: 1px solid #333;">珈琲、エナドリ、バグ取り</td></tr>
+          <tr><td style="padding: 4px; border: 1px solid #333; color: #ffff00;">好きな言葉</td><td style="padding: 4px; border: 1px solid #333;">「`git commit -m "fix"`」「一期一会」</td></tr>
+        </table>
+
+        <h3 id="diary" style="color: #ff99ff; border-bottom: 2px dotted #ff99ff; padding-bottom: 3px; margin: 15px 0 8px;">
+          ◆ WEB DIARY (電脳日記) ◆
+        </h3>
+        <div style="background: #111; padding: 8px; border-left: 4px solid #ff00ff; margin-bottom: 10px;">
+          <b style="color: #00ffff;">★ 2026年9月3日（木） 「やっちまった…」</b><br>
+          <p style="margin-top: 4px;">
+            サイトのデータを整理しようとして、ターミナルで `rm` コマンドを叩いたら一瞬で全コードが消滅して激しく鬱（；_；）<br>
+            バックアップの大切さを身に沁みて実感した午前0時。<br>
+            とりあえず平成風のサイトを作って心を落ち着かせることにした。コーヒーもう1杯飲もう…
+          </p>
+        </div>
+
+        <div class="bbs-container" id="bbs">
+          <div class="bbs-header">💬 カフェインBBS (一行掲示板)</div>
+          <p style="font-size: 11px; margin-bottom: 8px; color: #aaa;">足跡や感想を残していってね！キリ番報告もこちらへ★</p>
+          
+          <div class="bbs-form">
+            名前: <input type="text" id="bbs-name" placeholder="名無しさん" style="width: 120px;">
+            メッセージ: <input type="text" id="bbs-msg" placeholder="カキコしてね！" style="width: 200px;">
+            <button class="bbs-btn" onclick="addPost()">投稿する！</button>
+          </div>
+
+          <div class="bbs-posts" id="bbs-post-list">
+            <div class="bbs-post">
+              <span style="color: #ffff00;">[1] 管理人 ★</span> <span style="color: #888;">2026/09/03 00:00</span><br>
+              初カキコども！サイト見に来てくれてサンクスです！！
+            </div>
+          </div>
+        </div>
+
+        <h3 id="links" style="color: #ffff00; border-bottom: 2px dotted #ffff00; padding-bottom: 3px; margin: 20px 0 8px;">
+          ◆ LINK & 同盟バナー ◆
+        </h3>
+        <div class="banner-grid">
+          <div class="retro-banner banner-caffeine">☕ カフェイン同盟</div>
+          <div class="retro-banner banner-night">🌙 徹夜開発同盟</div>
+          <div class="retro-banner banner-html">&lt;/&gt; 手打ちHTML</div>
+          <div class="retro-banner banner-ie">e IE 6.0 推奨</div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2" style="background: #000080; border-top: 3px double #fff; text-align: center; padding: 12px; font-size: 10px;">
+        <p>Copyright © 2026 64ffe1ne.cloud All Rights Reserved.</p>
+        <p style="margin-top: 4px; color: #aaa;">SINCE 2026.09.03 / PRODUCED BY 64ffe1ne</p>
+      </td>
+    </tr>
+  </table>
 
   <script>
-    const adTemplates = [
-      { title: "🎉 特賞当選！", body: "おめでとうございます！高級コーヒー豆 10年分が当選しました！", btn: "受け取る" },
-      { title: "⚠️ カフェイン警告", body: "PCの内部カフェイン残量が 3% です。補充してください。", btn: "補充する" },
-      { title: "💥 画面が消滅するまであと5秒", body: "サイトの復旧ボタンを押してカウントダウンを止めてください！", btn: "復旧する" },
-      { title: "☕ 64ffe1ne通信", body: "今日も元気にコードを書いていきましょう（バックアップは忘れずに）", btn: "了解" }
-    ];
-
-    let currentZIndex = 10000;
-
-    function createPopup(x, y, data) {
-      const popup = document.createElement('div');
-      popup.className = 'popup-window';
-      popup.style.left = (x || (Math.random() * (window.innerWidth - 320))) + 'px';
-      popup.style.top = (y || (Math.random() * (window.innerHeight - 250))) + 'px';
-
-      popup.innerHTML = `
-        <div class="popup-header">
-          <span>${data.title}</span>
-          <div class="popup-close">×</div>
-        </div>
-        <div class="popup-body">
-          <p style="font-size:12px; margin-bottom:8px;">${data.body}</p>
-          <div class="ad-btn" style="font-size:12px; padding:5px 12px;">${data.btn}</div>
-        </div>
-      `;
-
-      popup.querySelector('.popup-close').addEventListener('click', (e) => {
-        e.stopPropagation();
-        popup.remove();
-        if (Math.random() > 0.3) {
-          setTimeout(() => { spawnAd(); spawnAd(); }, 200);
-        }
-      });
-
-      popup.querySelector('.ad-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        spawnAd();
-      });
-
-      let isDragging = false, startX, startY, initialLeft, initialTop;
-      const header = popup.querySelector('.popup-header');
-
-      header.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        initialLeft = popup.offsetLeft;
-        initialTop = popup.offsetTop;
-        popup.style.zIndex = ++currentZIndex;
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        popup.style.left = (initialLeft + e.clientX - startX) + 'px';
-        popup.style.top = (initialTop + e.clientY - startY) + 'px';
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-      document.body.appendChild(popup);
-    }
-
-    function spawnAd() {
-      const data = adTemplates[Math.floor(Math.random() * adTemplates.length)];
-      createPopup(null, null, data);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => spawnAd(), 500);
-      setTimeout(() => spawnAd(), 1000);
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      alert("★☆★ 当サイトの画像・テキストの無断転載・直リンクは禁止です！！ ★☆★\n（右クリックはご遠慮ください）");
     });
 
-    let count = 1000000;
-    setInterval(() => {
-      count += Math.floor(Math.random() * 3);
-      const el = document.getElementById('counter');
-      if (el) el.innerText = String(count).padStart(10, '0');
-    }, 2000);
+    const sparkleChars = ["★", "☆", "・", "｡", "･", "ﾟ", "✦"];
+    const sparkleColors = ["#ff00ff", "#00ffff", "#ffff00", "#ffffff", "#00ff00", "#ff007f"];
+    
+    let lastSparkle = 0;
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastSparkle < 60) return;
+      lastSparkle = now;
+
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.innerText = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+      sparkle.style.color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+      sparkle.style.left = (e.pageX - 6) + 'px';
+      sparkle.style.top = (e.pageY - 6) + 'px';
+
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 800);
+    });
+
+    function loadPosts() {
+      const saved = localStorage.getItem('retro_bbs_posts');
+      if (saved) {
+        document.getElementById('bbs-post-list').innerHTML = saved;
+      }
+    }
+    loadPosts();
+
+    function addPost() {
+      const nameInput = document.getElementById('bbs-name');
+      const msgInput = document.getElementById('bbs-msg');
+      const name = nameInput.value.trim() || '通りすがりの名無し';
+      const msg = msgInput.value.trim();
+
+      if (!msg) {
+        alert('メッセージを入力してください！');
+        return;
+      }
+
+      const postList = document.getElementById('bbs-post-list');
+      const count = postList.children.length + 1;
+      const now = new Date();
+      const timeStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+      const postEl = document.createElement('div');
+      postEl.className = 'bbs-post';
+      postEl.innerHTML = `<span style="color: #00ffff;">[${count}] ${escapeHtml(name)}</span> <span style="color: #888;">${timeStr}</span><br>${escapeHtml(msg)}`;
+
+      postList.prepend(postEl);
+      localStorage.setItem('retro_bbs_posts', postList.innerHTML);
+
+      msgInput.value = '';
+      alert('カキコありがとうございます！');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
+    let audioCtx = null;
+    let isPlaying = false;
+    let bgmInterval = null;
+
+    const melody = [
+      261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 440.00, 392.00,
+      329.63, 293.66, 261.63, 329.63, 392.00, 523.25, 659.25, 523.25
+    ];
+    let noteIndex = 0;
+
+    function toggleBGM() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      const btn = document.getElementById('bgm-toggle');
+      if (isPlaying) {
+        clearInterval(bgmInterval);
+        isPlaying = false;
+        btn.innerText = "♪ BGM再生 (MIDI風)";
+        btn.style.background = "#c0c0c0";
+      } else {
+        isPlaying = true;
+        btn.innerText = "■ BGM停止";
+        btn.style.background = "#ffff00";
+        bgmInterval = setInterval(() => {
+          playBeep(melody[noteIndex]);
+          noteIndex = (noteIndex + 1) % melody.length;
+        }, 220);
+      }
+    }
+
+    function playBeep(freq) {
+      if (!audioCtx || audioCtx.state === 'suspended') return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.2);
+    }
   </script>
 </body>
 </html>
