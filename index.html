@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【公式】64ffe1ne.cloud - 準備中！！！</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #000080;
+      background-image: radial-gradient(#1a1a8c 15%, transparent 16%), radial-gradient(#1a1a8c 15%, transparent 16%);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+      color: #ffff00;
+      font-family: "MS PGothic", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    .marquee-bar {
+      background: #ff0000;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 6px 0;
+      border-bottom: 3px dashed #ffff00;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 15px auto;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #000;
+      border: 5px ridge #c0c0c0;
+      box-shadow: 0 0 25px #ff00ff;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 10px;
+      background: linear-gradient(180deg, #ff007f, #7f00ff);
+      color: #fff;
+      border: 3px solid #ffeb3b;
+      margin-bottom: 15px;
+    }
+
+    .rainbow-text {
+      font-size: 2.2rem;
+      font-weight: 900;
+      animation: rainbow 1s infinite alternate;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    @keyframes rainbow {
+      0% { color: #ff0000; }
+      20% { color: #ff9900; }
+      40% { color: #ffff00; }
+      60% { color: #00ff00; }
+      80% { color: #00ffff; }
+      100% { color: #ff00ff; }
+    }
+
+    .blink { animation: blink-anim 0.4s infinite; }
+    @keyframes blink-anim { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 220px 1fr 220px;
+      gap: 15px;
+    }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+    .ad-card {
+      border: 3px solid #f00;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #fff;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.1s;
+    }
+    .ad-card:hover { transform: scale(1.03); }
+    .ad-card.flashing { animation: border-flash 0.3s infinite alternate; }
+    @keyframes border-flash {
+      from { border-color: red; background-color: #ffffcc; }
+      to { border-color: blue; background-color: #ffcccc; }
+    }
+
+    .ad-tag {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #888;
+      color: #fff;
+      font-size: 9px;
+      padding: 1px 4px;
+    }
+
+    .ad-winner { background: linear-gradient(45deg, #ffe082, #ffb300); border: 4px dashed #d50000; }
+    .ad-winner h3 { font-size: 1.1rem; color: #b71c1c; }
+    .ad-virus { background: #000; color: #00ff00; font-family: monospace; border: 3px solid #00ff00; }
+    .ad-caffeine { background: #3e2723; color: #d7ccc8; border: 3px solid #ffab00; }
+
+    .ad-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(180deg, #ff3d00, #dd2c00);
+      border: 2px outset #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #8b0000;
+    }
+    .ad-btn:active { transform: translateY(3px); box-shadow: none; }
+
+    .main-content {
+      text-align: center;
+      padding: 15px;
+      border: 2px dashed #999;
+      background: #fafafa;
+    }
+
+    .counter-box {
+      background: #000;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+      font-size: 1.5rem;
+      display: inline-block;
+      padding: 5px 15px;
+      border: 2px inset #fff;
+      margin: 10px 0;
+    }
+
+    .popup-window {
+      position: fixed;
+      width: 300px;
+      background: #c0c0c0;
+      border: 3px outset #ffffff;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
+      z-index: 9999;
+      user-select: none;
+    }
+    .popup-header {
+      background: linear-gradient(90deg, #000080, #1084d0);
+      color: #fff;
+      padding: 3px 6px;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+    }
+    .popup-close {
+      background: #c0c0c0;
+      border: 2px outset #fff;
+      font-weight: bold;
+      width: 18px;
+      height: 18px;
+      line-height: 14px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .popup-body {
+      padding: 12px;
+      color: #000;
+      text-align: center;
+      background: #fff;
+      margin: 3px;
+      border: 2px inset #808080;
+    }
+
+    .bottom-floating-ad {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 235, 59, 0.95);
+      color: #d50000;
+      border-top: 4px solid #f44336;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-weight: bold;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div class="marquee-bar">
+    <marquee scrollamount="12">
+      🔥【重要なお知らせ】現在 64ffe1ne.cloud は超絶準備中です！ ☕ カフェインが足りません！ 💥 クリックしてサイトを爆速構築！ 🎁 訪問者数 1,000,000 人突破記念大感謝セール実施中！！！
+    </marquee>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="rainbow-text">★☆★ 64ffe1ne.cloud ★☆★</div>
+      <p class="blink" style="font-size: 1.3rem; margin-top: 8px; font-weight: bold; color: #ffeb3b;">
+        ⚠️ サイトのコードが消滅したため現在工事中です ⚠️
+      </p>
+    </header>
+
+    <div class="grid">
+      <aside>
+        <div class="ad-card flashing" onclick="spawnAd()">
+          <span class="ad-tag">広告 [PR]</span>
+          <p style="color:red; font-weight:bold; font-size:12px;">【急募】</p>
+          <h4 style="color:#0000cd;">HTMLが書ける人</h4>
+          <p style="font-size:11px; margin-top:4px;">時給: ☕3杯<br>コード消去した責任者を救え！</p>
+          <div class="ad-btn" style="font-size:12px;">今すぐ応募 ＞</div>
+        </div>
+
+        <div class="ad-card ad-winner" onclick="spawnAd()">
+          <span class="ad-tag">広告</span>
+          <h3>🎉 当選おめでとうございます！</h3>
+          <p style="font-size:11px; margin:5px 0;">あなたはこのサーバーで<b>1,000,000人目</b>のアクセス者です！</p>
+          <div style="font-size: 24px;">☕☕☕</div>
+          <div class="ad-btn">カフェインを受け取る</div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <h2 style="color:#b71c1c; margin-bottom:10px;">🚧 UNDER CONSTRUCTION 🚧</h2>
+        <p>当サイト（<strong>64ffe1ne.cloud</strong>）は、管理人が誤ってコードを吹き飛ばしたため、一時的に何もない空間となっております。</p>
+        
+        <div style="margin: 20px 0;">
+          <p style="font-size: 12px; color: #666;">あなたは</p>
+          <div class="counter-box" id="counter">0001000000</div>
+          <p style="font-size: 12px; color: #666;">人目の犠牲者です</p>
+        </div>
+
+        <div class="ad-card flashing" style="padding: 15px; margin: 20px 0;" onclick="spawnAd()">
+          <span class="ad-tag">スポンサー</span>
+          <h3 class="blink" style="color: red; font-size: 1.4rem;">💥 押すな危険 💥</h3>
+          <p style="font-size: 13px; margin: 8px 0;">ここをクリックすると何かが起こります（広告が増えます）</p>
+          <button class="ad-btn" style="font-size: 1.2rem; padding: 10px 24px;">広告を増殖させる</button>
+        </div>
+      </main>
+
+      <aside>
+        <div class="ad-card ad-caffeine" onclick="spawnAd()">
+          <span class="ad-tag">広告 [PR]</span>
+          <h4 style="color:#ffd54f;">眠気と戦うあなたへ</h4>
+          <p style="font-size:11px; margin:5px 0;">カフェイン純度 99.9%！<br>飲むだけで徹夜開発が可能に！？</p>
+          <div style="font-size: 20px;">⚡☕⚡</div>
+          <div class="ad-btn" style="background:linear-gradient(#ff6f00, #e65100);">詳しく見る</div>
+        </div>
+
+        <div class="ad-card ad-virus" onclick="spawnAd()">
+          <span class="ad-tag">SYSTEM</span>
+          <p style="color:#ff3333; font-weight:bold;">⚠️ SYSTEM ALERT</p>
+          <p style="font-size:11px; margin:5px 0;">警告！あなたのブラウザはカフェインが枯渇しています。</p>
+          <div class="ad-btn" style="background:#333; border-color:#0f0; color:#0f0; font-size:11px;">今すぐスキャン</div>
+        </div>
+      </aside>
+    </div>
+
+    <footer style="text-align: center; margin-top: 25px; padding: 15px; border-top: 2px dashed #ccc; font-size: 12px; color: #555;">
+      <p>© 2026 64ffe1ne.cloud - All Rights Confused.</p>
+    </footer>
+  </div>
+
+  <div class="bottom-floating-ad">
+    <div>🚨【限定オファー】64ffe1ne.cloud のリニューアルをお見逃しなく！🚨</div>
+    <div class="ad-btn" onclick="spawnAd()" style="margin:0; padding:6px 12px; font-size:12px;">通知を受け取る (広告+)</div>
+  </div>
+
+  <script>
+    const adTemplates = [
+      { title: "🎉 特賞当選！", body: "おめでとうございます！高級コーヒー豆 10年分が当選しました！", btn: "受け取る" },
+      { title: "⚠️ カフェイン警告", body: "PCの内部カフェイン残量が 3% です。補充してください。", btn: "補充する" },
+      { title: "💥 画面が消滅するまであと5秒", body: "サイトの復旧ボタンを押してカウントダウンを止めてください！", btn: "復旧する" },
+      { title: "☕ 64ffe1ne通信", body: "今日も元気にコードを書いていきましょう（バックアップは忘れずに）", btn: "了解" }
+    ];
+
+    let currentZIndex = 10000;
+
+    function createPopup(x, y, data) {
+      const popup = document.createElement('div');
+      popup.className = 'popup-window';
+      popup.style.left = (x || (Math.random() * (window.innerWidth - 320))) + 'px';
+      popup.style.top = (y || (Math.random() * (window.innerHeight - 250))) + 'px';
+
+      popup.innerHTML = `
+        <div class="popup-header">
+          <span>${data.title}</span>
+          <div class="popup-close">×</div>
+        </div>
+        <div class="popup-body">
+          <p style="font-size:12px; margin-bottom:8px;">${data.body}</p>
+          <div class="ad-btn" style="font-size:12px; padding:5px 12px;">${data.btn}</div>
+        </div>
+      `;
+
+      popup.querySelector('.popup-close').addEventListener('click', (e) => {
+        e.stopPropagation();
+        popup.remove();
+        if (Math.random() > 0.3) {
+          setTimeout(() => { spawnAd(); spawnAd(); }, 200);
+        }
+      });
+
+      popup.querySelector('.ad-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        spawnAd();
+      });
+
+      let isDragging = false, startX, startY, initialLeft, initialTop;
+      const header = popup.querySelector('.popup-header');
+
+      header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = popup.offsetLeft;
+        initialTop = popup.offsetTop;
+        popup.style.zIndex = ++currentZIndex;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        popup.style.left = (initialLeft + e.clientX - startX) + 'px';
+        popup.style.top = (initialTop + e.clientY - startY) + 'px';
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+      document.body.appendChild(popup);
+    }
+
+    function spawnAd() {
+      const data = adTemplates[Math.floor(Math.random() * adTemplates.length)];
+      createPopup(null, null, data);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => spawnAd(), 500);
+      setTimeout(() => spawnAd(), 1000);
+    });
+
+    let count = 1000000;
+    setInterval(() => {
+      count += Math.floor(Math.random() * 3);
+      const el = document.getElementById('counter');
+      if (el) el.innerText = String(count).padStart(10, '0');
+    }, 2000);
+  </script>
+</body>
+</html>
