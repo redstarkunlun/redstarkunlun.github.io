@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://64ffe1ne.cloud/sitemap.xml
