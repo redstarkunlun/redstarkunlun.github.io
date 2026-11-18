@@ -1,7 +1,7 @@
 {
-  "name": "鹿児島ユナイテッドFC 戦績連動貯金 v2",
+  "name": "鹿児島ユナイテッドFC 戦績連動貯金",
   "short_name": "ユナイテッド貯金",
-  "description": "鹿児島ユナイテッドFC公式戦戦績連動・全14項目厳密ルール対応＆Discord Webhook通知PWA (v2)",
+  "description": "鹿児島ユナイテッドFC公式戦戦績連動・全14項目ルール対応＆Discord単発/自動通知PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
