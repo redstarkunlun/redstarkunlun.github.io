@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="112" fill="#0A1931"/>
-  <polygon points="0,370 512,165 512,235 0,440" fill="#D90429"/>
-  <polygon points="0,440 512,235 512,250 0,455" fill="#F5B700"/>
-  <polygon points="40,390 185,205 230,220 288,168 330,190 472,390" fill="#18345E" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round"/>
-  <circle cx="256" cy="322" r="92" fill="#F5B700" stroke="#0A1931" stroke-width="12"/>
+  <polygon points="0,358 512,154 512,230 0,435" fill="#D90429"/>
+  <polygon points="0,435 512,230 512,248 0,453" fill="#F5B700"/>
+  <polygon points="40,390 180,200 226,220 286,164 332,190 472,390" fill="#16315C" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="256" cy="322" r="94" fill="#F5B700" stroke="#0A1931" stroke-width="12"/>
   <text x="256" y="356" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="112" fill="#0A1931">¥</text>
 </svg>
