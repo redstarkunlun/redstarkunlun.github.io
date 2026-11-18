@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <title>鹿児島ユナイテッドFC 戦績連動貯金 & Discord通知</title>
+  <meta name="theme-color" content="#0A1931" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ユナイテッド貯金" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <style>
+    :root {
+      --navy: #0A1931;
+      --navy-mid: #13294B;
+      --navy-card: #102342;
+      --crimson: #D90429;
+      --crimson-dark: #A6031F;
+      --gold: #F5B700;
+      --ice: #F4F7FB;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --border: rgba(255, 255, 255, 0.12);
+      --ok: #10B981;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      background: radial-gradient(circle at top right, #1B3B6F 0%, var(--navy) 55%, #060F1E 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding-top: var(--safe-top);
+      padding-bottom: calc(82px + var(--safe-bottom));
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(10, 25, 49, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--crimson);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .crest {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--navy-mid), var(--crimson));
+      border: 1.5px solid var(--gold);
+      display: grid; place-items: center; font-weight: 900; color: var(--gold); font-size: 16px;
+    }
+    .brand-title { font-size: 15px; font-weight: 800; letter-spacing: 0.02em; }
+    .brand-sub { font-size: 11px; color: var(--muted); }
+    .header-actions { display: flex; gap: 6px; }
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--navy-mid);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: transform 0.1s, opacity 0.15s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-crimson { background: var(--crimson); border-color: #FF4D6D; color: #fff; }
+    .btn-gold { background: var(--gold); border-color: #FFE066; color: #0A1931; }
+    .btn-ghost { background: transparent; }
+    .container { max-width: 960px; margin: 0 auto; padding: 14px; display: grid; gap: 14px; }
+
+    /* Hero Total Card */
+    .hero-card {
+      background: linear-gradient(135deg, #132C54 0%, #0D1E3A 65%, #2B0918 100%);
+      border: 1px solid rgba(245, 183, 0, 0.35);
+      border-radius: 18px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    .hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .hero-label { font-size: 12px; color: var(--gold); font-weight: 700; letter-spacing: 0.05em; }
+    .hero-amount {
+      font-size: 38px; font-weight: 900; letter-spacing: -0.02em; margin: 4px 0;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 2px 12px rgba(245, 183, 0, 0.25);
+    }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px;
+    }
+    .stat-pill {
+      background: rgba(6, 15, 30, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+    }
+    .stat-pill span { display: block; font-size: 10px; color: var(--muted); }
+    .stat-pill strong { font-size: 15px; font-weight: 800; color: #fff; }
+    .progress-wrap { margin-top: 14px; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+    .progress-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--crimson), var(--gold)); width: 0%; transition: width 0.3s ease; }
+
+    /* Tabs */
+    .tab-panel { display: none; gap: 14px; }
+    .tab-panel.active { display: grid; }
+
+    /* Section Card */
+    .card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 15px;
+    }
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px;
+    }
+    .card-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+
+    /* Season Special Controls (Avispa / Title / Promotion) */
+    .season-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 640px) { .season-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+    .season-box {
+      background: rgba(6, 15, 30, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .stepper { display: inline-flex; align-items: center; gap: 8px; }
+    .stepper button {
+      width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--navy-mid); color: #fff; font-weight: 900; font-size: 16px; cursor: pointer;
+    }
+    .stepper span { min-width: 24px; text-align: center; font-weight: 800; font-size: 15px; }
+
+    /* Match List */
+    .filter-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+    .chip {
+      padding: 6px 12px; border-radius: 99px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05); color: var(--muted); font-size: 12px; font-weight: 700;
+      white-space: nowrap; cursor: pointer;
+    }
+    .chip.active { background: var(--crimson); color: #fff; border-color: var(--crimson); }
+    .match-list { display: grid; gap: 10px; }
+    .match-item {
+      background: rgba(7, 17, 34, 0.72);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--muted);
+      border-radius: 12px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+    .match-item.win { border-left-color: var(--crimson); }
+    .match-item.draw { border-left-color: var(--gold); }
+    .match-item.loss { border-left-color: #3B82F6; }
+    .match-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .match-meta { font-size: 11px; color: var(--muted); }
+    .badge {
+      padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800;
+    }
+    .badge-pending { background: rgba(148,163,184,0.18); color: var(--muted); }
+    .badge-win { background: rgba(217,4,41,0.25); color: #FF758F; border: 1px solid rgba(217,4,41,0.5); }
+    .badge-draw { background: rgba(245,183,0,0.2); color: var(--gold); border: 1px solid rgba(245,183,0,0.45); }
+    .badge-loss { background: rgba(59,130,246,0.2); color: #93C5FD; border: 1px solid rgba(59,130,246,0.45); }
+    .match-main { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .match-opp { font-size: 15px; font-weight: 800; }
+    .match-score { font-size: 18px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .match-yen { font-size: 15px; font-weight: 900; color: var(--gold); }
+    .bonus-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .b-tag {
+      font-size: 10px; padding: 2px 7px; border-radius: 5px;
+      background: rgba(255,255,255,0.08); color: #E2E8F0;
+    }
+    .match-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 2px; }
+
+    /* Rule Table Grid */
+    .rules-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    }
+    @media (min-width: 640px) { .rules-grid { grid-template-columns: repeat(4, 1fr); } }
+    .rule-tile {
+      background: rgba(6, 15, 30, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+    .rule-tile .r-name { font-size: 11px; color: var(--muted); font-weight: 700; }
+    .rule-tile .r-val { font-size: 16px; font-weight: 900; color: var(--gold); margin-top: 3px; }
+    .rule-tile .r-cnt { font-size: 11px; color: #fff; margin-top: 3px; }
+
+    /* Inputs & Modal */
+    input[type="text"], input[type="url"], input[type="number"], input[type="date"], select {
+      width: 100%;
+      background: #071122;
+      border: 1px solid var(--border);
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 700; }
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(3, 8, 18, 0.82);
+      display: none; align-items: flex-end; justify-content: center; z-index: 60;
+      padding: 12px;
+    }
+    @media (min-width: 640px) { .modal-backdrop { align-items: center; } }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #0F213E;
+      border: 1px solid rgba(245,183,0,0.4);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+    .score-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; text-align: center; }
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .check-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: #071122; border: 1px solid var(--border);
+      padding: 9px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+    .check-pill input { width: 16px; height: 16px; accent-color: var(--crimson); }
+
+    /* Discord Embed Preview */
+    .discord-box {
+      background: #2B2D31;
+      border-left: 4px solid var(--crimson);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .discord-box pre {
+      margin: 0; white-space: pre-wrap; font-family: inherit; color: #DBDEE1;
+    }
+
+    /* Bottom Navigation */
+    nav.bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+      background: rgba(10, 25, 49, 0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      padding-bottom: var(--safe-bottom);
+    }
+    .nav-btn {
+      background: none; border: none; color: var(--muted);
+      padding: 10px 4px; font-size: 11px; font-weight: 700;
+      display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
+    }
+    .nav-btn.active { color: var(--gold); }
+    .nav-btn span.ico { font-size: 18px; }
+    .toast {
+      position: fixed; top: calc(68px + var(--safe-top)); left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: #0A1931; font-weight: 800; font-size: 13px;
+      padding: 9px 16px; border-radius: 99px; z-index: 80;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="crest">¥</div>
+      <div>
+        <div class="brand-title">鹿児島ユナイテッドFC 貯金</div>
+        <div class="brand-sub">全14項目公式ルール・手動記録PWA</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="openAddModal()">＋ 日程</button>
+      <button class="btn btn-gold" onclick="exportBackup()">保存</button>
+    </div>
+  </header>
+
+  <div id="toast" class="toast"></div>
+
+  <main class="container">
+    <!-- Hero Summary -->
+    <section class="hero-card">
+      <div class="hero-top">
+        <div>
+          <div class="hero-label">2026/27 SEASON TOTAL SAVINGS</div>
+          <div class="hero-amount" id="totalAmount">¥0</div>
+        </div>
+        <button class="btn btn-ghost" style="font-size:11px;padding:6px 9px;" onclick="editGoal()">🎯 目標編集</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-pill"><span>記録済試合</span><strong id="statPlayed">0 / 21</strong></div>
+        <div class="stat-pill"><span>勝 / 分 / 敗</span><strong id="statWDL">0-0-0</strong></div>
+        <div class="stat-pill"><span>フアンマ弾</span><strong id="statJuanma">0点</strong></div>
+        <div class="stat-pill"><span>現在連勝</span><strong id="statStreak">0連勝</strong></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="goalLabel">遠征・ユニフォーム資金目標</span>
+          <span id="goalText">¥0 / ¥50,000 (0%)</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="goalFill"></div></div>
+      </div>
+    </section>
+
+    <!-- TAB 1: MATCHES -->
+    <div id="tab-matches" class="tab-panel active">
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">🏆 シーズン連動・他クラブボーナス</div>
+        </div>
+        <div class="season-grid">
+          <div class="season-box">
+            <div>
+              <div style="font-size:12px;font-weight:800;">アビスパ福岡勝利ボーナス</div>
+              <div style="font-size:11px;color:var(--muted);">1勝につき +200円</div>
+            </div>
+            <div class="stepper">
+              <button onclick="changeAvispa(-1)">−</button>
+              <span id="avispaCount">0</span>
+              <button onclick="changeAvispa(1)">＋</button>
+            </div>
+          </div>
+          <label class="check-pill">
+            <input type="checkbox" id="chkChamp" onchange="toggleSeasonFlag('champ', this.checked)" />
+            <span>🏆 優勝 (+5,000円)</span>
+          </label>
+          <label class="check-pill">
+            <input type="checkbox" id="chkPromo" onchange="toggleSeasonFlag('promo', this.checked)" />
+            <span>⬆️ 昇格 (+3,000円)</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">📅 2026/27 公式戦日程（手動入力）</div>
+          <button class="btn" style="padding:5px 9px;font-size:11px;" onclick="resetAllData()">全リセット(¥0)</button>
+        </div>
+        <div class="filter-row" id="filterRow">
+          <button class="chip active" data-filter="all" onclick="setFilter('all', this)">すべて</button>
+          <button class="chip" data-filter="pending" onclick="setFilter('pending', this)">未入力</button>
+          <button class="chip" data-filter="done" onclick="setFilter('done', this)">記録済</button>
+          <button class="chip" data-filter="kyushu" onclick="setFilter('kyushu', this)">バトルオブ九州</button>
+        </div>
+        <div class="match-list" id="matchList" style="margin-top:10px;"></div>
+      </section>
+    </div>
+
+    <!-- TAB 2: RULES -->
+    <div id="tab-rules" class="tab-panel">
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">📋 全14項目 貯金ルール＆累計内訳</div>
+        </div>
+        <div class="rules-grid" id="rulesGrid"></div>
+      </section>
+    </div>
+
+    <!-- TAB 3: DISCORD -->
+    <div id="tab-discord" class="tab-panel">
+      <section class="card" style="display:grid;gap:12px;">
+        <div class="card-header" style="margin-bottom:0;">
+          <div class="card-title">🔔 Discord Webhook リアルタイム通知</div>
+        </div>
+        <div>
+          <label for="webhookUrl">Discord Webhook URL</label>
+          <input type="url" id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." onchange="saveWebhook()" />
+        </div>
+        <label class="check-pill">
+          <input type="checkbox" id="autoSendDiscord" onchange="saveWebhook()" />
+          <span>試合結果を保存した時に自動でDiscordへ送信する</span>
+        </label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-crimson" onclick="sendSummaryDiscord()">📊 現在の累計状況をDiscord送信</button>
+          <button class="btn" onclick="testDiscord()">🧪 テスト通知送信</button>
+        </div>
+        <div>
+          <label>送信プレビュー</label>
+          <div class="discord-box"><pre id="discordPreview"></pre></div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn" onclick="exportBackup()">📤 JSONバックアップ書き出し</button>
+          <label class="btn" style="margin:0;cursor:pointer;">
+            📥 JSON復元
+            <input type="file" accept=".json" style="display:none;" onchange="importBackup(event)" />
+          </label>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('matches', this)"><span class="ico">⚽</span><span>試合日程・入力</span></button>
+    <button class="nav-btn" onclick="switchTab('rules', this)"><span class="ico">📊</span><span>全14項目内訳</span></button>
+    <button class="nav-btn" onclick="switchTab('discord', this)"><span class="ico">🔔</span><span>Discord・設定</span></button>
+  </nav>
+
+  <!-- Edit Match Modal -->
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong id="modalTitle" style="font-size:16px;">試合結果を入力</strong>
+        <button class="btn btn-ghost" onclick="closeModal('editModal')">✕</button>
+      </div>
+      <div id="modalSubtitle" style="font-size:12px;color:var(--muted);"></div>
+
+      <div class="score-row">
+        <div>
+          <label>鹿児島ユナイテッド</label>
+          <input type="number" id="inHomeScore" min="0" max="20" value="0" oninput="previewModalCalc()" />
+        </div>
+        <div style="font-size:20px;font-weight:900;padding-top:18px;">−</div>
+        <div>
+          <label id="inOppLabel">対戦相手</label>
+          <input type="number" id="inAwayScore" min="0" max="20" value="0" oninput="previewModalCalc()" />
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <label>⚽ フアンマゴール数 (+1,000円/点)</label>
+          <input type="number" id="inJuanma" min="0" max="10" value="0" oninput="previewModalCalc()" />
+        </div>
+        <div>
+          <label>🔥 連勝ボーナス口数 (+300円/口)</label>
+          <input type="number" id="inStreakUnits" min="0" max="30" value="0" oninput="previewModalCalc()" />
+          <div style="font-size:10px;color:var(--muted);margin-top:2px;">※2連勝=1口, 3連勝=2口</div>
+        </div>
+      </div>
+
+      <div class="check-grid">
+        <label class="check-pill"><input type="checkbox" id="inKyushu" onchange="previewModalCalc()" /><span>九州ダービー勝利 (+1,000)</span></label>
+        <label class="check-pill"><input type="checkbox" id="inClean" onchange="previewModalCalc()" /><span>無失点 (+500)</span></label>
+        <label class="check-pill"><input type="checkbox" id="inLateAT" onchange="previewModalCalc()" /><span>後半ATゴール (+500)</span></label>
+        <label class="check-pill"><input type="checkbox" id="inComeback" onchange="previewModalCalc()" /><span>逆転勝利 (+300)</span></label>
+        <label class="check-pill"><input type="checkbox" id="inHattrick" onchange="previewModalCalc()" /><span>ハットトリック (+3,000)</span></label>
+        <label class="check-pill"><input type="checkbox" id="inPkStop" onchange="previewModalCalc()" /><span>PKストップ (+1,000)</span></label>
+      </div>
+
+      <div>
+        <label>観戦メモ（任意）</label>
+        <input type="text" id="inMemo" placeholder="例：白波スタジアム現地観戦！後半AT劇的弾" />
+      </div>
+
+      <div style="background:#071122;border:1px solid var(--gold);border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:12px;font-weight:700;">この試合の貯金額</span>
+        <strong id="modalCalcTotal" style="font-size:20px;color:var(--gold);">¥0</strong>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:space-between;">
+        <button class="btn" onclick="clearSingleMatch()">🧹 未入力(¥0)に戻す</button>
+        <button class="btn btn-crimson" style="flex:1;" onclick="saveMatchEdit()">💾 保存して確定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Schedule Modal -->
+  <div class="modal-backdrop" id="addModal">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong style="font-size:16px;">新しい試合日程を追加</strong>
+        <button class="btn btn-ghost" onclick="closeModal('addModal')">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><label>大会・節</label><input type="text" id="newComp" placeholder="J3 第18節" /></div>
+        <div><label>開催日</label><input type="date" id="newDate" value="2026-11-22" /></div>
+      </div>
+      <div style="display:grid;grid-template-columns:90px 1fr;gap:8px;">
+        <div>
+          <label>H / A</label>
+          <select id="newVenue"><option value="H">HOME</option><option value="A">AWAY</option></select>
+        </div>
+        <div><label>対戦相手</label><input type="text" id="newOpp" placeholder="例：ギラヴァンツ北九州" /></div>
+      </div>
+      <label class="check-pill"><input type="checkbox" id="newIsKyushu" /><span>バトルオブ九州対象クラブ</span></label>
+      <button class="btn btn-crimson" onclick="addNewSchedule()">＋ 日程枠を追加 (¥0)</button>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'kufc_pwa_manual_zero_v1';
+
+    const DEFAULT_SCHEDULE = [
+      { id: 'm01', comp: 'J3 第1節', date: '2026-08-08', ha: 'H', opp: 'ザスパ群馬', kyushu: false },
+      { id: 'm02', comp: 'J3 第2節', date: '2026-08-16', ha: 'A', opp: '奈良クラブ', kyushu: false },
+      { id: 'c01', comp: '天皇杯 1回戦', date: '2026-08-19', ha: 'H', opp: 'レノファ山口FC', kyushu: false },
+      { id: 'm03', comp: 'J3 第3節', date: '2026-08-22', ha: 'H', opp: 'FC岐阜', kyushu: false },
+      { id: 'c02', comp: '天皇杯 2回戦', date: '2026-08-26', ha: 'H', opp: 'アルビレックス新潟', kyushu: false },
+      { id: 'm04', comp: 'J3 第4節', date: '2026-08-29', ha: 'A', opp: 'カマタマーレ讃岐', kyushu: false },
+      { id: 'c03', comp: 'ルヴァン杯 1回戦', date: '2026-09-02', ha: 'H', opp: '北海道コンサドーレ札幌', kyushu: false },
+      { id: 'm05', comp: 'J3 第5節', date: '2026-09-05', ha: 'H', opp: 'FC琉球OKINAWA', kyushu: true },
+      { id: 'm06', comp: 'J3 第6節', date: '2026-09-13', ha: 'A', opp: 'レイラック滋賀FC', kyushu: false },
+      { id: 'm07', comp: 'J3 第7節', date: '2026-09-19', ha: 'H', opp: '栃木SC', kyushu: false },
+      { id: 'm08', comp: 'J3 第8節', date: '2026-09-26', ha: 'A', opp: 'ギラヴァンツ北九州', kyushu: true },
+      { id: 'm09', comp: 'J3 第9節', date: '2026-10-04', ha: 'H', opp: '福島ユナイテッドFC', kyushu: false },
+      { id: 'c04', comp: '天皇杯 3回戦', date: '2026-10-07', ha: 'A', opp: 'セレッソ大阪', kyushu: false },
+      { id: 'm10', comp: 'J3 第10節', date: '2026-10-11', ha: 'A', opp: '松本山雅FC', kyushu: false },
+      { id: 'm11', comp: 'J3 第11節', date: '2026-10-17', ha: 'H', opp: '愛媛FC', kyushu: false },
+      { id: 'm12', comp: 'J3 第12節', date: '2026-10-21', ha: 'H', opp: '高知ユナイテッドSC', kyushu: false },
+      { id: 'm13', comp: 'J3 第13節', date: '2026-10-24', ha: 'A', opp: 'FC大阪', kyushu: false },
+      { id: 'm14', comp: 'J3 第14節', date: '2026-10-31', ha: 'H', opp: 'ロアッソ熊本', kyushu: true },
+      { id: 'm15', comp: 'J3 第15節', date: '2026-11-03', ha: 'A', opp: 'レノファ山口FC', kyushu: false },
+      { id: 'm16', comp: 'J3 第16節', date: '2026-11-08', ha: 'A', opp: 'SC相模原', kyushu: false },
+      { id: 'm17', comp: 'J3 第17節', date: '2026-11-15', ha: 'H', opp: 'ガイナーレ鳥取', kyushu: false }
+    ];
+
+    function createFreshState() {
+      return {
+        goalTitle: '遠征・ユニフォーム資金目標',
+        goalAmount: 50000,
+        avispaWins: 0,
+        champ: false,
+        promo: false,
+        webhookUrl: '',
+        autoSend: false,
+        matches: DEFAULT_SCHEDULE.map(s => ({
+          ...s,
+          played: false,
+          kScore: 0,
+          oScore: 0,
+          juanma: 0,
+          streakUnits: 0,
+          kyushuWin: false,
+          cleanSheet: false,
+          lateAT: false,
+          comeback: false,
+          hattrick: false,
+          pkStop: false,
+          memo: ''
+        }))
+      };
+    }
+
+    let state = loadState();
+    let currentFilter = 'all';
+    let editingId = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createFreshState();
+        return { ...createFreshState(), ...JSON.parse(raw) };
+      } catch (e) {
+        return createFreshState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderAll();
+    }
+
+    function calcMatchAmount(m) {
+      if (!m.played) return 0;
+      let sum = 0;
+      if (m.kScore > m.oScore) sum += 1000;
+      else if (m.kScore === m.oScore) sum += 500;
+      else sum += 300;
+
+      if (m.kyushuWin && m.kScore > m.oScore) sum += 1000;
+      sum += (Number(m.juanma) || 0) * 1000;
+      if (m.cleanSheet) sum += 500;
+      sum += (Number(m.streakUnits) || 0) * 300;
+      if (m.lateAT) sum += 500;
+      if (m.hattrick) sum += 3000;
+      if (m.pkStop) sum += 1000;
+      if (m.comeback && m.kScore > m.oScore) sum += 300;
+      return sum;
+    }
+
+    function computeTotals() {
+      let matchTotal = 0, wins = 0, draws = 0, losses = 0, playedCount = 0;
+      let juanmaCount = 0, kyushuWins = 0, cleanSheets = 0, streakUnits = 0;
+      let lateATs = 0, hattricks = 0, pkStops = 0, comebacks = 0;
+
+      // Current active streak from chronological played matches
+      let currentStreak = 0;
+      const sorted = [...state.matches].sort((a, b) => a.date.localeCompare(b.date));
+      sorted.forEach(m => {
+        if (!m.played) return;
+        playedCount++;
+        matchTotal += calcMatchAmount(m);
+        if (m.kScore > m.oScore) {
+          wins++;
+          currentStreak++;
+        } else if (m.kScore === m.oScore) {
+          draws++;
+          currentStreak = 0;
+        } else {
+          losses++;
+          currentStreak = 0;
+        }
+        juanmaCount += Number(m.juanma) || 0;
+        if (m.kyushuWin && m.kScore > m.oScore) kyushuWins++;
+        if (m.cleanSheet) cleanSheets++;
+        streakUnits += Number(m.streakUnits) || 0;
+        if (m.lateAT) lateATs++;
+        if (m.hattrick) hattricks++;
+        if (m.pkStop) pkStops++;
+        if (m.comeback && m.kScore > m.oScore) comebacks++;
+      });
+
+      const avispaTotal = (Number(state.avispaWins) || 0) * 200;
+      const champTotal = state.champ ? 5000 : 0;
+      const promoTotal = state.promo ? 3000 : 0;
+      const grandTotal = matchTotal + avispaTotal + champTotal + promoTotal;
+
+      return {
+        grandTotal, playedCount, totalSchedules: state.matches.length,
+        wins, draws, losses, currentStreak,
+        juanmaCount, kyushuWins, cleanSheets, streakUnits,
+        lateATs, hattricks, pkStops, comebacks,
+        avispaWins: Number(state.avispaWins) || 0,
+        champ: !!state.champ, promo: !!state.promo
+      };
+    }
+
+    function renderAll() {
+      const t = computeTotals();
+      document.getElementById('totalAmount').textContent = `¥${t.grandTotal.toLocaleString()}`;
+      document.getElementById('statPlayed').textContent = `${t.playedCount} / ${t.totalSchedules}`;
+      document.getElementById('statWDL').textContent = `${t.wins}-${t.draws}-${t.losses}`;
+      document.getElementById('statJuanma').textContent = `${t.juanmaCount}点`;
+      document.getElementById('statStreak').textContent = `${t.currentStreak}連勝`;
+
+      const pct = state.goalAmount > 0 ? Math.min(100, Math.round((t.grandTotal / state.goalAmount) * 100)) : 0;
+      document.getElementById('goalLabel').textContent = state.goalTitle;
+      document.getElementById('goalText').textContent = `¥${t.grandTotal.toLocaleString()} / ¥${state.goalAmount.toLocaleString()} (${pct}%)`;
+      document.getElementById('goalFill').style.width = `${pct}%`;
+
+      document.getElementById('avispaCount').textContent = t.avispaWins;
+      document.getElementById('chkChamp').checked = t.champ;
+      document.getElementById('chkPromo').checked = t.promo;
+      document.getElementById('webhookUrl').value = state.webhookUrl || '';
+      document.getElementById('autoSendDiscord').checked = !!state.autoSend;
+
+      renderMatchList();
+      renderRulesGrid(t);
+      document.getElementById('discordPreview').textContent = buildSummaryText(t);
+    }
+
+    function renderMatchList() {
+      const listEl = document.getElementById('matchList');
+      const filtered = state.matches.filter(m => {
+        if (currentFilter === 'pending') return !m.played;
+        if (currentFilter === 'done') return m.played;
+        if (currentFilter === 'kyushu') return m.kyushu;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">該当する試合日程がありません</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(m => {
+        const amt = calcMatchAmount(m);
+        let resClass = '';
+        let badgeHtml = `<span class="badge badge-pending">未入力 (¥0)</span>`;
+        if (m.played) {
+          if (m.kScore > m.oScore) { resClass = 'win'; badgeHtml = `<span class="badge badge-win">WIN</span>`; }
+          else if (m.kScore === m.oScore) { resClass = 'draw'; badgeHtml = `<span class="badge badge-draw">DRAW</span>`; }
+          else { resClass = 'loss'; badgeHtml = `<span class="badge badge-loss">LOSS</span>`; }
+        }
+
+        const tags = [];
+        if (m.kyushu) tags.push('🔥バトルオブ九州');
+        if (m.played) {
+          if (m.kyushuWin && m.kScore > m.oScore) tags.push('九州勝利+1,000');
+          if (m.juanma > 0) tags.push(`フアンマ×${m.juanma}`);
+          if (m.cleanSheet) tags.push('無失点+500');
+          if (m.streakUnits > 0) tags.push(`連勝${m.streakUnits}口`);
+          if (m.lateAT) tags.push('後半AT+500');
+          if (m.comeback && m.kScore > m.oScore) tags.push('逆転+300');
+          if (m.hattrick) tags.push('ハット+3,000');
+          if (m.pkStop) tags.push('PK止+1,000');
+        }
+
+        return `
+          <div class="match-item ${resClass}">
+            <div class="match-top">
+              <div class="match-meta">${m.date} ｜ ${m.comp} ｜ <strong>${m.ha === 'H' ? 'HOME' : 'AWAY'}</strong></div>
+              ${badgeHtml}
+            </div>
+            <div class="match-main">
+              <div class="match-opp">vs ${m.opp}</div>
+              <div style="text-align:right;">
+                <div class="match-score">${m.played ? `${m.kScore} - ${m.oScore}` : '- vs -'}</div>
+                <div class="match-yen">+¥${amt.toLocaleString()}</div>
+              </div>
+            </div>
+            ${tags.length ? `<div class="bonus-tags">${tags.map(t => `<span class="b-tag">${t}</span>`).join('')}</div>` : ''}
+            ${m.memo ? `<div style="font-size:11px;color:#CBD5E1;">📝 ${escapeHtml(m.memo)}</div>` : ''}
+            <div class="match-actions">
+              <button class="btn btn-crimson" style="padding:6px 12px;" onclick="openEditModal('${m.id}')">✏️ ${m.played ? '編集する' : '結果を入力'}</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRulesGrid(t) {
+      const items = [
+        { name: '① 勝利', unit: '1,000円', cnt: `${t.wins}回 (¥${(t.wins*1000).toLocaleString()})` },
+        { name: '② 引き分け', unit: '500円', cnt: `${t.draws}回 (¥${(t.draws*500).toLocaleString()})` },
+        { name: '③ 敗北', unit: '300円', cnt: `${t.losses}回 (¥${(t.losses*300).toLocaleString()})` },
+        { name: '④ 優勝', unit: '5,000円', cnt: t.champ ? '達成 (¥5,000)' : '未達成 (¥0)' },
+        { name: '⑤ 九州ダービー勝', unit: '1,000円', cnt: `${t.kyushuWins}回 (¥${(t.kyushuWins*1000).toLocaleString()})` },
+        { name: '⑥ フアンマゴール', unit: '1,000円/点', cnt: `${t.juanmaCount}点 (¥${(t.juanmaCount*1000).toLocaleString()})` },
+        { name: '⑦ 無失点', unit: '500円', cnt: `${t.cleanSheets}回 (¥${(t.cleanSheets*500).toLocaleString()})` },
+        { name: '⑧ 連勝ボーナス', unit: '300円/口', cnt: `${t.streakUnits}口 (¥${(t.streakUnits*300).toLocaleString()})` },
+        { name: '⑨ 後半ATゴール', unit: '500円', cnt: `${t.lateATs}回 (¥${(t.lateATs*500).toLocaleString()})` },
+        { name: '⑩ ハットトリック', unit: '3,000円', cnt: `${t.hattricks}回 (¥${(t.hattricks*3000).toLocaleString()})` },
+        { name: '⑪ PKストップ', unit: '1,000円', cnt: `${t.pkStops}回 (¥${(t.pkStops*1000).toLocaleString()})` },
+        { name: '⑫ アビスパ福岡勝', unit: '200円/勝', cnt: `${t.avispaWins}勝 (¥${(t.avispaWins*200).toLocaleString()})` },
+        { name: '⑬ 逆転勝利', unit: '300円', cnt: `${t.comebacks}回 (¥${(t.comebacks*300).toLocaleString()})` },
+        { name: '⑭ 昇格', unit: '3,000円', cnt: t.promo ? '達成 (¥3,000)' : '未達成 (¥0)' }
+      ];
+      document.getElementById('rulesGrid').innerHTML = items.map(i => `
+        <div class="rule-tile">
+          <div class="r-name">${i.name}</div>
+          <div class="r-val">${i.unit}</div>
+          <div class="r-cnt">${i.cnt}</div>
+        </div>
+      `).join('');
+    }
+
+    function openEditModal(id) {
+      const m = state.matches.find(x => x.id === id);
+      if (!m) return;
+      editingId = id;
+      document.getElementById('modalTitle').textContent = `vs ${m.opp}`;
+      document.getElementById('modalSubtitle').textContent = `${m.date} ｜ ${m.comp} (${m.ha === 'H' ? 'HOME' : 'AWAY'})`;
+      document.getElementById('inOppLabel').textContent = m.opp;
+      document.getElementById('inHomeScore').value = m.kScore;
+      document.getElementById('inAwayScore').value = m.oScore;
+      document.getElementById('inJuanma').value = m.juanma || 0;
+      document.getElementById('inStreakUnits').value = m.streakUnits || 0;
+      document.getElementById('inKyushu').checked = m.played ? !!m.kyushuWin : !!m.kyushu;
+      document.getElementById('inClean').checked = !!m.cleanSheet;
+      document.getElementById('inLateAT').checked = !!m.lateAT;
+      document.getElementById('inComeback').checked = !!m.comeback;
+      document.getElementById('inHattrick').checked = !!m.hattrick;
+      document.getElementById('inPkStop').checked = !!m.pkStop;
+      document.getElementById('inMemo').value = m.memo || '';
+      previewModalCalc();
+      document.getElementById('editModal').classList.add('open');
+    }
+
+    function previewModalCalc() {
+      const k = Number(document.getElementById('inHomeScore').value) || 0;
+      const o = Number(document.getElementById('inAwayScore').value) || 0;
+      // Auto-suggest clean sheet if o === 0
+      const cleanEl = document.getElementById('inClean');
+      if (o === 0 && document.activeElement?.id === 'inAwayScore') cleanEl.checked = true;
+      if (o > 0 && document.activeElement?.id === 'inAwayScore') cleanEl.checked = false;
+
+      const draft = {
+        played: true,
+        kScore: k,
+        oScore: o,
+        juanma: Number(document.getElementById('inJuanma').value) || 0,
+        streakUnits: Number(document.getElementById('inStreakUnits').value) || 0,
+        kyushuWin: document.getElementById('inKyushu').checked,
+        cleanSheet: cleanEl.checked,
+        lateAT: document.getElementById('inLateAT').checked,
+        comeback: document.getElementById('inComeback').checked,
+        hattrick: document.getElementById('inHattrick').checked,
+        pkStop: document.getElementById('inPkStop').checked
+      };
+      document.getElementById('modalCalcTotal').textContent = `¥${calcMatchAmount(draft).toLocaleString()}`;
+    }
+
+    async function saveMatchEdit() {
+      const m = state.matches.find(x => x.id === editingId);
+      if (!m) return;
+      m.played = true;
+      m.kScore = Number(document.getElementById('inHomeScore').value) || 0;
+      m.oScore = Number(document.getElementById('inAwayScore').value) || 0;
+      m.juanma = Number(document.getElementById('inJuanma').value) || 0;
+      m.streakUnits = Number(document.getElementById('inStreakUnits').value) || 0;
+      m.kyushuWin = document.getElementById('inKyushu').checked;
+      m.cleanSheet = document.getElementById('inClean').checked;
+      m.lateAT = document.getElementById('inLateAT').checked;
+      m.comeback = document.getElementById('inComeback').checked;
+      m.hattrick = document.getElementById('inHattrick').checked;
+      m.pkStop = document.getElementById('inPkStop').checked;
+      m.memo = document.getElementById('inMemo').value.trim();
+
+      saveState();
+      closeModal('editModal');
+      showToast(`保存完了！ +¥${calcMatchAmount(m).toLocaleString()}`);
+
+      if (state.autoSend && state.webhookUrl) {
+        await postMatchToDiscord(m);
+      }
+    }
+
+    function clearSingleMatch() {
+      const m = state.matches.find(x => x.id === editingId);
+      if (!m) return;
+      Object.assign(m, {
+        played: false, kScore: 0, oScore: 0, juanma: 0, streakUnits: 0,
+        kyushuWin: false, cleanSheet: false, lateAT: false, comeback: false,
+        hattrick: false, pkStop: false, memo: ''
+      });
+      saveState();
+      closeModal('editModal');
+      showToast('未入力(¥0)に戻しました');
+    }
+
+    function openAddModal() { document.getElementById('addModal').classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function addNewSchedule() {
+      const opp = document.getElementById('newOpp').value.trim();
+      if (!opp) { showToast('対戦相手を入力してください'); return; }
+      state.matches.push({
+        id: 'm_' + Date.now(),
+        comp: document.getElementById('newComp').value.trim() || '公式戦',
+        date: document.getElementById('newDate').value || '2026-11-22',
+        ha: document.getElementById('newVenue').value,
+        opp,
+        kyushu: document.getElementById('newIsKyushu').checked,
+        played: false, kScore: 0, oScore: 0, juanma: 0, streakUnits: 0,
+        kyushuWin: false, cleanSheet: false, lateAT: false, comeback: false,
+        hattrick: false, pkStop: false, memo: ''
+      });
+      document.getElementById('newOpp').value = '';
+      saveState();
+      closeModal('addModal');
+      showToast('日程枠を追加しました (¥0)');
+    }
+
+    function changeAvispa(delta) {
+      state.avispaWins = Math.max(0, (Number(state.avispaWins) || 0) + delta);
+      saveState();
+    }
+
+    function toggleSeasonFlag(key, val) {
+      state[key] = val;
+      saveState();
+    }
+
+    function editGoal() {
+      const amt = prompt('目標金額（円）を入力してください:', state.goalAmount);
+      if (amt !== null && !isNaN(Number(amt)) && Number(amt) > 0) {
+        state.goalAmount = Number(amt);
+        saveState();
+      }
+    }
+
+    function resetAllData() {
+      if (!confirm('すべての入力を消去して0円スタート（全21日程未入力）に戻しますか？')) return;
+      const keepWebhook = state.webhookUrl;
+      const keepAuto = state.autoSend;
+      state = createFreshState();
+      state.webhookUrl = keepWebhook;
+      state.autoSend = keepAuto;
+      saveState();
+      showToast('0円スタートにリセットしました');
+    }
+
+    function setFilter(f, btn) {
+      currentFilter = f;
+      document.querySelectorAll('#filterRow .chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderMatchList();
+    }
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function saveWebhook() {
+      state.webhookUrl = document.getElementById('webhookUrl').value.trim();
+      state.autoSend = document.getElementById('autoSendDiscord').checked;
+      saveState();
+    }
+
+    function buildSummaryText(t) {
+      return [
+        `⚽ 鹿児島ユナイテッドFC 貯金レポート`,
+        `━━━━━━━━━━━━━━━━━━`,
+        `💰 累計貯金額：¥${t.grandTotal.toLocaleString()}`,
+        `📊 戦績：${t.wins}勝 ${t.draws}分 ${t.losses}敗（記録済 ${t.playedCount}/${t.totalSchedules}試合）`,
+        `🔥 フアンマ弾：${t.juanmaCount}点 ｜ アビスパ福岡：${t.avispaWins}勝`,
+        `🎯 目標達成率：${Math.round((t.grandTotal / (state.goalAmount || 1)) * 100)}%`
+      ].join('\n');
+    }
+
+    async function postMatchToDiscord(m) {
+      const t = computeTotals();
+      const amt = calcMatchAmount(m);
+      const resLabel = m.kScore > m.oScore ? 'WIN 勝利！' : (m.kScore === m.oScore ? 'DRAW 引き分け' : 'LOSS 敗戦も応援貯金');
+      const color = m.kScore > m.oScore ? 14222377 : (m.kScore === m.oScore ? 16103168 : 661809);
+      const payload = {
+        username: '鹿児島ユナイテッドFC 貯金Bot',
+        embeds: [{
+          title: `${resLabel}｜vs ${m.opp} (${m.kScore}-${m.oScore})`,
+          description: `${m.date} ${m.comp} (${m.ha === 'H' ? 'HOME' : 'AWAY'})${m.memo ? '\n📝 ' + m.memo : ''}`,
+          color,
+          fields: [
+            { name: '今回貯金額', value: `+¥${amt.toLocaleString()}`, inline: true },
+            { name: 'シーズン累計', value: `¥${t.grandTotal.toLocaleString()}`, inline: true },
+            { name: 'フアンマ弾', value: `${m.juanma}点 (累計${t.juanmaCount}点)`, inline: true }
+          ]
+        }]
+      };
+      await sendDiscordPayload(payload);
+    }
+
+    async function sendSummaryDiscord() {
+      const t = computeTotals();
+      await sendDiscordPayload({
+        username: '鹿児島ユナイテッドFC 貯金Bot',
+        embeds: [{
+          title: '📊 2026/27 鹿児島ユナイテッドFC 累計貯金状況',
+          description: buildSummaryText(t),
+          color: 14222377
+        }]
+      });
+    }
+
+    async function testDiscord() {
+      await sendDiscordPayload({
+        username: '鹿児島ユナイテッドFC 貯金Bot',
+        content: '✅ PWAアプリからのDiscord Webhook接続テスト成功！チェスト鹿児島！'
+      });
+    }
+
+    async function sendDiscordPayload(payload) {
+      if (!state.webhookUrl) {
+        showToast('先にWebhook URLを入力してください');
+        return;
+      }
+      try {
+        const res = await fetch(state.webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok || res.status === 204) showToast('Discordへ送信しました！');
+        else showToast(`送信エラー (${res.status})`);
+      } catch (e) {
+        showToast('通信エラーが発生しました');
+      }
+    }
+
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `kufc-savings-backup-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      showToast('バックアップJSONを保存しました');
+    }
+
+    function importBackup(ev) {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          state = { ...createFreshState(), ...parsed };
+          saveState();
+          showToast('バックアップを復元しました');
+        } catch (e) {
+          showToast('JSONの読み込みに失敗しました');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "鹿児島ユナイテッドFC 戦績連動貯金",
+  "short_name": "ユナイテッド貯金",
+  "description": "鹿児島ユナイテッドFC公式戦戦績連動・全14項目ルール貯金＆Discord Webhook通知PWA",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A1931",
+  "theme_color": "#0A1931",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
